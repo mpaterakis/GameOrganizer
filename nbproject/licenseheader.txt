@@ -1,0 +1,7 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}mpaterakis, 2018
+<#if licenseLast??>
+${licenseLast}
+</#if>
