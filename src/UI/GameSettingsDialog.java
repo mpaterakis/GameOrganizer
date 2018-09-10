@@ -240,7 +240,7 @@ public class GameSettingsDialog extends JDialog {
         try {
             Desktop.getDesktop().open(new File(game.getGamePath()).getParentFile());
         } catch (IOException ex) {
-            Logger.getLogger(GameSettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "This file has no parent directory", "No Parent Directory", JOptionPane.ERROR_MESSAGE);
         }
     }
 

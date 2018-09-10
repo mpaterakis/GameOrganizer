@@ -67,7 +67,7 @@ public class GameLabel extends JLabel {
                         mainFrame.doExit();
                     }
                 } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "This file has no parent directory", "No Parent Directory", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error opening file", "File Error", JOptionPane.ERROR_MESSAGE);
                 }
 
             } else if (e.getButton() == MouseEvent.BUTTON3) {
