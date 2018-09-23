@@ -39,7 +39,14 @@ public class MainFrame extends JFrame {
         exitButton.setContentAreaFilled(false);
         exitButton.setPreferredSize(new Dimension(15, 16));
         exitButton.setBorder(null);
-        exitButton.setFont(new Font("Xolonium", 12, 12));
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/Files/Xolonium-Regular.ttf")).deriveFont(12f);
+        } catch (FontFormatException ex) {
+            JOptionPane.showMessageDialog(null, "FontFormat Error: Cannot load custom font", "Font Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "IO Error: Cannot read custom font file", "Font Error", JOptionPane.ERROR_MESSAGE); 
+        }
+        exitButton.setFont(customFont);
         exitButton.setForeground(buttonColor);
         exitButton.addActionListener(new ActionListener() {
             @Override
@@ -53,7 +60,7 @@ public class MainFrame extends JFrame {
         programSettingsButton.setContentAreaFilled(false);
         programSettingsButton.setPreferredSize(new Dimension(15, 16));
         programSettingsButton.setBorder(null);
-        programSettingsButton.setFont(new Font("Xolonium", Font.TRUETYPE_FONT, 15));
+        programSettingsButton.setFont(customFont.deriveFont(15f));
         programSettingsButton.setForeground(buttonColor);
         programSettingsButton.addActionListener(new ActionListener() {
             @Override
@@ -64,9 +71,9 @@ public class MainFrame extends JFrame {
 
         // JLabels
         emptyGridLabel = new JLabel("Drop a game exe here to add it!", SwingConstants.CENTER);
-        emptyGridLabel.setFont(new Font("Century Gothic", Font.TRUETYPE_FONT, 16));
+        emptyGridLabel.setFont(customFont.deriveFont(16f));
         titleLabel = new JLabel("  " + titleText);
-        titleLabel.setFont(new Font("Xolonium", Font.TRUETYPE_FONT, 12));
+        titleLabel.setFont(customFont.deriveFont(12f));
 
         // JPanels
         gameGridPanel = new JPanel(new GridLayout(3, 3));
@@ -380,4 +387,5 @@ public class MainFrame extends JFrame {
     private ArrayList<GameLabel> gameLabels = new ArrayList<>();
     private int numberOfGames = 0;
     private String gameName, titleText = "Game Organizer";
+    private Font customFont;
 }
