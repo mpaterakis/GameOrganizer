@@ -104,6 +104,15 @@ public class MainFrame extends JFrame {
         shadowPanel.add(mainPanel);
         add(shadowPanel);
 
+        // WindowListener
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Save to xml and fade out if the program is closed without clicking the X button
+                doExit();
+            }
+        });
+        
         // Set JFrame parameters
         setResizable(false);
         InputStream stream = getClass().getResourceAsStream("/Files/Icon.png");
@@ -126,6 +135,7 @@ public class MainFrame extends JFrame {
 
         // Add ComponentMover on status bar
         new ComponentMover(this, statusBarPanel);
+        
     }
 
     // Getters
