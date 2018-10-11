@@ -48,12 +48,8 @@ public class MainFrame extends JFrame {
         }
         exitButton.setFont(customFont);
         exitButton.setForeground(buttonColor);
-        exitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doExit();
-            }
-        });
+        exitButton.addActionListener(e -> doExit());
+        
         programSettingsButton = new JButton("\u2699");
         programSettingsButton.setBorderPainted(false);
         programSettingsButton.setFocusPainted(false);
@@ -62,12 +58,7 @@ public class MainFrame extends JFrame {
         programSettingsButton.setBorder(null);
         programSettingsButton.setFont(customFont.deriveFont(15f));
         programSettingsButton.setForeground(buttonColor);
-        programSettingsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doOpenProgramSettings();
-            }
-        });
+        programSettingsButton.addActionListener(e -> doOpenProgramSettings());
 
         // JLabels
         emptyGridLabel = new JLabel("Drop a game exe here to add it!", SwingConstants.CENTER);
@@ -78,11 +69,8 @@ public class MainFrame extends JFrame {
         // JPanels
         gameGridPanel = new JPanel(new GridLayout(3, 3));
         gameGridPanel.setBackground(Color.WHITE);
-        FileDrop fileDrop = new FileDrop(gameGridPanel, new FileDrop.Listener() {
-            @Override
-            public void filesDropped(java.io.File[] files) {
-                doDropFile(files);
-            }
+        FileDrop fileDrop = new FileDrop(gameGridPanel, (java.io.File[] files) -> {
+            doDropFile(files);
         });
         buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonsPanel.add(programSettingsButton);

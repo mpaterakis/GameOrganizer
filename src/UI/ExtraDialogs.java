@@ -36,12 +36,9 @@ public class ExtraDialogs {
         JLabel label = new JLabel("Enter Game Title: ");
         
         // ActionListener for the JButton and JTextField
-        ActionListener action = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.setAddedGameName(tf.getText());
-                gameNameDialog.dispose();
-            }
+        ActionListener action = (ActionEvent e) -> {
+            mainFrame.setAddedGameName(tf.getText());
+            gameNameDialog.dispose();
         };
         
         // Add ActionListener

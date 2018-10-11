@@ -28,115 +28,60 @@ public class SettingsDialog extends JDialog {
         barColorChooser.setBorder(BorderFactory.createTitledBorder("Bar Color"));
         barColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(barColorChooser);
-        barColorChooser.getSelectionModel().addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                doSetBarColor();
-            }
-        });
+        barColorChooser.getSelectionModel().addChangeListener(e -> doSetBarColor());
 
         buttonColorChooser = new JColorChooser();
         buttonColorChooser.setBorder(BorderFactory.createTitledBorder("Bar Buttons Color"));
         buttonColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(buttonColorChooser);
-        buttonColorChooser.getSelectionModel().addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                doSetButtonColor();
-            }
-        });
+        buttonColorChooser.getSelectionModel().addChangeListener(e -> doSetButtonColor());
 
         borderColorChooser = new JColorChooser();
         borderColorChooser.setBorder(BorderFactory.createTitledBorder("Window Border Color"));
         borderColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(borderColorChooser);
-        borderColorChooser.getSelectionModel().addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                doSetBorderColor();
-            }
-        });
+        borderColorChooser.getSelectionModel().addChangeListener(e -> doSetBorderColor());
 
         backgroundColorChooser = new JColorChooser();
         backgroundColorChooser.setBorder(BorderFactory.createTitledBorder("Background Color"));
         backgroundColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(backgroundColorChooser);
-        backgroundColorChooser.getSelectionModel().addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                doSetBackgroundColor();
-            }
-        });
+        backgroundColorChooser.getSelectionModel().addChangeListener(e -> doSetBackgroundColor());
 
         shadowColorChooser = new JColorChooser();
         shadowColorChooser.setBorder(BorderFactory.createTitledBorder("Shadow Color"));
         shadowColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(shadowColorChooser);
-        shadowColorChooser.getSelectionModel().addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                doSetShadowColor();
-            }
-        });
+        shadowColorChooser.getSelectionModel().addChangeListener(e -> doSetShadowColor());
 
         // JButtons
         disableBorderButton = new JButton("Remove Border");
         disableBorderButton.setBackground(new Color(209, 209, 209));
         disableBorderButton.setFocusPainted(false);
-        disableBorderButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doDisableBorder();
-            }
-        });
+        disableBorderButton.addActionListener(e -> doDisableBorder());
 
         changeTitleButton = new JButton("Change Window Title");
         changeTitleButton.setBackground(new Color(209, 209, 209));
         changeTitleButton.setFocusPainted(false);
-        changeTitleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doChangeTitle();
-            }
-        });
+        changeTitleButton.addActionListener(e -> doChangeTitle());
 
         revertDefaultsButton = new JButton("Revert to default");
         revertDefaultsButton.setBackground(new Color(209, 209, 209));
         revertDefaultsButton.setFocusPainted(false);
-        revertDefaultsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doRevertDefaults();
-            }
-        });
+        revertDefaultsButton.addActionListener(e -> doRevertDefaults());
 
         changeSpacingOption = new JButton("Switch spacing");
         changeSpacingOption.setBackground(new Color(209, 209, 209));
         changeSpacingOption.setFocusPainted(false);
         changeSpacingOption.setFocusPainted(false);
-        changeSpacingOption.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doChangeSpacing();
-            }
-        });
+        changeSpacingOption.addActionListener(e -> doChangeSpacing());
 
         // JRadioButtons
         radioAutoExitTrue = new JRadioButton("Yes");
-        radioAutoExitTrue.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doEnableAutoExit();
-            }
-        });
+        radioAutoExitTrue.addActionListener(e -> doEnableAutoExit());
 
         radioAutoExitFalse = new JRadioButton("No");
-        radioAutoExitFalse.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doDisableAutoExit();
-            }
-        });
+        radioAutoExitFalse.addActionListener(e -> doDisableAutoExit());
 
         if (mainFrame.getAutoExit()) {
             radioAutoExitTrue.setSelected(true);
@@ -145,20 +90,10 @@ public class SettingsDialog extends JDialog {
         }
 
         radioHasShadowTrue = new JRadioButton("Yes");
-        radioHasShadowTrue.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doEnableShadow();
-            }
-        });
+        radioHasShadowTrue.addActionListener(e -> doEnableShadow());
 
         radioHasShadowFalse = new JRadioButton("No");
-        radioHasShadowFalse.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doDisableShadow();
-            }
-        });
+        radioHasShadowFalse.addActionListener(e -> doDisableShadow());
 
         if (mainFrame.getHasShadow()) {
             radioHasShadowTrue.setSelected(true);

@@ -9,7 +9,6 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
@@ -48,57 +47,27 @@ public class GameSettingsDialog extends JDialog {
         // JButtons
         cancelButton = new JButton("Cancel");
         cancelButton.setBackground(new Color(209, 209, 209));
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doCancel();
-            }
-        });
+        cancelButton.addActionListener(e -> doCancel());
 
         okButton = new JButton("OK");
         okButton.setBackground(new Color(209, 209, 209));
-        okButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doOk();
-            }
-        });
+        okButton.addActionListener(e -> doOk());
 
         choosePathButton = new JButton("Change Exe");
         choosePathButton.setBackground(new Color(209, 209, 209));
-        choosePathButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doChoosePath();
-            }
-        });
+        choosePathButton.addActionListener(e -> doChoosePath());
 
         chooseIconButton = new JButton("Change Icon");
         chooseIconButton.setBackground(new Color(209, 209, 209));
-        chooseIconButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doChooseIcon();
-            }
-        });
+        chooseIconButton.addActionListener(e -> doChooseIcon());
 
         openDirButton = new JButton("Open Folder");
         openDirButton.setBackground(new Color(209, 209, 209));
-        openDirButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doOpenDir();
-            }
-        });
+        openDirButton.addActionListener(e -> doOpenDir());
 
         removeGameButton = new JButton("Remove Game");
         removeGameButton.setBackground(new Color(209, 209, 209));
-        removeGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doRemoveGame();
-            }
-        });
+        removeGameButton.addActionListener(e -> doRemoveGame());
 
         orderMinusButton = new JButton("-");
         orderMinusButton.setBackground(new Color(209, 209, 209));
@@ -106,12 +75,7 @@ public class GameSettingsDialog extends JDialog {
         if (Integer.valueOf(orderField.getText()) == 1) {
             orderMinusButton.setEnabled(false);
         }
-        orderMinusButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doOrderMinus();
-            }
-        });
+        orderMinusButton.addActionListener(e -> doOrderMinus());
 
         orderPlusButton = new JButton("+");
         orderPlusButton.setBackground(new Color(209, 209, 209));
@@ -119,12 +83,7 @@ public class GameSettingsDialog extends JDialog {
         if (Integer.valueOf(orderField.getText()) == mainFrame.getGameLabels().size()) {
             orderPlusButton.setEnabled(false);
         }
-        orderPlusButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doOrderPlus();
-            }
-        });
+        orderPlusButton.addActionListener(e -> doOrderPlus());
 
         // JPanels
         mainPanel = new JPanel(new BorderLayout());
@@ -258,31 +217,22 @@ public class GameSettingsDialog extends JDialog {
                 yesButton.setBackground(new Color(209, 209, 209));
                 yesButton.setFocusPainted(false);
                 final int j = i;
-                yesButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-
-                        // Get gameLabels, remove this instance and set it as the new gameLabels
-                        ArrayList<GameLabel> gameLabels = mainFrame.getGameLabels();
-                        gameLabels.remove(j);
-                        mainFrame.redrawGameGridPanel(gameLabels);
-
-                        // Close the dialogs
-                        SwingUtilities.getWindowAncestor(yesButton).dispose();
-                        dispose();
-                    }
+                yesButton.addActionListener((ActionEvent actionEvent) -> {
+                    // Get gameLabels, remove this instance and set it as the new gameLabels
+                    ArrayList<GameLabel> gameLabels = mainFrame.getGameLabels();
+                    gameLabels.remove(j);
+                    mainFrame.redrawGameGridPanel(gameLabels);
+                    
+                    // Close the dialogs
+                    SwingUtilities.getWindowAncestor(yesButton).dispose();
+                    dispose();
                 });
 
                 // Creating "NO" JButton
                 JButton noButton = new JButton("NO");
                 noButton.setBackground(new Color(209, 209, 209));
                 noButton.setFocusPainted(false);
-                noButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        SwingUtilities.getWindowAncestor(yesButton).dispose();
-                    }
-                });
+                noButton.addActionListener(e -> SwingUtilities.getWindowAncestor(yesButton).dispose());
                 JButton[] customButtons = {yesButton, noButton};
 
                 // Show JOptionPane with custom buttons
