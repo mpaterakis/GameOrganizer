@@ -100,6 +100,18 @@ public class SettingsDialog extends JDialog {
         } else {
             radioHasShadowFalse.setSelected(true);
         }
+        
+        radioFocusingTrue = new JRadioButton("Yes");
+        radioFocusingTrue.addActionListener(e -> doEnableFocusing());
+
+        radioFocusingFalse = new JRadioButton("No");
+        radioFocusingFalse.addActionListener(e -> doDisableFocusing());
+
+        if (mainFrame.usesFocusing()) {
+            radioFocusingTrue.setSelected(true);
+        } else {
+            radioFocusingFalse.setSelected(true);
+        }
 
         // Add the JRadioButtons in ButtonGroups
         ButtonGroup radioButtons1 = new ButtonGroup();
@@ -109,6 +121,10 @@ public class SettingsDialog extends JDialog {
         ButtonGroup radioButtons2 = new ButtonGroup();
         radioButtons2.add(radioHasShadowTrue);
         radioButtons2.add(radioHasShadowFalse);
+        
+        ButtonGroup radioButtons3 = new ButtonGroup();
+        radioButtons3.add(radioFocusingTrue);
+        radioButtons3.add(radioFocusingFalse);
 
         // JTextFields
         titleField = new JTextField(mainFrame.getTitleText());
@@ -127,16 +143,25 @@ public class SettingsDialog extends JDialog {
         radioShadowPanel.add(radioHasShadowTrue);
         radioShadowPanel.add(radioHasShadowFalse);
         
+        radioFocusingPanel = new JPanel(new FlowLayout());
+        radioFocusingPanel.add(radioFocusingTrue);
+        radioFocusingPanel.add(radioFocusingFalse);
+        
         shadowPanel = new JPanel(new BorderLayout());
         shadowPanel.add(new JLabel(" Use drop shadow on main window: "), BorderLayout.WEST);
         shadowPanel.add(radioShadowPanel, BorderLayout.EAST);
+        
+        focusingPanel = new JPanel(new BorderLayout());
+        focusingPanel.add(new JLabel(" Dim the games that are not focused: "), BorderLayout.WEST);
+        focusingPanel.add(radioFocusingPanel, BorderLayout.EAST);
 
         gameAutoExitPanel = new JPanel(new BorderLayout());
         gameAutoExitPanel.add(new JLabel(" Exit GameOrganizer after a game is launched: "), BorderLayout.WEST);
         gameAutoExitPanel.add(radioAutoExitPanel, BorderLayout.EAST);
 
-        middlePanel = new JPanel(new GridLayout(3, 1));
+        middlePanel = new JPanel(new GridLayout(4, 1));
         middlePanel.add(shadowPanel);
+        middlePanel.add(focusingPanel);
         middlePanel.add(gameAutoExitPanel);
         middlePanel.add(titleSettingsPanel);
 
@@ -161,7 +186,7 @@ public class SettingsDialog extends JDialog {
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Set JDialog parameters
-        setSize(430, 800);
+        setSize(440, 850);
         setTitle("Program Settings");
         setResizable(false);
         setLocationRelativeTo(null);
@@ -256,12 +281,24 @@ public class SettingsDialog extends JDialog {
         mainFrame.setHasShadow(false);
         mainFrame.paintShadow();
     }
-
+    
+    // Enable focusing
+    private void doEnableFocusing () {
+        mainFrame.setFocusing(true);
+        mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
+    }
+    
+    // Disable focusing
+    private void doDisableFocusing () {
+        mainFrame.setFocusing(false);
+        mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
+    }
+            
     // Fields
-    private JPanel centerPanel, bottomPanel, titleSettingsPanel, completeSettingsPanel, gameAutoExitPanel, shadowPanel, middlePanel, radioAutoExitPanel, radioShadowPanel;
+    private JPanel centerPanel, bottomPanel, titleSettingsPanel, completeSettingsPanel, gameAutoExitPanel, shadowPanel, middlePanel, focusingPanel, radioAutoExitPanel, radioShadowPanel, radioFocusingPanel;
     private JColorChooser barColorChooser, buttonColorChooser, borderColorChooser, backgroundColorChooser, shadowColorChooser;
     private JButton disableBorderButton, revertDefaultsButton, changeSpacingOption, changeTitleButton;
-    private JRadioButton radioAutoExitTrue, radioAutoExitFalse, radioHasShadowTrue, radioHasShadowFalse;
+    private JRadioButton radioAutoExitTrue, radioAutoExitFalse, radioHasShadowTrue, radioHasShadowFalse, radioFocusingTrue, radioFocusingFalse;
     private JTextField titleField;
     private MainFrame mainFrame;
 }

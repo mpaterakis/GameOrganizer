@@ -175,6 +175,14 @@ public class MainFrame extends JFrame {
         return shadowColor;
     }
 
+    public boolean isFullyBooted() {
+        return fullyBooted;
+    }
+
+    public boolean usesFocusing() {
+        return focusing;
+    }
+
     // Setters
     public void setAutoExit(boolean autoExit) {
         this.autoExit = autoExit;
@@ -199,6 +207,10 @@ public class MainFrame extends JFrame {
 
     public void setHasBorder(boolean hasBorder) {
         this.hasBorder = hasBorder;
+    }
+
+    public void setFocusing(boolean focusing) {
+        this.focusing = focusing;
     }
 
     public void setBorderColor(Color borderColor) {
@@ -316,6 +328,7 @@ public class MainFrame extends JFrame {
             }
         }
         setOpacity(1);
+        fullyBooted = true;
     }
 
     // Fade out animation
@@ -380,7 +393,7 @@ public class MainFrame extends JFrame {
     private JPanel gameGridPanel, statusBarPanel, buttonsPanel, mainPanel;
     private JButton exitButton, programSettingsButton;
     private JLabel emptyGridLabel, titleLabel;
-    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true;
+    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true;
     private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
     private ArrayList<GameLabel> gameLabels = new ArrayList<>();
     private int numberOfGames = 0;

@@ -131,6 +131,15 @@ public class ProcessXML {
             }
             subElement2.appendChild(hasShadow);
             
+            // Focusing bool
+            Element focusing = doc.createElement("Focusing");
+            if (mainFrame.usesFocusing()) {
+                focusing.appendChild(doc.createTextNode("true"));
+            } else {
+                focusing.appendChild(doc.createTextNode("false"));
+            }
+            subElement2.appendChild(focusing);
+            
             // Window Title text
             Element windowTitle = doc.createElement("WindowTitle");
             windowTitle.appendChild(doc.createTextNode(mainFrame.getTitleText()));
@@ -178,6 +187,7 @@ public class ProcessXML {
                 String hasSpc = document.getElementsByTagName("HasSpace").item(0).getTextContent();
                 String hasShadow = document.getElementsByTagName("HasShadow").item(0).getTextContent();
                 String autoExit = document.getElementsByTagName("AutoExit").item(0).getTextContent();
+                String focusing = document.getElementsByTagName("Focusing").item(0).getTextContent();
                 String windowTitle = document.getElementsByTagName("WindowTitle").item(0).getTextContent();
                 NodeList gamesList = document.getElementsByTagName("Game");
 
@@ -226,6 +236,13 @@ public class ProcessXML {
                 } else if (autoExit.equalsIgnoreCase("false")) {
                     mainFrame.setAutoExit(false);
                 }
+                
+                if (focusing.equalsIgnoreCase("true")) {
+                    mainFrame.setFocusing(true);
+                } else if (focusing.equalsIgnoreCase("false")) {
+                    mainFrame.setFocusing(false);
+                }
+                
             } else {
                 // If the XML file does not exist, simply draw the gameGridPanel
                 mainFrame.redrawGameGridPanel(new ArrayList<>());

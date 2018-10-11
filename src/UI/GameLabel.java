@@ -3,11 +3,15 @@
  */
 package UI;
 
+import Plugins.*;
 import GameOrganizer.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -28,7 +32,7 @@ public class GameLabel extends JLabel {
     private void initComponents() {
 
         // Add background image to JLabel
-        bgImage = new ImageIcon(game.getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH));
+        bgImage = new AlphaImageIcon(new ImageIcon(game.getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH)), 1.0f);
         setIcon(bgImage);
 
         // Add MouseListener()
@@ -37,6 +41,18 @@ public class GameLabel extends JLabel {
             public void mousePressed(MouseEvent e) {
                 // Launch the game
                 launchGame(e);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Focus on this game
+                focusOnGameLabel();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Regain focus of all game
+                resetGameLabelFocus();
             }
         });
 
@@ -49,7 +65,7 @@ public class GameLabel extends JLabel {
         return game;
     }
 
-    // Custom methods
+    // Custom methods    
     // Launch game if click was on the image
     private void launchGame(MouseEvent e) {
         // Check if the click was not outside the image
@@ -61,7 +77,7 @@ public class GameLabel extends JLabel {
                 try {
                     // Launch game if left click is pressed
                     Desktop.getDesktop().open(new File(game.getGamePath()));
-                    
+
                     // If autoExit is set, close the program
                     if (mainFrame.getAutoExit()) {
                         mainFrame.doExit();
@@ -74,15 +90,45 @@ public class GameLabel extends JLabel {
 
                 // Open game's settings if right click is pressed
                 new GameSettingsDialog(game, mainFrame);
-                bgImage = new ImageIcon(game.getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH));
+                bgImage = new AlphaImageIcon(new ImageIcon(game.getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH)), 1.0f);
                 setIcon(bgImage);
             }
         }
-        
+
+    }
+
+    // Focus on this game by making the rest of the window transparent
+    private void focusOnGameLabel() {
+        if (mainFrame.usesFocusing()) {
+            // Wait for the main window to fully load
+            while (!mainFrame.isFullyBooted()) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(10);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
+                if (mainFrame.getGameLabels().get(i) != this) {
+                    mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(new ImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH)), 0.5f));
+                }
+            }
+        }
+    }
+
+    // Reset focus of all the GameLabels
+    private void resetGameLabelFocus() {
+        if (mainFrame.usesFocusing()) {
+            for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
+                if (mainFrame.getGameLabels().get(i) != this) {
+                    mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(new ImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH)), 1.0f));
+                }
+            }
+        }
     }
 
     // Fields
     private Game game;
     private MainFrame mainFrame;
-    private ImageIcon bgImage;
+    private AlphaImageIcon bgImage;
 }
