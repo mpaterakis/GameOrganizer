@@ -76,7 +76,7 @@ public class GameLabel extends JLabel {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 try {
                     // Launch game if left click is pressed
-                    Desktop.getDesktop().open(new File(game.getGamePath()));
+                    Runtime.getRuntime().exec(game.getGamePath());
 
                     // If autoExit is set, close the program
                     if (mainFrame.getAutoExit()) {
