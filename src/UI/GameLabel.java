@@ -110,7 +110,7 @@ public class GameLabel extends JLabel {
             }
             for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
                 if (mainFrame.getGameLabels().get(i) != this) {
-                    mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(new ImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH)), 0.5f));
+                    mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(new ImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon().getImage()), 0.5f));
                 }
             }
         }
@@ -120,9 +120,7 @@ public class GameLabel extends JLabel {
     private void resetGameLabelFocus() {
         if (mainFrame.usesFocusing()) {
             for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
-                if (mainFrame.getGameLabels().get(i) != this) {
-                    mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(new ImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH)), 1.0f));
-                }
+                mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(new ImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon().getImage()), 1.0f));
             }
         }
     }
