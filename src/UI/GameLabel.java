@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import org.jdesktop.swingx.util.OS;
 
 /**
  * A GameLabel object displays the game icon, can launch the game and edit its properties
@@ -76,7 +77,11 @@ public class GameLabel extends JLabel {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 try {
                     // Launch game if left click is pressed
-                    Runtime.getRuntime().exec(game.getGamePath());
+                    if (OS.isWindows()) {
+                        Runtime.getRuntime().exec("explorer  \"" + game.getGamePath() + "\"");
+                    } else {
+                        Desktop.getDesktop().open(new File(game.getGamePath()));
+                    }
 
                     // If autoExit is set, close the program
                     if (mainFrame.getAutoExit()) {
