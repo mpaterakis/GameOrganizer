@@ -33,7 +33,7 @@ public class GameLabel extends JLabel {
     private void initComponents() {
 
         // Add background image to JLabel
-        bgImage = new AlphaImageIcon(new ImageIcon(game.getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH)), 1.0f);
+        bgImage = new AlphaImageIcon(game.getGameIcon(), 1.0f);
         setIcon(bgImage);
 
         // Add MouseListener()
@@ -95,7 +95,7 @@ public class GameLabel extends JLabel {
 
                 // Open game's settings if right click is pressed
                 new GameSettingsDialog(game, mainFrame);
-                bgImage = new AlphaImageIcon(new ImageIcon(game.getGameIcon().getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH)), 1.0f);
+                bgImage = new AlphaImageIcon(game.getGameIcon(), 1.0f);
                 setIcon(bgImage);
             }
         }
@@ -115,7 +115,7 @@ public class GameLabel extends JLabel {
             }
             for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
                 if (mainFrame.getGameLabels().get(i) != this) {
-                    mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(new ImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon().getImage()), 0.5f));
+                    mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon(), 0.5f));
                 }
             }
         }
@@ -125,7 +125,7 @@ public class GameLabel extends JLabel {
     private void resetGameLabelFocus() {
         if (mainFrame.usesFocusing()) {
             for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
-                mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(new ImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon().getImage()), 1.0f));
+                mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon(), 1.0f));
             }
         }
     }

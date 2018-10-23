@@ -179,7 +179,7 @@ public class GameSettingsDialog extends JDialog {
     // Apply the data from the textfields to the game instance
     private void doOk() {
         game.setGameName(nameField.getText());
-        game.setGameIcon(new ImageIcon(iconField.getText().toString()));
+        game.setGameIcon(new ImageIcon(iconField.getText()));
         game.setGamePath(pathField.getText());
         dispose();
     }

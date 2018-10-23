@@ -3,6 +3,7 @@
  */
 package GameOrganizer;
 
+import java.awt.Image;
 import javax.swing.ImageIcon;
 
 /**
@@ -13,7 +14,7 @@ public class Game {
 
     // Constructors
     public Game(ImageIcon gameIcon, String gamePath, String gameName) {
-        this.gameIcon = gameIcon;
+        this.gameIcon = new ImageIcon (gameIcon.getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH));
         this.gamePath = gamePath;
         this.gameName = gameName;
     }
@@ -39,7 +40,7 @@ public class Game {
         return gameIcon;
     }
     public void setGameIcon(ImageIcon gameIcon) {
-        this.gameIcon = gameIcon;
+        this.gameIcon = new ImageIcon (gameIcon.getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH));
     }
 
     // Fields
