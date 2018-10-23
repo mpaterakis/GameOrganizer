@@ -14,8 +14,9 @@ import javax.swing.ImageIcon;
 public class Game {
 
     // Constructors
-    public Game(String gameIconPath, String gamePath, String gameName) {
-        this.gameIcon = new ImageIcon(new ImageIcon(gameIconPath).getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH));
+    public Game(String gameIconPath, String gamePath, String gameName, double frameScale) {
+        this.frameScale = frameScale;
+        setGameIconPath(gameIconPath);
         this.gamePath = gamePath;
         this.gameName = gameName;
         this.gameIconPath = gameIconPath;
@@ -53,10 +54,20 @@ public class Game {
 
     public void setGameIconPath(String gameIconPath) {
         this.gameIconPath = gameIconPath;
-        this.gameIcon = new ImageIcon(new ImageIcon(gameIconPath).getImage().getScaledInstance(256, 256, Image.SCALE_SMOOTH));
+        this.gameIcon = new ImageIcon(new ImageIcon(gameIconPath).getImage().getScaledInstance((int) (256 * frameScale), (int) (256 * frameScale), Image.SCALE_SMOOTH));
+    }
+
+    public double getFrameScale() {
+        return frameScale;
+    }
+
+    public void setFrameScale(double frameScale) {
+        this.frameScale = frameScale;
+        setGameIconPath(gameIconPath);
     }
 
     // Fields
     private ImageIcon gameIcon;
     private String gamePath, gameIconPath, gameName;
+    private double frameScale;
 }

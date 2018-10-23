@@ -144,6 +144,11 @@ public class ProcessXML {
             Element windowTitle = doc.createElement("WindowTitle");
             windowTitle.appendChild(doc.createTextNode(mainFrame.getTitleText()));
             subElement2.appendChild(windowTitle);
+            
+            // Window scale double
+            Element frameScale = doc.createElement("FrameScale");
+            frameScale.appendChild(doc.createTextNode(String.valueOf(mainFrame.getFrameScale())));
+            subElement2.appendChild(frameScale);
 
             // Write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -189,6 +194,7 @@ public class ProcessXML {
                 String autoExit = document.getElementsByTagName("AutoExit").item(0).getTextContent();
                 String focusing = document.getElementsByTagName("Focusing").item(0).getTextContent();
                 String windowTitle = document.getElementsByTagName("WindowTitle").item(0).getTextContent();
+                double frameScale = Double.valueOf(document.getElementsByTagName("FrameScale").item(0).getTextContent());
                 NodeList gamesList = document.getElementsByTagName("Game");
 
                 // Load game data
@@ -198,20 +204,12 @@ public class ProcessXML {
                     String name = ((Element) gamesList.item(i)).getElementsByTagName("Name").item(0).getTextContent();
                     String icon = ((Element) gamesList.item(i)).getElementsByTagName("Icon").item(0).getTextContent();
                     String path = ((Element) gamesList.item(i)).getElementsByTagName("Path").item(0).getTextContent();
-                    GameLabel gameLabel = new GameLabel(new Game(icon, path, name), mainFrame);
+                    GameLabel gameLabel = new GameLabel(new Game(icon, path, name, frameScale), mainFrame);
                     gameLabels.add(gameLabel);
                 }
                 
                 // Draw the gameGridPanel with the new GameLabels
                 mainFrame.redrawGameGridPanel(gameLabels);
-
-                // Apply data to program
-                mainFrame.setBarColor(new Color(Integer.parseInt(barClr)));
-                mainFrame.setButtonColor(new Color(Integer.parseInt(btnsClr)));
-                mainFrame.setBorderColor(new Color(Integer.parseInt(brdrClr)));
-                mainFrame.setBackgroundColor(new Color(Integer.parseInt(bgClr)));
-                mainFrame.setShadowColor(new Color(Integer.parseInt(shdClr)));
-                mainFrame.setTitleText(windowTitle);
 
                 if (hasSpc.equalsIgnoreCase("true")) {
                     mainFrame.setHasSpace(true);
@@ -242,6 +240,15 @@ public class ProcessXML {
                 } else if (focusing.equalsIgnoreCase("false")) {
                     mainFrame.setFocusing(false);
                 }
+
+                // Apply data to program
+                mainFrame.setBarColor(new Color(Integer.parseInt(barClr)));
+                mainFrame.setButtonColor(new Color(Integer.parseInt(btnsClr)));
+                mainFrame.setBorderColor(new Color(Integer.parseInt(brdrClr)));
+                mainFrame.setBackgroundColor(new Color(Integer.parseInt(bgClr)));
+                mainFrame.setShadowColor(new Color(Integer.parseInt(shdClr)));
+                mainFrame.setTitleText(windowTitle);                
+                mainFrame.setFrameScale(frameScale);
                 
             } else {
                 // If the XML file does not exist, simply draw the gameGridPanel

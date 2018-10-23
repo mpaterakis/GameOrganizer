@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
+import javafx.stage.Screen;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import org.jdesktop.swingx.JXPanel;
@@ -44,12 +45,12 @@ public class MainFrame extends JFrame {
         } catch (FontFormatException ex) {
             JOptionPane.showMessageDialog(null, "FontFormat Error: Cannot load custom font", "Font Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "IO Error: Cannot read custom font file", "Font Error", JOptionPane.ERROR_MESSAGE); 
+            JOptionPane.showMessageDialog(null, "IO Error: Cannot read custom font file", "Font Error", JOptionPane.ERROR_MESSAGE);
         }
         exitButton.setFont(customFont);
         exitButton.setForeground(buttonColor);
         exitButton.addActionListener(e -> doExit());
-        
+
         programSettingsButton = new JButton("\u2699");
         programSettingsButton.setBorderPainted(false);
         programSettingsButton.setFocusPainted(false);
@@ -100,21 +101,30 @@ public class MainFrame extends JFrame {
                 doExit();
             }
         });
-        
+
         // Set JFrame parameters
         setResizable(false);
+        setTitle("Game Organizer");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setUndecorated(true);
         InputStream stream = getClass().getResourceAsStream("/Files/Icon.png");
         try {
             setIconImage(new ImageIcon(ImageIO.read(stream)).getImage());
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "IconImage Error: Cannot load statusbar icon", "Icon Error", JOptionPane.ERROR_MESSAGE);
         }
-        setTitle("Game Organizer");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setUndecorated(true);
-        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
+
+        // Load data from XML
         ProcessXML.LoadXML(this);
-        setBorderAndSize(hasBorder, borderColor);
+
+        // If screen is too small, adjust the frame scale
+        int height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+        int width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+        if (height < 870 || width < 890) {
+            setFrameScale(Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 870);
+        }
+
+        setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
         paintShadow();
         setOpacity(0);
         setLocationRelativeTo(null);
@@ -123,7 +133,7 @@ public class MainFrame extends JFrame {
 
         // Add ComponentMover on status bar
         new ComponentMover(this, statusBarPanel);
-        
+
     }
 
     // Getters
@@ -239,6 +249,19 @@ public class MainFrame extends JFrame {
         paintShadow();
     }
 
+    public double getFrameScale() {
+        return frameScale;
+    }
+
+    public void setFrameScale(double frameScale) {
+        this.frameScale = frameScale;
+        setBorderAndSize(hasBorder, borderColor);
+        for (int i = 0; i < gameLabels.size(); i++) {
+            gameLabels.get(i).getGame().setFrameScale(frameScale);
+            gameLabels.get(i).setIcon(gameLabels.get(i).getGame().getGameIcon());
+        }
+    }
+
     // Custom functions
     // Redraw the GridLayout with filled blank tiles
     public void redrawGameGridPanel(ArrayList<GameLabel> gameLabels) {
@@ -269,10 +292,10 @@ public class MainFrame extends JFrame {
             gameGridPanel.setBorder(BorderFactory.createMatteBorder(8, 8, 1, 1, backgroundColor));
             if (hasBorder) {
                 mainPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, borderColor));
-                setSize(810, 860);
+                setSize((int) (810 * frameScale), (int) (860 * frameScale));
             } else {
                 mainPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, borderColor));
-                setSize(810, 860);
+                setSize((int) (810 * frameScale), (int) (860 * frameScale));
             }
             shadowPanel.remove(mainPanel);
             shadowPanel.add(mainPanel);
@@ -280,10 +303,10 @@ public class MainFrame extends JFrame {
             gameGridPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.WHITE));
             if (hasBorder) {
                 mainPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, borderColor));
-                setSize(777, 797);
+                setSize((int) (777 * frameScale), (int) (797 * frameScale));
             } else {
                 mainPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, borderColor));
-                setSize(778, 798);
+                setSize((int) (778 * frameScale), (int) (798 * frameScale));
             }
         }
     }
@@ -318,27 +341,32 @@ public class MainFrame extends JFrame {
     }
 
     // Fade in animation
-    private void fadeInJFrame() {
-        for (float i = 0; i < 1; i += 0.03) {
-            setOpacity(i);
-            try {
-                TimeUnit.MILLISECONDS.sleep(1);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+    public void fadeInJFrame() {
+        if (!fullyBooted) {
+            for (float i = 0; i < 1; i += 0.03) {
+                setOpacity(i);
+                try {
+                    TimeUnit.MILLISECONDS.sleep(1);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+            setOpacity(1);
+            fullyBooted = true;
         }
-        setOpacity(1);
-        fullyBooted = true;
     }
 
     // Fade out animation
-    private void fadeOutJFrame() {
-        for (float i = 1; i > 0; i -= 0.03) {
-            setOpacity(i);
-            try {
-                TimeUnit.MILLISECONDS.sleep(1);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+    public void fadeOutJFrame() {
+        if (fullyBooted) {            
+            fullyBooted = false;
+            for (float i = 1; i > 0; i -= 0.03) {
+                setOpacity(i);
+                try {
+                    TimeUnit.MILLISECONDS.sleep(1);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
@@ -377,7 +405,7 @@ public class MainFrame extends JFrame {
             numberOfGames = gameLabels.size() + 1;
 
             // Create new GameLabel object
-            GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), gameName), this);
+            GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), gameName, frameScale), this);
             gameLabels.add(gameLabel);
 
             // Add gameLabel to gameGridPanel
@@ -397,6 +425,7 @@ public class MainFrame extends JFrame {
     private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
     private ArrayList<GameLabel> gameLabels = new ArrayList<>();
     private int numberOfGames = 0;
+    private double frameScale = 0.7;
     private String gameName, titleText = "Game Organizer";
     private Font customFont;
 }

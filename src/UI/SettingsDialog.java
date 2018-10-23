@@ -4,6 +4,9 @@
 package UI;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Hashtable;
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 
@@ -52,6 +55,44 @@ public class SettingsDialog extends JDialog {
         removeExcessChooserTabs(shadowColorChooser);
         shadowColorChooser.getSelectionModel().addChangeListener(e -> doSetShadowColor());
 
+        // JSliders
+        frameScaleSlider = new JSlider(5, 15, (int) (mainFrame.getFrameScale() * 10));
+        Hashtable sliderTable = new Hashtable();
+        for (int i = 5; i < 16; i++) {
+            sliderTable.put(i,new JLabel(String.valueOf((double) i / 10)));
+        }
+        frameScaleSlider.setLabelTable(sliderTable);
+        frameScaleSlider.setPaintLabels(true);
+        frameScaleSlider.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                // Make a new thread for repainting
+                Thread repaintingThread = new Thread(() -> {
+                    mainFrame.fadeOutJFrame();
+                    doSetFrameScale((double) frameScaleSlider.getValue() / 10);
+                    mainFrame.fadeInJFrame();
+                });
+                repaintingThread.start();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent me) {
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent me) {
+            }
+        });
+
         // JButtons
         disableBorderButton = new JButton("Remove Border");
         disableBorderButton.setBackground(new Color(209, 209, 209));
@@ -98,7 +139,7 @@ public class SettingsDialog extends JDialog {
         } else {
             radioHasShadowFalse.setSelected(true);
         }
-        
+
         radioFocusingTrue = new JRadioButton("Yes");
         radioFocusingTrue.addActionListener(e -> doEnableFocusing());
 
@@ -119,7 +160,7 @@ public class SettingsDialog extends JDialog {
         ButtonGroup radioButtons2 = new ButtonGroup();
         radioButtons2.add(radioHasShadowTrue);
         radioButtons2.add(radioHasShadowFalse);
-        
+
         ButtonGroup radioButtons3 = new ButtonGroup();
         radioButtons3.add(radioFocusingTrue);
         radioButtons3.add(radioFocusingFalse);
@@ -140,15 +181,15 @@ public class SettingsDialog extends JDialog {
         radioShadowPanel = new JPanel(new FlowLayout());
         radioShadowPanel.add(radioHasShadowTrue);
         radioShadowPanel.add(radioHasShadowFalse);
-        
+
         radioFocusingPanel = new JPanel(new FlowLayout());
         radioFocusingPanel.add(radioFocusingTrue);
         radioFocusingPanel.add(radioFocusingFalse);
-        
+
         shadowPanel = new JPanel(new BorderLayout());
         shadowPanel.add(new JLabel(" Use drop shadow on main window: "), BorderLayout.WEST);
         shadowPanel.add(radioShadowPanel, BorderLayout.EAST);
-        
+
         focusingPanel = new JPanel(new BorderLayout());
         focusingPanel.add(new JLabel(" Dim the games that are not focused: "), BorderLayout.WEST);
         focusingPanel.add(radioFocusingPanel, BorderLayout.EAST);
@@ -157,11 +198,16 @@ public class SettingsDialog extends JDialog {
         gameAutoExitPanel.add(new JLabel(" Exit GameOrganizer after a game is launched: "), BorderLayout.WEST);
         gameAutoExitPanel.add(radioAutoExitPanel, BorderLayout.EAST);
 
-        middlePanel = new JPanel(new GridLayout(4, 1));
+        sliderPanel = new JPanel(new BorderLayout());
+        sliderPanel.add(new JLabel(" Window Scale:     "), BorderLayout.WEST);
+        sliderPanel.add(frameScaleSlider, BorderLayout.CENTER);
+
+        middlePanel = new JPanel(new GridLayout(5, 1));
         middlePanel.add(shadowPanel);
         middlePanel.add(focusingPanel);
         middlePanel.add(gameAutoExitPanel);
         middlePanel.add(titleSettingsPanel);
+        middlePanel.add(sliderPanel);
 
         centerPanel = new JPanel(new GridLayout(5, 1));
         centerPanel.add(barColorChooser);
@@ -184,7 +230,11 @@ public class SettingsDialog extends JDialog {
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Set JDialog parameters
-        setSize(440, 850);
+        int height = 870;
+        if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 870) {
+            height *= mainFrame.getFrameScale();
+        }
+        setSize(440, height);
         setTitle("Program Settings");
         setResizable(false);
         setLocationRelativeTo(null);
@@ -244,7 +294,7 @@ public class SettingsDialog extends JDialog {
     private void doSetBackgroundColor() {
         mainFrame.setBackgroundColor(backgroundColorChooser.getColor());
     }
-    
+
     // Set the new shadow color
     private void doSetShadowColor() {
         mainFrame.setHasShadow(true);
@@ -279,22 +329,37 @@ public class SettingsDialog extends JDialog {
         mainFrame.setHasShadow(false);
         mainFrame.paintShadow();
     }
-    
+
     // Enable focusing
-    private void doEnableFocusing () {
+    private void doEnableFocusing() {
         mainFrame.setFocusing(true);
         mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
     }
-    
+
     // Disable focusing
-    private void doDisableFocusing () {
+    private void doDisableFocusing() {
         mainFrame.setFocusing(false);
+    }
+
+    // Set main window's frame scale
+    private void doSetFrameScale(double frameScale) {
+        if (mainFrame.isFullyBooted()) {
+            while (mainFrame.isFullyBooted()) {
+            }
+        }
+        int height = 870;
+        if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 870) {
+            height *= mainFrame.getFrameScale();
+        }
+        setSize(440, height);
+        mainFrame.setFrameScale(frameScale);
         mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
     }
-            
+
     // Fields
-    private JPanel centerPanel, bottomPanel, titleSettingsPanel, completeSettingsPanel, gameAutoExitPanel, shadowPanel, middlePanel, focusingPanel, radioAutoExitPanel, radioShadowPanel, radioFocusingPanel;
+    private JPanel centerPanel, bottomPanel, titleSettingsPanel, completeSettingsPanel, gameAutoExitPanel, shadowPanel, middlePanel, focusingPanel, radioAutoExitPanel, radioShadowPanel, radioFocusingPanel, sliderPanel;
     private JColorChooser barColorChooser, buttonColorChooser, borderColorChooser, backgroundColorChooser, shadowColorChooser;
+    private JSlider frameScaleSlider;
     private JButton disableBorderButton, revertDefaultsButton, changeSpacingOption, changeTitleButton;
     private JRadioButton radioAutoExitTrue, radioAutoExitFalse, radioHasShadowTrue, radioHasShadowFalse, radioFocusingTrue, radioFocusingFalse;
     private JTextField titleField;
