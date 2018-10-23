@@ -4,10 +4,8 @@
 package UI;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
-import javax.swing.event.*;
 
 /**
  * Creates the Settings Panel which can manipulate the program's look
