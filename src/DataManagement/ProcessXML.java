@@ -57,7 +57,7 @@ public class ProcessXML {
 
                 // Icon elements
                 Element gameicon = doc.createElement("Icon");
-                gameicon.appendChild(doc.createTextNode(mainFrame.getGameLabels().get(i).getGame().getGameIcon().toString()));
+                gameicon.appendChild(doc.createTextNode(mainFrame.getGameLabels().get(i).getGame().getGameIconPath()));
                 game.appendChild(gameicon);
 
                 // Exe locaiton elements
@@ -198,7 +198,7 @@ public class ProcessXML {
                     String name = ((Element) gamesList.item(i)).getElementsByTagName("Name").item(0).getTextContent();
                     String icon = ((Element) gamesList.item(i)).getElementsByTagName("Icon").item(0).getTextContent();
                     String path = ((Element) gamesList.item(i)).getElementsByTagName("Path").item(0).getTextContent();
-                    GameLabel gameLabel = new GameLabel(new Game(new ImageIcon(icon), path, name), mainFrame);
+                    GameLabel gameLabel = new GameLabel(new Game(icon, path, name), mainFrame);
                     gameLabels.add(gameLabel);
                 }
                 

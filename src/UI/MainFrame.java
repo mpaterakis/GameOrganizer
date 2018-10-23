@@ -377,7 +377,7 @@ public class MainFrame extends JFrame {
             numberOfGames = gameLabels.size() + 1;
 
             // Create new GameLabel object
-            GameLabel gameLabel = new GameLabel(new Game(new ImageIcon(iconFile), files[0].getAbsoluteFile().getAbsolutePath(), gameName), this);
+            GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), gameName), this);
             gameLabels.add(gameLabel);
 
             // Add gameLabel to gameGridPanel

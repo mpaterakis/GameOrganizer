@@ -39,7 +39,7 @@ public class GameSettingsDialog extends JDialog {
         // JTextFields
         nameField = new JTextField(game.getGameName());
         pathField = new JTextField(game.getGamePath());
-        iconField = new JTextField(game.getGameIcon().toString());
+        iconField = new JTextField(game.getGameIconPath());
         orderField = new JTextField(Integer.toString(getGameOrderNumber()));
         orderField.setHorizontalAlignment((int) JTextField.CENTER_ALIGNMENT);
         orderField.setEditable(false);
@@ -179,7 +179,7 @@ public class GameSettingsDialog extends JDialog {
     // Apply the data from the textfields to the game instance
     private void doOk() {
         game.setGameName(nameField.getText());
-        game.setGameIcon(new ImageIcon(iconField.getText()));
+        game.setGameIconPath(iconField.getText());
         game.setGamePath(pathField.getText());
         dispose();
     }
