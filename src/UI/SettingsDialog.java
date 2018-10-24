@@ -59,38 +59,16 @@ public class SettingsDialog extends JDialog {
         frameScaleSlider = new JSlider(5, 15, (int) (mainFrame.getFrameScale() * 10));
         Hashtable sliderTable = new Hashtable();
         for (int i = 5; i < 16; i++) {
-            sliderTable.put(i,new JLabel(String.valueOf((double) i / 10)));
+            sliderTable.put(i, new JLabel(String.valueOf((double) i / 10)));
         }
         frameScaleSlider.setLabelTable(sliderTable);
         frameScaleSlider.setPaintLabels(true);
-        frameScaleSlider.addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseReleased(MouseEvent me) {
-                // Make a new thread for repainting
-                Thread repaintingThread = new Thread(() -> {
-                    mainFrame.fadeOutJFrame();
-                    doSetFrameScale((double) frameScaleSlider.getValue() / 10);
-                    mainFrame.fadeInJFrame();
-                });
-                repaintingThread.start();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent me) {
-            }
-            
-            @Override
-            public void mouseClicked(MouseEvent me) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent me) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent me) {
-            }
+        frameScaleSlider.addChangeListener(e -> {
+            // Make a new thread for repainting
+            Thread repaintingThread = new Thread(() -> {
+                doSetFrameScale((double) frameScaleSlider.getValue() / 10);
+            });
+            repaintingThread.start();
         });
 
         // JButtons
@@ -343,10 +321,6 @@ public class SettingsDialog extends JDialog {
 
     // Set main window's frame scale
     private void doSetFrameScale(double frameScale) {
-        if (mainFrame.isFullyBooted()) {
-            while (mainFrame.isFullyBooted()) {
-            }
-        }
         int height = 870;
         if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 870) {
             height *= mainFrame.getFrameScale();
