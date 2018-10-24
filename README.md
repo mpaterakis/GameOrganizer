@@ -5,9 +5,11 @@ Features:
 * Can use up to 9 different games
 * Total color customization
 * 2 different spacing modes
+* Rescalable window
 * Customizable window title
 * Customizable shadow
 * Customizable grid order
+* Option to dim the non-focused game tiles
 * Option to exit GameOrganizer after a game is launched
 * Allows editing of all the game data after the game is added
 
