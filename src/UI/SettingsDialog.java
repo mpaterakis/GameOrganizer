@@ -4,8 +4,6 @@
 package UI;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Hashtable;
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
