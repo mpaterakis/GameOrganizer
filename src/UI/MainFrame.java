@@ -120,8 +120,8 @@ public class MainFrame extends JFrame {
         // If screen is too small, adjust the frame scale
         int height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         int width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-        if (height < 870 || width < 890) {
-            setFrameScale(Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 870);
+        if ((height < 870 || width < 890) && getFrameScale() > Toolkit.getDefaultToolkit().getScreenSize().getHeight()/870) {
+            setFrameScale(Toolkit.getDefaultToolkit().getScreenSize().getHeight()/870);
         }
 
         setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
