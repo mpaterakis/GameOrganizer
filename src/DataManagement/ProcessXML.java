@@ -149,6 +149,16 @@ public class ProcessXML {
             Element frameScale = doc.createElement("FrameScale");
             frameScale.appendChild(doc.createTextNode(String.valueOf(mainFrame.getFrameScale())));
             subElement2.appendChild(frameScale);
+            
+            // Window position X
+            Element windowPosX = doc.createElement("WindowPositionX");
+            windowPosX.appendChild(doc.createTextNode(String.valueOf(mainFrame.getLocation().getX())));
+            subElement2.appendChild(windowPosX);
+            
+            // Window position Y
+            Element windowPosY = doc.createElement("WindowPositionY");
+            windowPosY.appendChild(doc.createTextNode(String.valueOf(mainFrame.getLocation().getY())));
+            subElement2.appendChild(windowPosY);
 
             // Write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -194,6 +204,8 @@ public class ProcessXML {
                 String autoExit = document.getElementsByTagName("AutoExit").item(0).getTextContent();
                 String focusing = document.getElementsByTagName("Focusing").item(0).getTextContent();
                 String windowTitle = document.getElementsByTagName("WindowTitle").item(0).getTextContent();
+                double windowPosX = Double.valueOf(document.getElementsByTagName("WindowPositionX").item(0).getTextContent());
+                double windowPosY = Double.valueOf(document.getElementsByTagName("WindowPositionY").item(0).getTextContent());
                 double frameScale = Double.valueOf(document.getElementsByTagName("FrameScale").item(0).getTextContent());
                 NodeList gamesList = document.getElementsByTagName("Game");
 
@@ -249,11 +261,13 @@ public class ProcessXML {
                 mainFrame.setShadowColor(new Color(Integer.parseInt(shdClr)));
                 mainFrame.setTitleText(windowTitle);                
                 mainFrame.setFrameScale(frameScale);
+                mainFrame.setLocation((int) windowPosX, (int) windowPosY);
                 
             } else {
                 // If the XML file does not exist, simply draw the gameGridPanel
                 mainFrame.redrawGameGridPanel(new ArrayList<>());
                 mainFrame.setBorderAndSize(true, mainFrame.getBorderColor());
+                mainFrame.setLocationRelativeTo(null);
             }
 
             // Catch exceptions

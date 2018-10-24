@@ -127,7 +127,6 @@ public class MainFrame extends JFrame {
         setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
         paintShadow();
         setOpacity(0);
-        setLocationRelativeTo(null);
         setVisible(true);
         fadeInJFrame();
 
