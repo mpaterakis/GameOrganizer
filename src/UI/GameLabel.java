@@ -78,7 +78,9 @@ public class GameLabel extends JLabel {
                 try {
                     // Launch game if left click is pressed
                     if (OS.isWindows()) {
-                        Runtime.getRuntime().exec("explorer  \"" + game.getGamePath() + "\"");
+                        Runtime.getRuntime().exec("cmd /c \"" + game.getGamePath().charAt(0) 
+                                + ": & cd \"" + (new File(game.getGamePath()).getParentFile()).toString()
+                                +  "\" & start \"\" \"" + (new File(game.getGamePath()).getName()) + "\"\"");
                     } else {
                         Desktop.getDesktop().open(new File(game.getGamePath()));
                     }
