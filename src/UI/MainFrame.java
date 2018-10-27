@@ -12,7 +12,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
-import javafx.stage.Screen;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import org.jdesktop.swingx.JXPanel;
@@ -101,8 +100,23 @@ public class MainFrame extends JFrame {
                 doExit();
             }
         });
+        
+        // KeyListener
+        addKeyListener(new KeyAdapter(){
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // If F5 is pressed, center the main window
+                if (e.getKeyCode() == KeyEvent.VK_F5) {
+                    fadeOutJFrame();
+                    setLocationRelativeTo(null);
+                    fadeInJFrame();
+                }
+            }
+        });
+
 
         // Set JFrame parameters
+        setFocusable(true);
         setResizable(false);
         setTitle("Game Organizer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -388,6 +402,7 @@ public class MainFrame extends JFrame {
     // Open the program's Settings JDialog
     private void doOpenProgramSettings() {
         new SettingsDialog(this);
+        requestFocus();
     }
 
     // Select all of the game's properties after it is dropped
