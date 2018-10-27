@@ -18,5 +18,6 @@ Usage:
 * A prompt asking for a game icon and a game name will follow
 * Right clicking a game's icon opens up the Game's Settings Menu
 * Left clicking a game's icon will launch the game
+* Pressing F5 centers the main window
 
 ***Thanks for downloading this, hope you like it! ;)***
