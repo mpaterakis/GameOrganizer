@@ -30,3 +30,10 @@ Usage:
 * Pressing B on an XBOX Controller exits the program
 
 ***Thanks for downloading this, hope you like it! ;)***
+
+**Also big thanks to:**  
+Darryl Burke (AlphaImageIcon, ComponentMover)  
+Rob Camick (ComponentMover)  
+Robert Harder (FileDrop)  
+Ivan "StrikerX3" Oliveira (JXInput)  
+SwingLabs (SwingX)  
