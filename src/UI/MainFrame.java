@@ -6,6 +6,11 @@ package UI;
 import Plugins.*;
 import DataManagement.ProcessXML;
 import GameOrganizer.Game;
+import com.ivan.xinput.XInputDevice;
+import com.ivan.xinput.enums.XInputAxis;
+import com.ivan.xinput.enums.XInputButton;
+import com.ivan.xinput.exceptions.XInputNotLoadedException;
+import com.ivan.xinput.listener.SimpleXInputDeviceListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -109,6 +114,50 @@ public class MainFrame extends JFrame {
                 doKeyAction(e);
             }
         });
+
+        // XInputDeviceListener
+        try {
+            controller = XInputDevice.getDeviceFor(0);
+            controller.addListener(new SimpleXInputDeviceListener() {
+                @Override
+                public void buttonChanged(XInputButton button, boolean pressed) {
+                    if (pressed) {
+                        System.out.println(button.toString());
+                        doControllerButtonAction(button);
+                    }
+                }
+            });
+
+            // Make a new thread for listening to controller keys, if controller is connected
+            if (controller.poll()) {
+                Thread listenToControllerThread = new Thread(() -> {
+                    long timeSinceLastAnalogAction = System.currentTimeMillis();
+                    while (true) {
+                        if (System.currentTimeMillis() - timeSinceLastAnalogAction > 200) {
+                            if (controller.getComponents().getAxes().get(XInputAxis.LEFT_THUMBSTICK_X) > 0.9) {
+                                doControllerButtonAction(XInputButton.DPAD_RIGHT);
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                            } else if (controller.getComponents().getAxes().get(XInputAxis.LEFT_THUMBSTICK_X) < -0.8) {
+                                doControllerButtonAction(XInputButton.DPAD_LEFT);
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                            }
+                            if (controller.getComponents().getAxes().get(XInputAxis.LEFT_THUMBSTICK_Y) > 0.8) {
+                                doControllerButtonAction(XInputButton.DPAD_UP);
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                            } else if (controller.getComponents().getAxes().get(XInputAxis.LEFT_THUMBSTICK_Y) < -0.8) {
+                                doControllerButtonAction(XInputButton.DPAD_DOWN);
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                            }
+                        }
+                        controller.poll();
+                    }
+                });
+                listenToControllerThread.start();
+            }
+
+        } catch (XInputNotLoadedException ex) {
+            // Do nothing, controller functions will be disabled
+        }
 
         // Set JFrame parameters
         setFocusable(true);
@@ -270,6 +319,14 @@ public class MainFrame extends JFrame {
         }
     }
 
+    public JLabel getFocusedGameLabel() {
+        return focusedGameLabel;
+    }
+
+    public void setFocusedGameLabel(GameLabel focusedGameLabel) {
+        this.focusedGameLabel = focusedGameLabel;
+    }
+
     // Custom functions
     // Redraw the GridLayout with filled blank tiles
     public void redrawGameGridPanel(ArrayList<GameLabel> gameLabels) {
@@ -396,7 +453,7 @@ public class MainFrame extends JFrame {
 
     // Open the program's Settings JDialog
     private void doOpenProgramSettings() {
-        new SettingsDialog(this);        
+        new SettingsDialog(this);
         requestFocus();
     }
 
@@ -427,31 +484,162 @@ public class MainFrame extends JFrame {
 
     // Changes the main window's appearance according to each keypress
     private void doKeyAction(KeyEvent e) {
-        
+
         // If F5 is pressed, center the main window
         if (e.getKeyCode() == KeyEvent.VK_F5) {
-            fadeOutJFrame();
-            setLocationRelativeTo(null);
-            fadeInJFrame();
-        } 
-
-        // If + is pressed, increase the window's scale
+            centerWindow();
+        } // If + is pressed, increase the window's scale
         else if (e.getKeyCode() == KeyEvent.VK_ADD) {
-            if (frameScale < 1.5) {
-                fadeOutJFrame();
-                frameScale += 0.1;
-                setFrameScale(frameScale);
-                fadeInJFrame();
-            }
-        }
-
-        // If - is pressed, decrease the window's scale
+            increaseScale();
+        } // If - is pressed, decrease the window's scale
         else if (e.getKeyCode() == KeyEvent.VK_SUBTRACT) {
-            if (frameScale > 0.5) {
-                fadeOutJFrame();
-                frameScale -= 0.1;
-                setFrameScale(frameScale);
-                fadeInJFrame();
+            decreaseScale();
+        } // If Enter is pressed, launch the focused game
+        else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (focusedGameLabel != null) {
+                focusedGameLabel.launchGame();
+            }
+        } // If an arrow key is pressed, navigate through the tiles
+        else if (e.getKeyCode() == KeyEvent.VK_UP) {
+            changeFocusedGamelabel(-3);
+        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            changeFocusedGamelabel(3);
+        } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            changeFocusedGamelabel(-1);
+        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            changeFocusedGamelabel(1);
+        }
+    }
+
+    // (Re)Center main window
+    public void centerWindow() {
+        fadeOutJFrame();
+        setLocationRelativeTo(null);
+        fadeInJFrame();
+    }
+
+    // Decrease the window's scale
+    public void decreaseScale() {
+        if (frameScale > 0.5) {
+            fadeOutJFrame();
+            frameScale -= 0.1;
+            setFrameScale(frameScale);
+            fadeInJFrame();
+        }
+    }
+
+    // Increase the window's scale
+    public void increaseScale() {
+        if (frameScale < 1.5) {
+            fadeOutJFrame();
+            frameScale += 0.1;
+            setFrameScale(frameScale);
+            fadeInJFrame();
+        }
+    }
+
+    // Navigate the menu according to each controller button press
+    private void doControllerButtonAction(XInputButton button) {
+        switch (button.toString()) {
+
+            // If A is pressed, launch the focused game
+            case "A": {
+                if (focusedGameLabel != null) {
+                    focusedGameLabel.launchGame();
+                }
+                break;
+            }
+
+            // If B is pressed, exit the program
+            case "B": {
+                doExit();
+                break;
+            }
+
+            // If Y is pressed, center the main window
+            case "Y": {
+                centerWindow();
+                break;
+            }
+
+            // If LT is pressed, decrease the window's scale
+            //case "" XInputAxis.LEFT_THUMBSTICK_X
+            case "LEFT_SHOULDER": {
+                decreaseScale();
+                break;
+            }
+
+            // If RT is pressed, increase the window's scale
+            case "RIGHT_SHOULDER": {
+                increaseScale();
+                break;
+            }
+
+            // If a DPAD button is pressed, navigate the gameLabels
+            case "DPAD_LEFT": {
+                changeFocusedGamelabel(-1);
+                break;
+            }
+            case "DPAD_RIGHT": {
+                changeFocusedGamelabel(+1);
+                break;
+            }
+            case "DPAD_UP": {
+                changeFocusedGamelabel(-3);
+                break;
+            }
+            case "DPAD_DOWN": {
+                changeFocusedGamelabel(+3);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    // Changes focused GameLabel
+    private void changeFocusedGamelabel(int indexDelta) {
+        if (getFocusedGameLabel() != null) {
+            for (int i = 0; i < gameLabels.size(); i++) {
+                if (focusedGameLabel == gameLabels.get(i) && i + indexDelta >= 0 && i + indexDelta < gameLabels.size()) {
+                    gameLabels.get(i + indexDelta).focusOnGameLabel();
+                    break;
+                }
+            }
+        } else {
+            if (!gameLabels.isEmpty()) {
+                switch (indexDelta) {
+                    case 1: {
+                        if (gameLabels.size() >= 2) {
+                            gameLabels.get(2).focusOnGameLabel();
+                        } else {
+                            gameLabels.get(0).focusOnGameLabel();
+                        }
+                        break;
+                    }
+                    case 3: {
+                        if (gameLabels.size() >= 1) {
+                            gameLabels.get(1).focusOnGameLabel();
+                        } else {
+                            gameLabels.get(0).focusOnGameLabel();
+                        }
+                        break;
+                    }
+                    case -3: {
+                        if (gameLabels.size() >= 7) {
+                            gameLabels.get(7).focusOnGameLabel();
+                        } else {
+                            gameLabels.get(0).focusOnGameLabel();
+                        }
+                        break;
+                    }
+                    case -1: {
+                        gameLabels.get(0).focusOnGameLabel();
+                        break;
+                    }
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -465,7 +653,9 @@ public class MainFrame extends JFrame {
     private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
     private ArrayList<GameLabel> gameLabels = new ArrayList<>();
     private int numberOfGames = 0;
-    private double frameScale = 0.7;
+    private double frameScale = 1.0;
     private String gameName, titleText = "Game Organizer";
     private Font customFont;
+    private XInputDevice controller;
+    private GameLabel focusedGameLabel = null;
 }

@@ -41,7 +41,7 @@ public class GameLabel extends JLabel {
             @Override
             public void mousePressed(MouseEvent e) {
                 // Launch the game
-                launchGame(e);
+                manageClick(e);
             }
 
             @Override
@@ -53,7 +53,7 @@ public class GameLabel extends JLabel {
             @Override
             public void mouseExited(MouseEvent e) {
                 // Regain focus of all game
-                resetGameLabelFocus();
+                resetGameLabelFocus(mainFrame);
             }
         });
 
@@ -66,32 +66,37 @@ public class GameLabel extends JLabel {
         return game;
     }
 
-    // Custom methods    
-    // Launch game if click was on the image
-    private void launchGame(MouseEvent e) {
+    // Custom methods
+    // Launch game
+    public void launchGame() {
+        try {
+            // Launch game if left click is pressed
+            if (OS.isWindows()) {
+                Runtime.getRuntime().exec("cmd /c \"" + game.getGamePath().charAt(0)
+                        + ": & cd \"" + (new File(game.getGamePath()).getParentFile()).toString()
+                        + "\" & start \"\" \"" + (new File(game.getGamePath()).getName()) + "\"\"");
+            } else {
+                Desktop.getDesktop().open(new File(game.getGamePath()));
+            }
+
+            // If autoExit is set, close the program
+            if (mainFrame.getAutoExit()) {
+                mainFrame.doExit();
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error opening file", "File Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Manage the click that was issued and make an action
+    private void manageClick(MouseEvent e) {
         // Check if the click was not outside the image
         Point p = e.getPoint();
         int clickX = (int) p.getX();
         int clickY = (int) p.getY();
         if ((mainFrame.hasSpace() && clickX < 256 && clickY < 263 && clickY > 6) || (!mainFrame.hasSpace() && clickX < 256 && clickY < 263)) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                try {
-                    // Launch game if left click is pressed
-                    if (OS.isWindows()) {
-                        Runtime.getRuntime().exec("cmd /c \"" + game.getGamePath().charAt(0) 
-                                + ": & cd \"" + (new File(game.getGamePath()).getParentFile()).toString()
-                                +  "\" & start \"\" \"" + (new File(game.getGamePath()).getName()) + "\"\"");
-                    } else {
-                        Desktop.getDesktop().open(new File(game.getGamePath()));
-                    }
-
-                    // If autoExit is set, close the program
-                    if (mainFrame.getAutoExit()) {
-                        mainFrame.doExit();
-                    }
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "Error opening file", "File Error", JOptionPane.ERROR_MESSAGE);
-                }
+                launchGame();
 
             } else if (e.getButton() == MouseEvent.BUTTON3) {
 
@@ -105,7 +110,7 @@ public class GameLabel extends JLabel {
     }
 
     // Focus on this game by making the rest of the window transparent
-    private void focusOnGameLabel() {
+    public void focusOnGameLabel() {
         if (mainFrame.usesFocusing()) {
             // Wait for the main window to fully load
             while (!mainFrame.isFullyBooted()) {
@@ -120,15 +125,18 @@ public class GameLabel extends JLabel {
                     mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon(), 0.5f));
                 }
             }
+            setIcon(new AlphaImageIcon(getGame().getGameIcon(), 1.0f));
+            mainFrame.setFocusedGameLabel(this);
         }
     }
 
     // Reset focus of all the GameLabels
-    private void resetGameLabelFocus() {
+    public static void resetGameLabelFocus(MainFrame mainFrame) {
         if (mainFrame.usesFocusing()) {
             for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
                 mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon(), 1.0f));
             }
+            mainFrame.setFocusedGameLabel(null);
         }
     }
 
