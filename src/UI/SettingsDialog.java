@@ -4,6 +4,8 @@
 package UI;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Hashtable;
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
@@ -204,12 +206,22 @@ public class SettingsDialog extends JDialog {
         // Add JPanel
         add(completeSettingsPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
-
+        
+        // Add KeyListener
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // Change the main window's appearance according to each keypress
+                doKeyAction(e);
+            }
+        });
+        
         // Set JDialog parameters
         int height = 870;
         if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 870) {
             height *= mainFrame.getFrameScale();
         }
+        setFocusable(true);
         setSize(440, height);
         setTitle("Program Settings");
         setResizable(false);
@@ -326,6 +338,34 @@ public class SettingsDialog extends JDialog {
         setSize(440, height);
         mainFrame.setFrameScale(frameScale);
         mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
+    }
+    
+    // Changes the main window's appearance according to each keypress
+    private void doKeyAction(KeyEvent e) {
+        
+        // If F5 is pressed, center the main window
+        if (e.getKeyCode() == KeyEvent.VK_F5) {
+            mainFrame.fadeOutJFrame();
+            setLocationRelativeTo(null);
+            mainFrame.setLocationRelativeTo(null);
+            mainFrame.fadeInJFrame();
+        } 
+
+        // If + is pressed, increase the window's scale
+        else if (e.getKeyCode() == KeyEvent.VK_ADD) {
+            if (mainFrame.getFrameScale() < 1.5) {
+                mainFrame.setFrameScale(mainFrame.getFrameScale() + 0.1);
+                frameScaleSlider.setValue((int) (mainFrame.getFrameScale() * 10));
+            }
+        }
+
+        // If - is pressed, decrease the window's scale
+        else if (e.getKeyCode() == KeyEvent.VK_SUBTRACT) {
+            if (mainFrame.getFrameScale() > 0.5) {
+                mainFrame.setFrameScale(mainFrame.getFrameScale() - 0.1);
+                frameScaleSlider.setValue((int) (mainFrame.getFrameScale() * 10));
+            }
+        }
     }
 
     // Fields

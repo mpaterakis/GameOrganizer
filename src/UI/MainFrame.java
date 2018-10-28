@@ -100,20 +100,15 @@ public class MainFrame extends JFrame {
                 doExit();
             }
         });
-        
+
         // KeyListener
-        addKeyListener(new KeyAdapter(){
+        addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                // If F5 is pressed, center the main window
-                if (e.getKeyCode() == KeyEvent.VK_F5) {
-                    fadeOutJFrame();
-                    setLocationRelativeTo(null);
-                    fadeInJFrame();
-                }
+                // Change the main window's appearance according to each keypress
+                doKeyAction(e);
             }
         });
-
 
         // Set JFrame parameters
         setFocusable(true);
@@ -134,8 +129,8 @@ public class MainFrame extends JFrame {
         // If screen is too small, adjust the frame scale
         int height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         int width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-        if ((height < 870 || width < 890) && getFrameScale() > Toolkit.getDefaultToolkit().getScreenSize().getHeight()/870) {
-            setFrameScale(Toolkit.getDefaultToolkit().getScreenSize().getHeight()/870);
+        if ((height < 870 || width < 890) && getFrameScale() > Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 870) {
+            setFrameScale(Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 870);
         }
 
         setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
@@ -371,7 +366,7 @@ public class MainFrame extends JFrame {
 
     // Fade out animation
     public void fadeOutJFrame() {
-        if (fullyBooted) {            
+        if (fullyBooted) {
             fullyBooted = false;
             for (float i = 1; i > 0; i -= 0.03) {
                 setOpacity(i);
@@ -401,7 +396,7 @@ public class MainFrame extends JFrame {
 
     // Open the program's Settings JDialog
     private void doOpenProgramSettings() {
-        new SettingsDialog(this);
+        new SettingsDialog(this);        
         requestFocus();
     }
 
@@ -427,6 +422,37 @@ public class MainFrame extends JFrame {
 
             // Redraw the gameGridPanel
             redrawGameGridPanel(gameLabels);
+        }
+    }
+
+    // Changes the main window's appearance according to each keypress
+    private void doKeyAction(KeyEvent e) {
+        
+        // If F5 is pressed, center the main window
+        if (e.getKeyCode() == KeyEvent.VK_F5) {
+            fadeOutJFrame();
+            setLocationRelativeTo(null);
+            fadeInJFrame();
+        } 
+
+        // If + is pressed, increase the window's scale
+        else if (e.getKeyCode() == KeyEvent.VK_ADD) {
+            if (frameScale < 1.5) {
+                fadeOutJFrame();
+                frameScale += 0.1;
+                setFrameScale(frameScale);
+                fadeInJFrame();
+            }
+        }
+
+        // If - is pressed, decrease the window's scale
+        else if (e.getKeyCode() == KeyEvent.VK_SUBTRACT) {
+            if (frameScale > 0.5) {
+                fadeOutJFrame();
+                frameScale -= 0.1;
+                setFrameScale(frameScale);
+                fadeInJFrame();
+            }
         }
     }
 
