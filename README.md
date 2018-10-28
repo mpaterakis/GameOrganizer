@@ -21,5 +21,12 @@ Usage:
 * Pressing F5 centers the main window
 * Pressing Add (+) increases the main window's scale
 * Pressing Subtract (-) decreases the main window's scale
+* Pressing any Arrow key navigates through the games
+* Pressing A on an XBOX Controller launches the focused game
+* Pressing any DPAD button on an XBOX Controller navigates through the games
+* Pressing RT on an XBOX Controller increases the main window's scale
+* Pressing LT on an XBOX Controller decreases the main window's scale
+* Pressing Y on an XBOX Controller centers the main window
+* Pressing B on an XBOX Controller exits the program
 
 ***Thanks for downloading this, hope you like it! ;)***
