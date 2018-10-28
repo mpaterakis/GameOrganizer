@@ -19,5 +19,7 @@ Usage:
 * Right clicking a game's icon opens up the Game's Settings Menu
 * Left clicking a game's icon will launch the game
 * Pressing F5 centers the main window
+* Pressing Add (+) increases the main window's scale
+* Pressing Subtract (-) decreases the main window's scale
 
 ***Thanks for downloading this, hope you like it! ;)***
