@@ -119,4 +119,21 @@ public class ExtraDialogs {
             }
         }
     }
+    
+    // Creates a dialog for picking a color
+    public static void createColorPicker(JColorChooser picker) {
+        
+        // Set up JPanel
+        JDialog colorPickerDialog = new JDialog();
+        JPanel mainPanel = new JPanel();
+        mainPanel.add(picker);
+        colorPickerDialog.setTitle(picker.getName());
+        
+        colorPickerDialog.add(picker);
+        colorPickerDialog.setModal(true);
+        colorPickerDialog.pack();
+        colorPickerDialog.setLocationRelativeTo(null);
+        colorPickerDialog.setVisible(true);
+//        return picker.getColor();
+    }
 }

@@ -31,12 +31,14 @@ public class SettingsDialog extends JDialog {
         // Color Choosers
         barColorChooser = new JColorChooser();
         barColorChooser.setBorder(BorderFactory.createTitledBorder("Bar Color"));
+        barColorChooser.setName("Bar Color");
         barColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(barColorChooser);
         barColorChooser.getSelectionModel().addChangeListener(e -> doSetBarColor());
 
         buttonColorChooser = new JColorChooser();
         buttonColorChooser.setBorder(BorderFactory.createTitledBorder("Bar Buttons Color"));
+        buttonColorChooser.setName("Bar Buttons Color");
         buttonColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(buttonColorChooser);
         buttonColorChooser.getSelectionModel().addChangeListener(e -> doSetButtonColor());
@@ -45,18 +47,21 @@ public class SettingsDialog extends JDialog {
         borderColorChooser.setColor(mainFrame.getBorderColor());
         System.out.println(mainFrame.getBorderColor());
         borderColorChooser.setBorder(BorderFactory.createTitledBorder("Window Border Color"));
+        borderColorChooser.setName("Window Border Color");
         borderColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(borderColorChooser);
         borderColorChooser.getSelectionModel().addChangeListener(e -> doSetBorderColor());
 
         backgroundColorChooser = new JColorChooser();
         backgroundColorChooser.setBorder(BorderFactory.createTitledBorder("Background Color"));
+        backgroundColorChooser.setName("Background Color");
         backgroundColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(backgroundColorChooser);
         backgroundColorChooser.getSelectionModel().addChangeListener(e -> doSetBackgroundColor());
 
         shadowColorChooser = new JColorChooser();
         shadowColorChooser.setBorder(BorderFactory.createTitledBorder("Shadow Color"));
+        shadowColorChooser.setName("Shadow Color");
         shadowColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(shadowColorChooser);
         shadowColorChooser.getSelectionModel().addChangeListener(e -> doSetShadowColor());
@@ -113,6 +118,31 @@ public class SettingsDialog extends JDialog {
         changeSpacingOption.setFocusPainted(false);
         changeSpacingOption.addActionListener(e -> doChangeSpacing());
 
+        borderColorButton = new JButton("Change Color");
+        borderColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(borderColorChooser));
+        borderColorButton.setBackground(new Color(209, 209, 209));
+        borderColorButton.setFocusPainted(false);
+        
+        shadowColorButton = new JButton("Change Color");
+        shadowColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(shadowColorChooser));
+        shadowColorButton.setBackground(new Color(209, 209, 209));
+        shadowColorButton.setFocusPainted(false);
+        
+        backgroundColorButton = new JButton("Change Background Color");
+        backgroundColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(backgroundColorChooser));
+        backgroundColorButton.setBackground(new Color(209, 209, 209));
+        backgroundColorButton.setFocusPainted(false);
+        
+        barColorButton = new JButton("Change Bar Color");
+        barColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(barColorChooser));
+        barColorButton.setBackground(new Color(209, 209, 209));
+        barColorButton.setFocusPainted(false);
+        
+        buttonsColorButton = new JButton("Change Bar Buttons Color");
+        buttonsColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(buttonColorChooser));
+        buttonsColorButton.setBackground(new Color(209, 209, 209));
+        buttonsColorButton.setFocusPainted(false);
+
         // JCheckBoxes
         autoExitCheckbox = new JCheckBox();
         autoExitCheckbox.setSelected(mainFrame.getAutoExit());
@@ -133,7 +163,7 @@ public class SettingsDialog extends JDialog {
                 doDisableFocusing();
             }
         });
-        
+
         hasShadowCheckbox = new JCheckBox();
         hasShadowCheckbox.setSelected(mainFrame.hasShadow());
         hasShadowCheckbox.addActionListener(e -> {
@@ -143,7 +173,7 @@ public class SettingsDialog extends JDialog {
                 doDisableShadow();
             }
         });
-        
+
         hasBorderCheckBox = new JCheckBox();
         hasBorderCheckBox.setSelected(mainFrame.hasBorder());
         hasBorderCheckBox.addActionListener(e -> {
@@ -158,32 +188,44 @@ public class SettingsDialog extends JDialog {
         titleField = new JTextField(mainFrame.getTitleText());
 
         // JPanels
+        spareColorButtonsPanel = new JPanel(new FlowLayout());
+        spareColorButtonsPanel.add(barColorButton);
+        spareColorButtonsPanel.add(buttonsColorButton);
+        spareColorButtonsPanel.add(backgroundColorButton);
+        
         titleSettingsPanel = new JPanel(new BorderLayout());
-        titleSettingsPanel.add(new JLabel(" Window Title: "), BorderLayout.WEST);
+        titleSettingsPanel.add(new JLabel("  Window Title: "), BorderLayout.WEST);
         titleSettingsPanel.add(titleField, BorderLayout.CENTER);
         titleSettingsPanel.add(changeTitleButton, BorderLayout.EAST);
 
+        shadowButtonsPanel = new JPanel(new FlowLayout());
+        shadowButtonsPanel.add(hasShadowCheckbox);
+        shadowButtonsPanel.add(shadowColorButton);
         shadowPanel = new JPanel(new BorderLayout());
-        shadowPanel.add(new JLabel(" Use drop shadow on main window: "), BorderLayout.WEST);
-        shadowPanel.add(hasShadowCheckbox, BorderLayout.EAST);
-        
+        shadowPanel.add(new JLabel("  Use drop shadow on main window: "), BorderLayout.WEST);
+        shadowPanel.add(shadowButtonsPanel, BorderLayout.EAST);
+
+        borderButtonsPanel = new JPanel(new FlowLayout());
+        borderButtonsPanel.add(hasBorderCheckBox);
+        borderButtonsPanel.add(borderColorButton);
         borderPanel = new JPanel(new BorderLayout());
-        borderPanel.add(new JLabel(" Use border on main window: "), BorderLayout.WEST);
-        borderPanel.add(hasBorderCheckBox, BorderLayout.EAST);
+        borderPanel.add(new JLabel("  Use border on main window: "), BorderLayout.WEST);
+        borderPanel.add(borderButtonsPanel, BorderLayout.EAST);
 
         focusingPanel = new JPanel(new BorderLayout());
-        focusingPanel.add(new JLabel(" Dim the games that are not focused: "), BorderLayout.WEST);
+        focusingPanel.add(new JLabel("  Dim the games that are not focused: "), BorderLayout.WEST);
         focusingPanel.add(hasFocusingCheckbox, BorderLayout.EAST);
 
         gameAutoExitPanel = new JPanel(new BorderLayout());
-        gameAutoExitPanel.add(new JLabel(" Exit GameOrganizer after a game is launched: "), BorderLayout.WEST);
+        gameAutoExitPanel.add(new JLabel("  Exit GameOrganizer after a game is launched: "), BorderLayout.WEST);
         gameAutoExitPanel.add(autoExitCheckbox, BorderLayout.EAST);
 
         sliderPanel = new JPanel(new BorderLayout());
-        sliderPanel.add(new JLabel(" Window Scale:     "), BorderLayout.WEST);
+        sliderPanel.add(new JLabel("  Window Scale:     "), BorderLayout.WEST);
         sliderPanel.add(frameScaleSlider, BorderLayout.CENTER);
 
-        middlePanel = new JPanel(new GridLayout(6, 1));
+        middlePanel = new JPanel(new GridLayout(7, 1));
+        middlePanel.add(spareColorButtonsPanel);
         middlePanel.add(shadowPanel);
         middlePanel.add(borderPanel);
         middlePanel.add(focusingPanel);
@@ -191,23 +233,12 @@ public class SettingsDialog extends JDialog {
         middlePanel.add(titleSettingsPanel);
         middlePanel.add(sliderPanel);
 
-        centerPanel = new JPanel(new GridLayout(5, 1));
-        centerPanel.add(barColorChooser);
-        centerPanel.add(buttonColorChooser);
-        centerPanel.add(borderColorChooser);
-        centerPanel.add(backgroundColorChooser);
-        centerPanel.add(shadowColorChooser);
-
-        completeSettingsPanel = new JPanel(new BorderLayout());
-        completeSettingsPanel.add(centerPanel, BorderLayout.CENTER);
-        completeSettingsPanel.add(middlePanel, BorderLayout.SOUTH);
-
         bottomPanel = new JPanel(new FlowLayout());
         bottomPanel.add(changeSpacingOption);
         bottomPanel.add(revertDefaultsButton);
 
         // Add JPanel
-        add(completeSettingsPanel, BorderLayout.CENTER);
+        add(middlePanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Add KeyListener
@@ -219,13 +250,8 @@ public class SettingsDialog extends JDialog {
             }
         });
 
-        // Set JDialog parameters
-        int height = 900;
-        if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 900) {
-            height *= mainFrame.getFrameScale();
-        }
         setFocusable(true);
-        setSize(440, height);
+        setSize(580, 310);
         setTitle("Program Settings");
         setResizable(false);
         setLocationRelativeTo(null);
@@ -334,11 +360,6 @@ public class SettingsDialog extends JDialog {
 
     // Set main window's frame scale
     private void doSetFrameScale(double frameScale) {
-        int height = 900;
-        if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 900) {
-            height *= mainFrame.getFrameScale();
-        }
-        setSize(440, height);
         mainFrame.setFrameScale(frameScale);
         mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
     }
@@ -383,10 +404,10 @@ public class SettingsDialog extends JDialog {
     }
 
     // Fields
-    private JPanel centerPanel, bottomPanel, titleSettingsPanel, completeSettingsPanel, gameAutoExitPanel, shadowPanel, middlePanel, focusingPanel, borderPanel, sliderPanel;
+    private JPanel bottomPanel, titleSettingsPanel, gameAutoExitPanel, shadowPanel, shadowButtonsPanel, middlePanel, focusingPanel, borderPanel, borderButtonsPanel, sliderPanel, spareColorButtonsPanel;
     private JColorChooser barColorChooser, buttonColorChooser, borderColorChooser, backgroundColorChooser, shadowColorChooser;
     private JSlider frameScaleSlider;
-    private JButton revertDefaultsButton, changeSpacingOption, changeTitleButton;
+    private JButton revertDefaultsButton, changeSpacingOption, changeTitleButton, borderColorButton, shadowColorButton, buttonsColorButton, barColorButton, backgroundColorButton;
     private JCheckBox autoExitCheckbox, hasShadowCheckbox, hasFocusingCheckbox, hasBorderCheckBox;
     private JTextField titleField;
     private MainFrame mainFrame;
