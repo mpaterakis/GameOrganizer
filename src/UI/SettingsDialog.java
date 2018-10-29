@@ -6,7 +6,11 @@ package UI;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 
@@ -38,6 +42,8 @@ public class SettingsDialog extends JDialog {
         buttonColorChooser.getSelectionModel().addChangeListener(e -> doSetButtonColor());
 
         borderColorChooser = new JColorChooser();
+        borderColorChooser.setColor(mainFrame.getBorderColor());
+        System.out.println(mainFrame.getBorderColor());
         borderColorChooser.setBorder(BorderFactory.createTitledBorder("Window Border Color"));
         borderColorChooser.setPreviewPanel(new JPanel());
         removeExcessChooserTabs(borderColorChooser);
@@ -63,20 +69,34 @@ public class SettingsDialog extends JDialog {
         }
         frameScaleSlider.setLabelTable(sliderTable);
         frameScaleSlider.setPaintLabels(true);
-        frameScaleSlider.addChangeListener(e -> {
-            // Make a new thread for repainting
-            Thread repaintingThread = new Thread(() -> {
-                doSetFrameScale((double) frameScaleSlider.getValue() / 10);
-            });
-            repaintingThread.start();
+        frameScaleSlider.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                // Repaint the new window after resizing it
+                createRepaintThread();
+            }
+        });
+        frameScaleSlider.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent ke) {
+                switch (ke.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        if (mainFrame.getFrameScale() > 0.5) {
+                            mainFrame.setFrameScale(mainFrame.getFrameScale() - 0.1);
+                        }
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        if (mainFrame.getFrameScale() < 1.5) {
+                            mainFrame.setFrameScale(mainFrame.getFrameScale() + 0.1);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
         });
 
         // JButtons
-        disableBorderButton = new JButton("Remove Border");
-        disableBorderButton.setBackground(new Color(209, 209, 209));
-        disableBorderButton.setFocusPainted(false);
-        disableBorderButton.addActionListener(e -> doDisableBorder());
-
         changeTitleButton = new JButton("Change Window Title");
         changeTitleButton.setBackground(new Color(209, 209, 209));
         changeTitleButton.setFocusPainted(false);
@@ -93,55 +113,46 @@ public class SettingsDialog extends JDialog {
         changeSpacingOption.setFocusPainted(false);
         changeSpacingOption.addActionListener(e -> doChangeSpacing());
 
-        // JRadioButtons
-        radioAutoExitTrue = new JRadioButton("Yes");
-        radioAutoExitTrue.addActionListener(e -> doEnableAutoExit());
+        // JCheckBoxes
+        autoExitCheckbox = new JCheckBox();
+        autoExitCheckbox.setSelected(mainFrame.getAutoExit());
+        autoExitCheckbox.addActionListener(e -> {
+            if (autoExitCheckbox.isSelected()) {
+                doEnableAutoExit();
+            } else {
+                doDisableAutoExit();
+            }
+        });
 
-        radioAutoExitFalse = new JRadioButton("No");
-        radioAutoExitFalse.addActionListener(e -> doDisableAutoExit());
-
-        if (mainFrame.getAutoExit()) {
-            radioAutoExitTrue.setSelected(true);
-        } else {
-            radioAutoExitFalse.setSelected(true);
-        }
-
-        radioHasShadowTrue = new JRadioButton("Yes");
-        radioHasShadowTrue.addActionListener(e -> doEnableShadow());
-
-        radioHasShadowFalse = new JRadioButton("No");
-        radioHasShadowFalse.addActionListener(e -> doDisableShadow());
-
-        if (mainFrame.getHasShadow()) {
-            radioHasShadowTrue.setSelected(true);
-        } else {
-            radioHasShadowFalse.setSelected(true);
-        }
-
-        radioFocusingTrue = new JRadioButton("Yes");
-        radioFocusingTrue.addActionListener(e -> doEnableFocusing());
-
-        radioFocusingFalse = new JRadioButton("No");
-        radioFocusingFalse.addActionListener(e -> doDisableFocusing());
-
-        if (mainFrame.usesFocusing()) {
-            radioFocusingTrue.setSelected(true);
-        } else {
-            radioFocusingFalse.setSelected(true);
-        }
-
-        // Add the JRadioButtons in ButtonGroups
-        ButtonGroup radioButtons1 = new ButtonGroup();
-        radioButtons1.add(radioAutoExitTrue);
-        radioButtons1.add(radioAutoExitFalse);
-
-        ButtonGroup radioButtons2 = new ButtonGroup();
-        radioButtons2.add(radioHasShadowTrue);
-        radioButtons2.add(radioHasShadowFalse);
-
-        ButtonGroup radioButtons3 = new ButtonGroup();
-        radioButtons3.add(radioFocusingTrue);
-        radioButtons3.add(radioFocusingFalse);
+        hasFocusingCheckbox = new JCheckBox();
+        hasFocusingCheckbox.setSelected(mainFrame.hasFocusing());
+        hasFocusingCheckbox.addActionListener(e -> {
+            if (hasFocusingCheckbox.isSelected()) {
+                doEnableFocusing();
+            } else {
+                doDisableFocusing();
+            }
+        });
+        
+        hasShadowCheckbox = new JCheckBox();
+        hasShadowCheckbox.setSelected(mainFrame.hasShadow());
+        hasShadowCheckbox.addActionListener(e -> {
+            if (hasShadowCheckbox.isSelected()) {
+                doEnableShadow();
+            } else {
+                doDisableShadow();
+            }
+        });
+        
+        hasBorderCheckBox = new JCheckBox();
+        hasBorderCheckBox.setSelected(mainFrame.hasBorder());
+        hasBorderCheckBox.addActionListener(e -> {
+            if (hasBorderCheckBox.isSelected()) {
+                doSetBorderColor();
+            } else {
+                doDisableBorder();
+            }
+        });
 
         // JTextFields
         titleField = new JTextField(mainFrame.getTitleText());
@@ -152,36 +163,29 @@ public class SettingsDialog extends JDialog {
         titleSettingsPanel.add(titleField, BorderLayout.CENTER);
         titleSettingsPanel.add(changeTitleButton, BorderLayout.EAST);
 
-        radioAutoExitPanel = new JPanel(new FlowLayout());
-        radioAutoExitPanel.add(radioAutoExitTrue);
-        radioAutoExitPanel.add(radioAutoExitFalse);
-
-        radioShadowPanel = new JPanel(new FlowLayout());
-        radioShadowPanel.add(radioHasShadowTrue);
-        radioShadowPanel.add(radioHasShadowFalse);
-
-        radioFocusingPanel = new JPanel(new FlowLayout());
-        radioFocusingPanel.add(radioFocusingTrue);
-        radioFocusingPanel.add(radioFocusingFalse);
-
         shadowPanel = new JPanel(new BorderLayout());
         shadowPanel.add(new JLabel(" Use drop shadow on main window: "), BorderLayout.WEST);
-        shadowPanel.add(radioShadowPanel, BorderLayout.EAST);
+        shadowPanel.add(hasShadowCheckbox, BorderLayout.EAST);
+        
+        borderPanel = new JPanel(new BorderLayout());
+        borderPanel.add(new JLabel(" Use border on main window: "), BorderLayout.WEST);
+        borderPanel.add(hasBorderCheckBox, BorderLayout.EAST);
 
         focusingPanel = new JPanel(new BorderLayout());
         focusingPanel.add(new JLabel(" Dim the games that are not focused: "), BorderLayout.WEST);
-        focusingPanel.add(radioFocusingPanel, BorderLayout.EAST);
+        focusingPanel.add(hasFocusingCheckbox, BorderLayout.EAST);
 
         gameAutoExitPanel = new JPanel(new BorderLayout());
         gameAutoExitPanel.add(new JLabel(" Exit GameOrganizer after a game is launched: "), BorderLayout.WEST);
-        gameAutoExitPanel.add(radioAutoExitPanel, BorderLayout.EAST);
+        gameAutoExitPanel.add(autoExitCheckbox, BorderLayout.EAST);
 
         sliderPanel = new JPanel(new BorderLayout());
         sliderPanel.add(new JLabel(" Window Scale:     "), BorderLayout.WEST);
         sliderPanel.add(frameScaleSlider, BorderLayout.CENTER);
 
-        middlePanel = new JPanel(new GridLayout(5, 1));
+        middlePanel = new JPanel(new GridLayout(6, 1));
         middlePanel.add(shadowPanel);
+        middlePanel.add(borderPanel);
         middlePanel.add(focusingPanel);
         middlePanel.add(gameAutoExitPanel);
         middlePanel.add(titleSettingsPanel);
@@ -199,14 +203,13 @@ public class SettingsDialog extends JDialog {
         completeSettingsPanel.add(middlePanel, BorderLayout.SOUTH);
 
         bottomPanel = new JPanel(new FlowLayout());
-        bottomPanel.add(disableBorderButton);
         bottomPanel.add(changeSpacingOption);
         bottomPanel.add(revertDefaultsButton);
 
         // Add JPanel
         add(completeSettingsPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
-        
+
         // Add KeyListener
         addKeyListener(new KeyAdapter() {
             @Override
@@ -215,10 +218,10 @@ public class SettingsDialog extends JDialog {
                 doKeyAction(e);
             }
         });
-        
+
         // Set JDialog parameters
-        int height = 870;
-        if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 870) {
+        int height = 900;
+        if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 900) {
             height *= mainFrame.getFrameScale();
         }
         setFocusable(true);
@@ -254,8 +257,7 @@ public class SettingsDialog extends JDialog {
     // Set the new border as no border (remove the border)
     private void doDisableBorder() {
         // Change color to an unavailable swatch, needed for stateChanged
-        borderColorChooser.setColor(Color.TRANSLUCENT);
-        mainFrame.setBorderAndSize(false, Color.WHITE);
+        mainFrame.setBorderAndSize(false, mainFrame.getBorderColor());
     }
 
     // This loop removes all tabs except "Swatches" from the colorChooser
@@ -275,6 +277,7 @@ public class SettingsDialog extends JDialog {
 
     // Set the new border color
     private void doSetBorderColor() {
+        hasBorderCheckBox.setSelected(true);
         mainFrame.setBorderAndSize(true, borderColorChooser.getColor());
     }
 
@@ -288,7 +291,7 @@ public class SettingsDialog extends JDialog {
         mainFrame.setHasShadow(true);
         mainFrame.setShadowColor(shadowColorChooser.getColor());
         mainFrame.paintShadow();
-        radioHasShadowTrue.setSelected(true);
+        hasShadowCheckbox.setSelected(true);
     }
 
     // Set the new button color
@@ -331,35 +334,31 @@ public class SettingsDialog extends JDialog {
 
     // Set main window's frame scale
     private void doSetFrameScale(double frameScale) {
-        int height = 870;
-        if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 870) {
+        int height = 900;
+        if (mainFrame.getFrameScale() < 1.0 && Toolkit.getDefaultToolkit().getScreenSize().getHeight() < 900) {
             height *= mainFrame.getFrameScale();
         }
         setSize(440, height);
         mainFrame.setFrameScale(frameScale);
         mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
     }
-    
+
     // Changes the main window's appearance according to each keypress
     private void doKeyAction(KeyEvent e) {
-        
+
         // If F5 is pressed, center the main window
         if (e.getKeyCode() == KeyEvent.VK_F5) {
             mainFrame.fadeOutJFrame();
             setLocationRelativeTo(null);
             mainFrame.setLocationRelativeTo(null);
             mainFrame.fadeInJFrame();
-        } 
-
-        // If + is pressed, increase the window's scale
+        } // If + is pressed, increase the window's scale
         else if (e.getKeyCode() == KeyEvent.VK_ADD) {
             if (mainFrame.getFrameScale() < 1.5) {
                 mainFrame.setFrameScale(mainFrame.getFrameScale() + 0.1);
                 frameScaleSlider.setValue((int) (mainFrame.getFrameScale() * 10));
             }
-        }
-
-        // If - is pressed, decrease the window's scale
+        } // If - is pressed, decrease the window's scale
         else if (e.getKeyCode() == KeyEvent.VK_SUBTRACT) {
             if (mainFrame.getFrameScale() > 0.5) {
                 mainFrame.setFrameScale(mainFrame.getFrameScale() - 0.1);
@@ -368,12 +367,27 @@ public class SettingsDialog extends JDialog {
         }
     }
 
+    // Make a new thread for resizing and repainting the window
+    private void createRepaintThread() {
+        Thread repaintingThread = new Thread(() -> {
+            doSetFrameScale((double) frameScaleSlider.getValue() / 10);
+        });
+        repaintingThread.start();
+        try {
+            synchronized (repaintingThread) {
+                repaintingThread.wait();
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     // Fields
-    private JPanel centerPanel, bottomPanel, titleSettingsPanel, completeSettingsPanel, gameAutoExitPanel, shadowPanel, middlePanel, focusingPanel, radioAutoExitPanel, radioShadowPanel, radioFocusingPanel, sliderPanel;
+    private JPanel centerPanel, bottomPanel, titleSettingsPanel, completeSettingsPanel, gameAutoExitPanel, shadowPanel, middlePanel, focusingPanel, borderPanel, sliderPanel;
     private JColorChooser barColorChooser, buttonColorChooser, borderColorChooser, backgroundColorChooser, shadowColorChooser;
     private JSlider frameScaleSlider;
-    private JButton disableBorderButton, revertDefaultsButton, changeSpacingOption, changeTitleButton;
-    private JRadioButton radioAutoExitTrue, radioAutoExitFalse, radioHasShadowTrue, radioHasShadowFalse, radioFocusingTrue, radioFocusingFalse;
+    private JButton revertDefaultsButton, changeSpacingOption, changeTitleButton;
+    private JCheckBox autoExitCheckbox, hasShadowCheckbox, hasFocusingCheckbox, hasBorderCheckBox;
     private JTextField titleField;
     private MainFrame mainFrame;
 }

@@ -124,7 +124,7 @@ public class ProcessXML {
             
             // HasShadow bool
             Element hasShadow = doc.createElement("HasShadow");
-            if (mainFrame.getHasShadow()) {
+            if (mainFrame.hasShadow()) {
                 hasShadow.appendChild(doc.createTextNode("true"));
             } else {
                 hasShadow.appendChild(doc.createTextNode("false"));
@@ -133,7 +133,7 @@ public class ProcessXML {
             
             // Focusing bool
             Element focusing = doc.createElement("Focusing");
-            if (mainFrame.usesFocusing()) {
+            if (mainFrame.hasFocusing()) {
                 focusing.appendChild(doc.createTextNode("true"));
             } else {
                 focusing.appendChild(doc.createTextNode("false"));

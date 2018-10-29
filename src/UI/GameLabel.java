@@ -111,7 +111,7 @@ public class GameLabel extends JLabel {
 
     // Focus on this game by making the rest of the window transparent
     public void focusOnGameLabel() {
-        if (mainFrame.usesFocusing()) {
+        if (mainFrame.hasFocusing()) {
             // Wait for the main window to fully load
             while (!mainFrame.isFullyBooted()) {
                 try {
@@ -132,7 +132,7 @@ public class GameLabel extends JLabel {
 
     // Reset focus of all the GameLabels
     public static void resetGameLabelFocus(MainFrame mainFrame) {
-        if (mainFrame.usesFocusing()) {
+        if (mainFrame.hasFocusing()) {
             for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
                 mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon(), 1.0f));
             }

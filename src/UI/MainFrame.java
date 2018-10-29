@@ -230,7 +230,7 @@ public class MainFrame extends JFrame {
         return autoExit;
     }
 
-    public boolean getHasShadow() {
+    public boolean hasShadow() {
         return hasShadow;
     }
 
@@ -246,7 +246,7 @@ public class MainFrame extends JFrame {
         return fullyBooted;
     }
 
-    public boolean usesFocusing() {
+    public boolean hasFocusing() {
         return focusing;
     }
 
