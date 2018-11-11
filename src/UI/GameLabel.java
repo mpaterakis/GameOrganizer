@@ -99,7 +99,8 @@ public class GameLabel extends JLabel {
         Point p = e.getPoint();
         int clickX = (int) p.getX();
         int clickY = (int) p.getY();
-        if ((mainFrame.hasSpace() && clickX < 256 && clickY < 263 && clickY > 6) || (!mainFrame.hasSpace() && clickX < 256 && clickY < 263)) {
+        if ((mainFrame.hasSpace() && clickX < 256 * mainFrame.getFrameScale() && clickY < 263 * mainFrame.getFrameScale() && clickY > 6) 
+                || (!mainFrame.hasSpace() && clickX < 256  * mainFrame.getFrameScale() && clickY < 263  * mainFrame.getFrameScale())) {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 launchGame();
 
