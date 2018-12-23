@@ -186,12 +186,12 @@ public class GameSettingsDialog extends JDialog {
 
     // Choose game's path
     private void doChoosePath() {
-        pathField.setText(ExtraDialogs.createGameExePicker());
+        pathField.setText(SpareDialogs.createGameExePicker());
     }
 
     // Choose icon's path
     private void doChooseIcon() {
-        iconField.setText(ExtraDialogs.createGameIconPicker());
+        iconField.setText(SpareDialogs.createGameIconPicker());
     }
 
     // Open parent folder

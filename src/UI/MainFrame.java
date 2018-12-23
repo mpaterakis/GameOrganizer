@@ -122,7 +122,6 @@ public class MainFrame extends JFrame {
                 @Override
                 public void buttonChanged(XInputButton button, boolean pressed) {
                     if (pressed) {
-                        System.out.println(button.toString());
                         doControllerButtonAction(button);
                     }
                 }
@@ -132,7 +131,7 @@ public class MainFrame extends JFrame {
             if (controller.poll()) {
                 Thread listenToControllerThread = new Thread(() -> {
                     long timeSinceLastAnalogAction = System.currentTimeMillis();
-                    while (true) {
+                    while (controller.poll()) {
                         if (System.currentTimeMillis() - timeSinceLastAnalogAction > 200) {
                             if (controller.getComponents().getAxes().get(XInputAxis.LEFT_THUMBSTICK_X) > 0.9) {
                                 doControllerButtonAction(XInputButton.DPAD_RIGHT);
@@ -148,8 +147,14 @@ public class MainFrame extends JFrame {
                                 doControllerButtonAction(XInputButton.DPAD_DOWN);
                                 timeSinceLastAnalogAction = System.currentTimeMillis();
                             }
+
                         }
-                        controller.poll();
+
+                        try {
+                            Thread.sleep(5);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 listenToControllerThread.start();
@@ -463,10 +468,10 @@ public class MainFrame extends JFrame {
         if (numberOfGames < 9) {
 
             // Select Image
-            String iconFile = ExtraDialogs.createGameIconPicker();
+            String iconFile = SpareDialogs.createGameIconPicker();
 
             // Select Game Name                    
-            ExtraDialogs.createGameNameDialog(this, files[0].getAbsoluteFile().getName());
+            SpareDialogs.createGameNameDialog(this, files[0].getAbsoluteFile().getName());
 
             numberOfGames = gameLabels.size() + 1;
 

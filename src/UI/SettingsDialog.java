@@ -119,27 +119,27 @@ public class SettingsDialog extends JDialog {
         changeSpacingOption.addActionListener(e -> doChangeSpacing());
 
         borderColorButton = new JButton("Change Color");
-        borderColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(borderColorChooser));
+        borderColorButton.addActionListener(e -> SpareDialogs.createColorPicker(borderColorChooser));
         borderColorButton.setBackground(new Color(209, 209, 209));
         borderColorButton.setFocusPainted(false);
         
         shadowColorButton = new JButton("Change Color");
-        shadowColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(shadowColorChooser));
+        shadowColorButton.addActionListener(e -> SpareDialogs.createColorPicker(shadowColorChooser));
         shadowColorButton.setBackground(new Color(209, 209, 209));
         shadowColorButton.setFocusPainted(false);
         
         backgroundColorButton = new JButton("Change Background Color");
-        backgroundColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(backgroundColorChooser));
+        backgroundColorButton.addActionListener(e -> SpareDialogs.createColorPicker(backgroundColorChooser));
         backgroundColorButton.setBackground(new Color(209, 209, 209));
         backgroundColorButton.setFocusPainted(false);
         
         barColorButton = new JButton("Change Bar Color");
-        barColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(barColorChooser));
+        barColorButton.addActionListener(e -> SpareDialogs.createColorPicker(barColorChooser));
         barColorButton.setBackground(new Color(209, 209, 209));
         barColorButton.setFocusPainted(false);
         
         buttonsColorButton = new JButton("Change Bar Buttons Color");
-        buttonsColorButton.addActionListener(e -> ExtraDialogs.createColorPicker(buttonColorChooser));
+        buttonsColorButton.addActionListener(e -> SpareDialogs.createColorPicker(buttonColorChooser));
         buttonsColorButton.setBackground(new Color(209, 209, 209));
         buttonsColorButton.setFocusPainted(false);
 

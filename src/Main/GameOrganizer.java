@@ -2,7 +2,9 @@
  * GameOrganizer - A simple application for organizing game shortcuts
  * mpaterakis, 2018
  */
-package UI;
+package Main;
+
+import UI.MainFrame;
 
 /**
  * Used only as the main() class, keeping things tidy

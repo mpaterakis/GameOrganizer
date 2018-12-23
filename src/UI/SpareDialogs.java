@@ -13,7 +13,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author mpaterakis
  */
-public class ExtraDialogs {
+public class SpareDialogs {
 
     // Creates a dialog for inserting a game name
     public static void createGameNameDialog(MainFrame mainFrame, String fileName) {
