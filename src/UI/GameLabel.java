@@ -16,20 +16,28 @@ import javax.swing.*;
 import org.jdesktop.swingx.util.OS;
 
 /**
- * A GameLabel object displays the game icon, can launch the game and edit its properties
+ * A GameLabel object displays the game icon, can launch the game and
+ * open its GameSettingsDialog.
  *
  * @author mpaterakis
  */
 public class GameLabel extends JLabel {
 
-    // Constructor
+    /**
+     * Create a GameLabel object.
+     * 
+     * @param game Game object for this GameLabel
+     * @param mainFrame MainFrame containing this GameLabel
+     */
     public GameLabel(Game game, MainFrame mainFrame) {
         this.game = game;
         this.mainFrame = mainFrame;
         initComponents();
     }
 
-    // Initialize components
+    /**
+     * Initialize the GameLabel's components.
+     */
     private void initComponents() {
 
         // Add background image to JLabel
@@ -61,13 +69,18 @@ public class GameLabel extends JLabel {
         setVisible(true);
     }
 
-    // Setters
+    /**
+     * Get the GameLabel's Game object.
+     * 
+     * @return Game
+     */
     public Game getGame() {
         return game;
     }
 
-    // Custom methods
-    // Launch game
+    /**
+     * Launch the GameLabel's game.
+     */
     public void launchGame() {
         try {
             // Launch game if left click is pressed
@@ -93,7 +106,11 @@ public class GameLabel extends JLabel {
         }
     }
 
-    // Manage the click that was issued and make an action
+    /**
+     * Manage the click that was issued and make an action.
+     * 
+     * @param e MouseEvent that was issued
+     */
     private void manageClick(MouseEvent e) {
         // Check if the click was not outside the image
         Point p = e.getPoint();
@@ -115,7 +132,9 @@ public class GameLabel extends JLabel {
 
     }
 
-    // Focus on this game by making the rest of the window transparent
+    /**
+     * Focus on this game by making the rest of the window transparent.
+     */
     public void focusOnGameLabel() {
         if (mainFrame.hasFocusing()) {
             // Wait for the main window to fully load
@@ -136,7 +155,11 @@ public class GameLabel extends JLabel {
         }
     }
 
-    // Reset focus of all the GameLabels
+    /**
+     * Reset focus of all the GameLabels.
+     * 
+     * @param mainFrame MainFrame object containing this GameLabel
+     */
     public static void resetGameLabelFocus(MainFrame mainFrame) {
         if (mainFrame.hasFocusing()) {
             for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {

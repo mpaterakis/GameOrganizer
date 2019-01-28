@@ -9,13 +9,18 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
- * Includes functions for smaller and less important dialogs that are used by MainFrame
+ * Includes functions for smaller and less important dialogs that are used by MainFrame.
  *
  * @author mpaterakis
  */
 public class SpareDialogs {
 
-    // Creates a dialog for inserting a game name
+    /**
+     * Creates a dialog for inserting a game name.
+     * 
+     * @param mainFrame MainFrame object where this method was called from
+     * @param fileName A Game's filename
+     */
     public static void createGameNameDialog(MainFrame mainFrame, String fileName) {
         
         // JPanels
@@ -59,7 +64,11 @@ public class SpareDialogs {
         gameNameDialog.setVisible(true);
     }
 
-    // Creates a dialog for picking a game icon
+    /**
+     * Creates a dialog for picking a game icon.
+     * 
+     * @return String containing the picked icon's path
+     */
     public static String createGameIconPicker() {
         
         // Set up JFileChooser
@@ -77,7 +86,11 @@ public class SpareDialogs {
         return chooser.getSelectedFile().getAbsolutePath();
     }
 
-    // Creates a dialog for picking a game icon
+    /**
+     * Creates a dialog for picking a game's path.
+     * 
+     * @return String containing the picked game's path
+     */
     public static String createGameExePicker() {
         
         // Set up JFileChooser
@@ -93,7 +106,11 @@ public class SpareDialogs {
         return chooser.getSelectedFile().getAbsolutePath();
     }
 
-    // Change the "Open" and "Cancel" buttons' color in JFileChooser to "Color(209,209,209"
+    /**
+     * Changes a JFileChooser's buttons to a custom color.
+     * 
+     * @param chooser JFileChooser object to be edited
+     */
     private static void changeFileChooserButtonColor(JFileChooser chooser) {
 
         // This spaghetti is setting the buttons colors to "Color(209, 209, 209)" instead
@@ -120,7 +137,11 @@ public class SpareDialogs {
         }
     }
     
-    // Creates a dialog for picking a color
+    /**
+     * Creates a dialog for picking a color.
+     * 
+     * @param picker JColorChooser to be shown
+     */
     public static void createColorPicker(JColorChooser picker) {
         
         // Set up JPanel
@@ -134,6 +155,5 @@ public class SpareDialogs {
         colorPickerDialog.pack();
         colorPickerDialog.setLocationRelativeTo(null);
         colorPickerDialog.setVisible(true);
-//        return picker.getColor();
     }
 }

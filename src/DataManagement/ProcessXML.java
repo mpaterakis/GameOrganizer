@@ -23,7 +23,11 @@ import org.xml.sax.SAXException;
  */
 public class ProcessXML {
 
-    // Writes the current data to the xml
+    /**
+     * Write all the program's data to an XML file.
+     * 
+     * @param mainFrame MainFrame object whose data will be written to XML
+     */
     public static void WriteXML(MainFrame mainFrame) {
         try {
             // Build XML
@@ -184,7 +188,11 @@ public class ProcessXML {
         }
     }
 
-    // Loads the data from the saved xml
+    /**
+     * Load XML file and adjust the MainFrame's components.
+     * 
+     * @param mainFrame MainFrame object to be adjusted
+     */
     public static void LoadXML(MainFrame mainFrame) {
         try {
             // Load file

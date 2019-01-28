@@ -15,17 +15,25 @@ import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 
 /**
- * Creates the Settings Panel which can manipulate the program's look
+ * Creates the Settings dialog from which the user can manipulate the program's look.
  *
  * @author mpaterakis
  */
 public class SettingsDialog extends JDialog {
 
+    /**
+     * Create a SettingsDialog object.
+     * 
+     * @param mainFrame MainFrame object to be manipulated from this class
+     */
     public SettingsDialog(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         initComponents();
     }
 
+    /**
+     * Initialize the SettingsDialog's components.
+     */
     private void initComponents() {
 
         // Color Choosers
@@ -259,13 +267,16 @@ public class SettingsDialog extends JDialog {
         setVisible(true);
     }
 
-    // Custom Functions
-    // Switch spacing
+    /**
+     * Switch spacing of the MainFrame.
+     */
     private void doChangeSpacing() {
         mainFrame.switchHasSpace();
     }
 
-    // Set "default" values
+    /**
+     * Set "default" values.
+     */
     private void doRevertDefaults() {
         mainFrame.setHasSpace(false);
         mainFrame.setBarColor(new Color(204, 204, 204));
@@ -275,18 +286,26 @@ public class SettingsDialog extends JDialog {
         mainFrame.setTitleText("Game Organizer");
     }
 
-    // Set the new Window Title text
+    /**
+     * Set the new MainFrame title.
+     */
     private void doChangeTitle() {
         mainFrame.setTitleText(titleField.getText());
     }
 
-    // Set the new border as no border (remove the border)
+    /**
+     * Set the new border as no border (remove the border).
+     */
     private void doDisableBorder() {
         // Change color to an unavailable swatch, needed for stateChanged
         mainFrame.setBorderAndSize(false, mainFrame.getBorderColor());
     }
 
-    // This loop removes all tabs except "Swatches" from the colorChooser
+    /**
+     * Remove all tabs except "Swatches" from a JColorChooser.
+     * 
+     * @param colorChooser JColorChooser object to be customized
+     */
     private void removeExcessChooserTabs(JColorChooser colorChooser) {
         AbstractColorChooserPanel[] panels2 = colorChooser.getChooserPanels();
         for (AbstractColorChooserPanel accp : panels2) {
@@ -296,23 +315,31 @@ public class SettingsDialog extends JDialog {
         }
     }
 
-    // Set the new bar color
+    /**
+     * Set the new bar color.
+     */
     private void doSetBarColor() {
         mainFrame.setBarColor(barColorChooser.getColor());
     }
 
-    // Set the new border color
+    /**
+     * Set the new border color.
+     */
     private void doSetBorderColor() {
         hasBorderCheckBox.setSelected(true);
         mainFrame.setBorderAndSize(true, borderColorChooser.getColor());
     }
 
-    // Set the new background color
+    /**
+     * Set the new background color.
+     */
     private void doSetBackgroundColor() {
         mainFrame.setBackgroundColor(backgroundColorChooser.getColor());
     }
 
-    // Set the new shadow color
+    /**
+     * Set the new shadow color.
+     */
     private void doSetShadowColor() {
         mainFrame.setHasShadow(true);
         mainFrame.setShadowColor(shadowColorChooser.getColor());
@@ -320,51 +347,73 @@ public class SettingsDialog extends JDialog {
         hasShadowCheckbox.setSelected(true);
     }
 
-    // Set the new button color
+    /**
+     * Set the new button color.
+     */
     private void doSetButtonColor() {
         mainFrame.setButtonColor(buttonColorChooser.getColor());
     }
 
-    // Enable auto-exit after game launch
+    /**
+     * Enable auto-exit after game launch.
+     */
     private void doEnableAutoExit() {
         mainFrame.setAutoExit(true);
     }
 
-    // Enable auto-exit after game launch
+    /**
+     * Disable auto-exit after game launch.
+     */
     private void doDisableAutoExit() {
         mainFrame.setAutoExit(false);
     }
 
-    // Enable shadow
+    /**
+     * Enable shadow on MainFrame.
+     */
     private void doEnableShadow() {
         mainFrame.setHasShadow(true);
         mainFrame.paintShadow();
     }
 
-    // Disable shadow
+    /**
+     * Disable shadow on MainFrame.
+     */
     private void doDisableShadow() {
         mainFrame.setHasShadow(false);
         mainFrame.paintShadow();
     }
 
-    // Enable focusing
+    /**
+     * Enable focusing for GameLabels.
+     */
     private void doEnableFocusing() {
         mainFrame.setFocusing(true);
         mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
     }
 
-    // Disable focusing
+    /**
+     * Disable focusing for GameLabels.
+     */
     private void doDisableFocusing() {
         mainFrame.setFocusing(false);
     }
 
-    // Set main window's frame scale
+    /**
+     * Set MainFrame's frame scale.
+     * 
+     * @param frameScale Double containing the MainFrame's new frame scale
+     */
     private void doSetFrameScale(double frameScale) {
         mainFrame.setFrameScale(frameScale);
         mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
     }
 
-    // Changes the main window's appearance according to each keypress
+    /**
+     * Changes the main window's appearance according to each key press.
+     * 
+     * @param e KeyEvent that was triggered
+     */
     private void doKeyAction(KeyEvent e) {
 
         // If F5 is pressed, center the main window
@@ -388,7 +437,9 @@ public class SettingsDialog extends JDialog {
         }
     }
 
-    // Make a new thread for resizing and repainting the window
+    /**
+     * Create a new thread for resizing and repainting the MainFrame.
+     */
     private void createRepaintThread() {
         Thread repaintingThread = new Thread(() -> {
             doSetFrameScale((double) frameScaleSlider.getValue() / 10);

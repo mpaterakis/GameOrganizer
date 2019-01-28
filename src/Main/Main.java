@@ -7,13 +7,17 @@ package Main;
 import UI.MainFrame;
 
 /**
- * Used only as the main() class, keeping things tidy
+ * The program's main class, which creates a MainFrame instance.
  * 
  * @author mpaterakis
  */
-public class GameOrganizer {
+public class Main {
 
-    // Create a MainFrame object
+    /**
+     * Create a MainFrame object
+     * 
+     * @param args 
+     */
     public static void main(String[] args) {
         new MainFrame();
     }

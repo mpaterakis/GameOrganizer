@@ -13,13 +13,18 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 /**
- * This class creates the settings dialog that is created for each game on right click
+ * Creates the GameSettings dialog from which the user can manipulate a Game's values.
  *
  * @author mpaterakis
  */
 public class GameSettingsDialog extends JDialog {
 
-    // Constructor
+    /**
+     * Create a new GameSettingsDialog object.
+     * 
+     * @param game Game object whose values will be shown and edited
+     * @param mainFrame MainFrame object containing the GameLabel that holds the game
+     */
     public GameSettingsDialog(Game game, MainFrame mainFrame) {
         this.game = originalGame = game;
         this.mainFrame = mainFrame;
@@ -27,7 +32,9 @@ public class GameSettingsDialog extends JDialog {
         initComponents();
     }
 
-    // Initialize Components
+    /**
+     * Initialize the GameSettingsDialog's components.
+     */
     private void initComponents() {
 
         // JLabels
@@ -150,8 +157,11 @@ public class GameSettingsDialog extends JDialog {
         setVisible(true);
     }
 
-    // Custom functions
-    // Return game's order number in gameGridPanel
+    /**
+     * Get the Game's order number (on the MainFrame).
+     * 
+     * @return Integer containing the Game's order number
+     */
     private int getGameOrderNumber() {
         for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
             if (mainFrame.getGameLabels().get(i).getGame() == game) {
@@ -161,7 +171,12 @@ public class GameSettingsDialog extends JDialog {
         return -1;
     }
 
-    // Reorder gameLabels
+    /**
+     * Reorder the GameLabels on the MainFrame.
+     * 
+     * @param oldPosition Integer containing the old position of a GameLabel
+     * @param newPosition Integer containing the new position of a GameLabel
+     */
     private void reorderGameLabels(int oldPosition, int newPosition) {
         // Swap positions
         Collections.swap(mainFrame.getGameLabels(), oldPosition, newPosition);
@@ -170,13 +185,17 @@ public class GameSettingsDialog extends JDialog {
         mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
     }
 
-    // Close this JDialog
+    /**
+     * Close this JDialog.
+     */
     private void doCancel() {
         mainFrame.redrawGameGridPanel(originalGameLabels);
         dispose();
     }
 
-    // Apply the data from the textfields to the game instance
+    /**
+     * Apply the data from the textfields to the game instance
+     */
     private void doOk() {
         game.setGameName(nameField.getText());
         game.setGameIconPath(iconField.getText());
@@ -184,12 +203,16 @@ public class GameSettingsDialog extends JDialog {
         dispose();
     }
 
-    // Choose game's path
+    /**
+     * Choose the Game's path.
+     */
     private void doChoosePath() {
         pathField.setText(SpareDialogs.createGameExePicker());
     }
 
-    // Choose icon's path
+    /**
+     * Choose the Game's icon.
+     */
     private void doChooseIcon() {
         iconField.setText(SpareDialogs.createGameIconPicker());
     }
@@ -203,7 +226,9 @@ public class GameSettingsDialog extends JDialog {
         }
     }
 
-    // Remove this game
+    /**
+     * Remove this Game.
+     */
     private void doRemoveGame() {
         for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
             // Make sure we got the correct game
@@ -244,7 +269,9 @@ public class GameSettingsDialog extends JDialog {
         }
     }
 
-    // Move game down in games' order
+    /**
+     * Move game down in games' order.
+     */
     private void doOrderMinus() {
         // Calculate old and new positions and set the textfield text
         int oldPosition = Integer.valueOf(orderField.getText());
@@ -265,7 +292,9 @@ public class GameSettingsDialog extends JDialog {
         }
     }
 
-    // Move game up in games' order
+    /**
+     * Move game up in games' order.
+     */
     private void doOrderPlus() {
         // Calculate old and new positions and set the textfield text
         int oldPosition = Integer.valueOf(orderField.getText());

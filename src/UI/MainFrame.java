@@ -23,18 +23,22 @@ import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.border.DropShadowBorder;
 
 /**
- * This class represents the main window
+ * Custom JFrame representing the main window.
  *
  * @author mpaterakis
  */
 public class MainFrame extends JFrame {
 
-    // Constructor
+    /**
+     * Create a MainFrame object.
+     */
     public MainFrame() {
         initComponents();
     }
 
-    // Initialize the object
+    /**
+     * Initialize the MainFrame's components.
+     */
     private void initComponents() {
 
         // JButtons
@@ -198,68 +202,137 @@ public class MainFrame extends JFrame {
 
     }
 
-    // Getters
+    /**
+     * Check if MainFrame uses spacing.
+     * 
+     * @return Boolean containing value representative of the check
+     */
     public boolean hasSpace() {
         return hasSpace;
     }
 
+    /**
+     * Get MainFrame's GameLabels ArrayList.
+     * 
+     * @return GameLabels ArrayList of this MainFrame
+     */
     public ArrayList<GameLabel> getGameLabels() {
         return gameLabels;
     }
 
+    /**
+     * Check if MainFrame has a border.
+     * 
+     * @return Boolean containing value representative of the check
+     */
     public boolean hasBorder() {
         return hasBorder;
     }
 
-    public boolean isHasSpace() {
-        return hasSpace;
-    }
-
+    /**
+     * Get the buttons' color.
+     * 
+     * @return Color object containing the buttons' color
+     */
     public Color getButtonColor() {
         return buttonColor;
     }
 
+    /**
+     * Get the bar's color.
+     * 
+     * @return Color object containing the bar's color
+     */
     public Color getBarColor() {
         return barColor;
     }
 
+    /**
+     * Get the border's color.
+     * 
+     * @return Color object containing the border's color
+     */
     public Color getBorderColor() {
         return borderColor;
     }
 
+    /**
+     * Get the background's color.
+     * 
+     * @return Color object containing the background's color
+     */
     public Color getBackgroundColor() {
         return backgroundColor;
     }
 
+    /**
+     * Check if MainFrame uses auto-exit after a game launch.
+     * 
+     * @return Boolean containing value representative of the check
+     */
     public boolean getAutoExit() {
         return autoExit;
     }
 
+    /**
+     * Check if MainFrame has a shadow.
+     * 
+     * @return Boolean containing value representative of the check
+     */
     public boolean hasShadow() {
         return hasShadow;
     }
 
+    /**
+     * Get the MainFrame's title text.
+     * 
+     * @return String containing the title's text
+     */
     public String getTitleText() {
         return titleText;
     }
 
+    /**
+     * Get the shadow's color.
+     * 
+     * @return Color object containing the shadow's color
+     */
     public Color getShadowColor() {
         return shadowColor;
     }
 
+    /**
+     * Check if MainFrame has fully booted.
+     * 
+     * @return Boolean containing value representative of the check
+     */
     public boolean isFullyBooted() {
         return fullyBooted;
     }
 
+    /**
+     * Check if MainFrame uses focusing.
+     * 
+     * @return Boolean containing value representative of the check
+     */
     public boolean hasFocusing() {
         return focusing;
     }
 
-    // Setters
+    /**
+     * Set the auto-exit value (after a game is launched).
+     * 
+     * @param autoExit Boolean containing the new auto-exit value.
+     */
     public void setAutoExit(boolean autoExit) {
         this.autoExit = autoExit;
     }
 
+    /**
+     * Set the button color.
+     * 
+     * @param buttonColor Color object containing the new button color
+     */
     public void setButtonColor(Color buttonColor) {
         this.buttonColor = buttonColor;
         exitButton.setForeground(buttonColor);
@@ -267,54 +340,114 @@ public class MainFrame extends JFrame {
         titleLabel.setForeground(buttonColor);
     }
 
+    /**
+     * Set the bar color.
+     * 
+     * @param barColor Color object containing the new bar color
+     */
     public void setBarColor(Color barColor) {
         this.barColor = barColor;
         statusBarPanel.setBackground(barColor);
         buttonsPanel.setBackground(barColor);
     }
 
+    /**
+     * Set the added Game's name.
+     * 
+     * @param addedGameName String containing the added Game's name
+     */
     public void setAddedGameName(String addedGameName) {
         this.gameName = addedGameName;
     }
 
+    /**
+     * Set the hasBorder value.
+     * 
+     * @param hasBorder Boolean containing the new hasBorder value
+     */
     public void setHasBorder(boolean hasBorder) {
         this.hasBorder = hasBorder;
     }
 
+    /**
+     * Set the focusing value.
+     * 
+     * @param focusing Boolean containing the new focusing value
+     */
     public void setFocusing(boolean focusing) {
         this.focusing = focusing;
     }
 
+    /**
+     * Set the border color.
+     * 
+     * @param borderColor Color object containing the new border color
+     */
     public void setBorderColor(Color borderColor) {
         this.borderColor = borderColor;
     }
 
+    /**
+     * Set the hasSpace value.
+     * 
+     * @param hasSpace Boolean containing the new hasSpace value
+     */
     public void setHasSpace(boolean hasSpace) {
         this.hasSpace = hasSpace;
     }
 
+    /**
+     * Set the MainFrame's title text.
+     * 
+     * @param titleText String object containing the MainFrame's title
+     */
     public void setTitleText(String titleText) {
         this.titleText = titleText;
         titleLabel.setText("  " + titleText);
     }
 
+    /**
+     * Set the MainFrame's GameLabels.
+     * 
+     * @param gameLabels GameLabels ArrayList to be set
+     */
     public void setGameLabels(ArrayList<GameLabel> gameLabels) {
         this.gameLabels = gameLabels;
     }
 
+    /**
+     * Set the hasShadow value.
+     * 
+     * @param hasShadow Boolean containing the new hasShadow value
+     */
     public void setHasShadow(boolean hasShadow) {
         this.hasShadow = hasShadow;
     }
 
+    /**
+     * Set the shadow color.
+     * 
+     * @param shadowColor Color object containing the new shadow color
+     */
     public void setShadowColor(Color shadowColor) {
         this.shadowColor = shadowColor;
         paintShadow();
     }
 
+    /**
+     * Get the MainFrame's frame scale.
+     * 
+     * @return Double object containing the frame scale value.
+     */
     public double getFrameScale() {
         return frameScale;
     }
 
+    /**
+     * Set the MainFrame's frame scale.
+     * 
+     * @param frameScale Double object containing the frame scale value.
+     */
     public void setFrameScale(double frameScale) {
         this.frameScale = frameScale;
         setBorderAndSize(hasBorder, borderColor);
@@ -324,16 +457,29 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Get the currently focused GameLabel.
+     * 
+     * @return GameLabel that is focused
+     */
     public JLabel getFocusedGameLabel() {
         return focusedGameLabel;
     }
 
+    /**
+     * Set the currently focused GameLabel.
+     * 
+     * @param focusedGameLabel GameLabel to be focused
+     */
     public void setFocusedGameLabel(GameLabel focusedGameLabel) {
         this.focusedGameLabel = focusedGameLabel;
     }
 
-    // Custom functions
-    // Redraw the GridLayout with filled blank tiles
+    /**
+     * Redraw the GridLayout with filled blank tiles.
+     * 
+     * @param gameLabels GameLabel ArrayList to be used for the redrawing
+     */
     public void redrawGameGridPanel(ArrayList<GameLabel> gameLabels) {
         this.gameLabels = gameLabels;
         numberOfGames = gameLabels.size();
@@ -354,7 +500,12 @@ public class MainFrame extends JFrame {
         gameGridPanel.repaint();
     }
 
-    // Set the border and window size
+    /**
+     * Set the border and window size.
+     * 
+     * @param hasBorder Boolean object (true if MainFrame has border, false otherwise)
+     * @param borderColor Color object containing the new border Color
+     */
     public void setBorderAndSize(boolean hasBorder, Color borderColor) {
         this.hasBorder = hasBorder;
         this.borderColor = borderColor;
@@ -381,14 +532,20 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Change the background color
+    /**
+     * Set the background color.
+     * 
+     * @param backgroundColor Color object containing the new background color
+     */
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
         gameGridPanel.setBackground(backgroundColor);
         setBorderAndSize(hasBorder, borderColor);
     }
 
-    // Set window's shadow
+    /**
+     * Set the MainFrame's shadow
+     */
     public void paintShadow() {
         DropShadowBorder shadow = new DropShadowBorder();
         shadow.setShowLeftShadow(true);
@@ -404,13 +561,17 @@ public class MainFrame extends JFrame {
         shadowPanel.setBorder(shadow);
     }
 
-    // Switches the hasSpace var
+    /**
+     * Switches the hasSpace Boolean.
+     */
     public void switchHasSpace() {
         hasSpace = !hasSpace;
         setBorderAndSize(hasBorder, borderColor);
     }
 
-    // Fade in animation
+    /**
+     * Start fade in animation.
+     */
     public void fadeInJFrame() {
         if (!fullyBooted) {
             for (float i = 0; i < 1; i += 0.03) {
@@ -426,7 +587,9 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Fade out animation
+    /**
+     * Start fade out animation.
+     */
     public void fadeOutJFrame() {
         if (fullyBooted) {
             fullyBooted = false;
@@ -441,7 +604,9 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Close the program
+    /**
+     * Close the program.
+     */
     public void doExit() {
         // Save to XML on exit
         ArrayList<Game> gameList = new ArrayList<>();
@@ -456,13 +621,19 @@ public class MainFrame extends JFrame {
         System.exit(0);
     }
 
-    // Open the program's Settings JDialog
+    /**
+     * Open the program's Settings JDialog.
+     */
     private void doOpenProgramSettings() {
         new SettingsDialog(this);
         requestFocus();
     }
 
-    // Select all of the game's properties after it is dropped
+    /**
+     * Select all of the game's properties after it is dropped.
+     * 
+     * @param files File object containing the Game file that was dropped
+     */
     private void doDropFile(java.io.File[] files) {
         // If there are 9 games, then don't a new one
         if (numberOfGames < 9) {
@@ -487,7 +658,11 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Changes the main window's appearance according to each keypress
+    /**
+     * Changes the main window's appearance according to each key press.
+     * 
+     * @param e KeyEvent that was triggered
+     */
     private void doKeyAction(KeyEvent e) {
 
         // If F5 is pressed, center the main window
@@ -516,14 +691,18 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // (Re)Center main window
+    /**
+     * (Re)Center the MainFrame.
+     */
     public void centerWindow() {
         fadeOutJFrame();
         setLocationRelativeTo(null);
         fadeInJFrame();
     }
 
-    // Decrease the window's scale
+    /**
+     * Decrease the MainFrame's scale.
+     */
     public void decreaseScale() {
         if (frameScale > 0.5) {
             fadeOutJFrame();
@@ -533,7 +712,9 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Increase the window's scale
+    /**
+     * Increase the MainFrame's scale.
+     */
     public void increaseScale() {
         if (frameScale < 1.5) {
             fadeOutJFrame();
@@ -543,7 +724,11 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Navigate the menu according to each controller button press
+    /**
+     * Navigate the menu according to each controller button press.
+     * 
+     * @param button XInputButton object containing the button that was pressed
+     */
     private void doControllerButtonAction(XInputButton button) {
         switch (button.toString()) {
 
@@ -602,7 +787,12 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Changes focused GameLabel
+    /**
+     * Change the focused GameLabel.
+     * 
+     * @param indexDelta Integer containing the delta (difference) of the new 
+     * focused GameLabel compared to the previous one.
+     */
     private void changeFocusedGamelabel(int indexDelta) {
         if (getFocusedGameLabel() != null) {
             for (int i = 0; i < gameLabels.size(); i++) {
