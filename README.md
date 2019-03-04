@@ -11,6 +11,7 @@ Features:
 * Customizable grid order
 * Option to dim the non-focused game tiles
 * Option to exit GameOrganizer after a game is launched
+* Ability to launch the Steam Client
 * Allows editing of all the game data after the game is added
 
 Usage:
