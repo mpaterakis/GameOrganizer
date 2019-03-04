@@ -14,7 +14,7 @@ Features:
 * Option to dim the non-focused game tiles
 * Option to exit GameOrganizer after a game is launched
 * Ability to launch the Steam Client
-* Allows editing of all the game data after the game is added
+* Allows editing of all the game data after each game is added
 
 Usage:
 * Simply Drag-and-Drop a file onto the GameOrganizer window to create its shortcut
@@ -27,7 +27,7 @@ Usage:
 * Pressing any Arrow key navigates through the games
 * Pressing A on an XBOX Controller launches the focused game
 * Pressing any DPAD button on an XBOX Controller navigates through the games
-* Pressing the Guide Button on an XBOX Controller launches steam in Big Picture mode
+* Pressing the Guide Button on an XBOX Controller launches Steam in Big Picture mode
 * Pressing RB on an XBOX Controller increases the main window's scale
 * Pressing LB on an XBOX Controller decreases the main window's scale
 * Pressing Y on an XBOX Controller centers the main window
