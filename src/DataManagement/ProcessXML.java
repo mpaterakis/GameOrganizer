@@ -1,6 +1,6 @@
 /*
  * mpaterakis, 2018
- */ 
+ */
 package DataManagement;
 
 import GameOrganizer.Game;
@@ -8,6 +8,8 @@ import UI.*;
 import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -25,7 +27,7 @@ public class ProcessXML {
 
     /**
      * Write all the program's data to an XML file.
-     * 
+     *
      * @param mainFrame MainFrame object whose data will be written to XML
      */
     public static void WriteXML(MainFrame mainFrame) {
@@ -116,7 +118,7 @@ public class ProcessXML {
                 hasSpc.appendChild(doc.createTextNode("false"));
             }
             subElement2.appendChild(hasSpc);
-            
+
             // AutoExit bool
             Element autoExit = doc.createElement("AutoExit");
             if (mainFrame.getAutoExit()) {
@@ -125,7 +127,7 @@ public class ProcessXML {
                 autoExit.appendChild(doc.createTextNode("false"));
             }
             subElement2.appendChild(autoExit);
-            
+
             // HasShadow bool
             Element hasShadow = doc.createElement("HasShadow");
             if (mainFrame.hasShadow()) {
@@ -134,7 +136,7 @@ public class ProcessXML {
                 hasShadow.appendChild(doc.createTextNode("false"));
             }
             subElement2.appendChild(hasShadow);
-            
+
             // Focusing bool
             Element focusing = doc.createElement("Focusing");
             if (mainFrame.hasFocusing()) {
@@ -143,7 +145,7 @@ public class ProcessXML {
                 focusing.appendChild(doc.createTextNode("false"));
             }
             subElement2.appendChild(focusing);
-            
+
             // UseSteam bool
             Element useSteam = doc.createElement("UseSteam");
             if (mainFrame.isUsingSteam()) {
@@ -152,22 +154,22 @@ public class ProcessXML {
                 useSteam.appendChild(doc.createTextNode("false"));
             }
             subElement2.appendChild(useSteam);
-            
+
             // Window Title text
             Element windowTitle = doc.createElement("WindowTitle");
             windowTitle.appendChild(doc.createTextNode(mainFrame.getTitleText()));
             subElement2.appendChild(windowTitle);
-            
+
             // Window scale double
             Element frameScale = doc.createElement("FrameScale");
             frameScale.appendChild(doc.createTextNode(String.valueOf(mainFrame.getFrameScale())));
             subElement2.appendChild(frameScale);
-            
+
             // Window position X
             Element windowPosX = doc.createElement("WindowPositionX");
             windowPosX.appendChild(doc.createTextNode(String.valueOf(mainFrame.getLocation().getX())));
             subElement2.appendChild(windowPosX);
-            
+
             // Window position Y
             Element windowPosY = doc.createElement("WindowPositionY");
             windowPosY.appendChild(doc.createTextNode(String.valueOf(mainFrame.getLocation().getY())));
@@ -188,45 +190,143 @@ public class ProcessXML {
             System.out.println("XML saved successfully");
 
             // Catch exceptions
-        } catch (ParserConfigurationException pce) {
+        } catch (ParserConfigurationException | TransformerException | IllegalArgumentException | DOMException pce) {
             JOptionPane.showMessageDialog(null, "XML Error: " + pce.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
-        } catch (TransformerException tfe) {
-            JOptionPane.showMessageDialog(null, "XML Error: " + tfe.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "XML Error: " + ex.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     /**
      * Load XML file and adjust the MainFrame's components.
-     * 
+     *
      * @param mainFrame MainFrame object to be adjusted
      */
     public static void LoadXML(MainFrame mainFrame) {
-        try {
-            // Load file
-            File file = new File(System.getProperty("user.home") + "\\GameOrganizerData.xml");
-            if (file.exists()) {
-                Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+        File file = new File(System.getProperty("user.home") + "\\GameOrganizerData.xml");
+        if (file.exists()) {
+            
+            // Initialize values
+            String barClr = "", btnsClr = "", brdrClr = "", bgClr = "", shdClr = "", hasBrdr = "", hasSpc = "", hasShadow = "", autoExit = "", focusing = "", usingSteam = "", windowTitle = "";
+            double windowPosX = 0, windowPosY = 0, frameScale = 1;
+            NodeList gamesList = null;
+            Document document = null;
+            
+            try {
+                document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
+            } catch (ParserConfigurationException ex) {
+                JOptionPane.showMessageDialog(null, "XML Error: " + ex.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "XML Error: " + ex.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SAXException ex) {
+                JOptionPane.showMessageDialog(null, "XML Error: " + ex.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
+            }
 
-                // Get data from file
-                String barClr = document.getElementsByTagName("BarColor").item(0).getTextContent();
-                String btnsClr = document.getElementsByTagName("ButtonsColor").item(0).getTextContent();
-                String brdrClr = document.getElementsByTagName("BorderColor").item(0).getTextContent();
-                String bgClr = document.getElementsByTagName("BackgroundColor").item(0).getTextContent();
-                String shdClr = document.getElementsByTagName("ShadowColor").item(0).getTextContent();
-                String hasBrdr = document.getElementsByTagName("HasBorder").item(0).getTextContent();
-                String hasSpc = document.getElementsByTagName("HasSpace").item(0).getTextContent();
-                String hasShadow = document.getElementsByTagName("HasShadow").item(0).getTextContent();
-                String autoExit = document.getElementsByTagName("AutoExit").item(0).getTextContent();
-                String focusing = document.getElementsByTagName("Focusing").item(0).getTextContent();
-                String usingSteam = document.getElementsByTagName("UseSteam").item(0).getTextContent();
-                String windowTitle = document.getElementsByTagName("WindowTitle").item(0).getTextContent();
-                double windowPosX = Double.valueOf(document.getElementsByTagName("WindowPositionX").item(0).getTextContent());
-                double windowPosY = Double.valueOf(document.getElementsByTagName("WindowPositionY").item(0).getTextContent());
-                double frameScale = Double.valueOf(document.getElementsByTagName("FrameScale").item(0).getTextContent());
-                NodeList gamesList = document.getElementsByTagName("Game");
-
+            // Get data from file
+            try {
+                barClr = document.getElementsByTagName("BarColor").item(0).getTextContent();
+                mainFrame.setBarColor(new Color(Integer.parseInt(barClr)));
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                btnsClr = document.getElementsByTagName("ButtonsColor").item(0).getTextContent();
+                mainFrame.setButtonColor(new Color(Integer.parseInt(btnsClr)));
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                brdrClr = document.getElementsByTagName("BorderColor").item(0).getTextContent();
+                mainFrame.setBorderColor(new Color(Integer.parseInt(brdrClr)));
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                bgClr = document.getElementsByTagName("BackgroundColor").item(0).getTextContent();
+                mainFrame.setBackgroundColor(new Color(Integer.parseInt(bgClr)));
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                shdClr = document.getElementsByTagName("ShadowColor").item(0).getTextContent();
+                mainFrame.setShadowColor(new Color(Integer.parseInt(shdClr)));
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                hasBrdr = document.getElementsByTagName("HasBorder").item(0).getTextContent();
+                if (hasBrdr.equalsIgnoreCase("true")) {
+                    mainFrame.setHasBorder(true);
+                } else if (hasBrdr.equalsIgnoreCase("false")) {
+                    mainFrame.setHasBorder(false);
+                }
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                hasSpc = document.getElementsByTagName("HasSpace").item(0).getTextContent();
+                if (hasSpc.equalsIgnoreCase("true")) {
+                    mainFrame.setHasSpace(true);
+                } else if (hasBrdr.equalsIgnoreCase("false")) {
+                    mainFrame.setHasSpace(false);
+                }
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                hasShadow = document.getElementsByTagName("HasShadow").item(0).getTextContent();
+                if (hasShadow.equalsIgnoreCase("true")) {
+                    mainFrame.setHasShadow(true);
+                } else if (hasShadow.equalsIgnoreCase("false")) {
+                    mainFrame.setHasShadow(false);
+                }
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                autoExit = document.getElementsByTagName("AutoExit").item(0).getTextContent();
+                if (autoExit.equalsIgnoreCase("true")) {
+                    mainFrame.setAutoExit(true);
+                } else if (autoExit.equalsIgnoreCase("false")) {
+                    mainFrame.setAutoExit(false);
+                }
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                focusing = document.getElementsByTagName("Focusing").item(0).getTextContent();
+                if (focusing.equalsIgnoreCase("true")) {
+                    mainFrame.setFocusing(true);
+                } else if (focusing.equalsIgnoreCase("false")) {
+                    mainFrame.setFocusing(false);
+                }
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                windowTitle = document.getElementsByTagName("WindowTitle").item(0).getTextContent();
+                mainFrame.setTitleText(windowTitle);
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                windowPosX = Double.valueOf(document.getElementsByTagName("WindowPositionX").item(0).getTextContent());
+                try {
+                    windowPosY = Double.valueOf(document.getElementsByTagName("WindowPositionY").item(0).getTextContent());
+                    mainFrame.setLocation((int) windowPosX, (int) windowPosY);
+                } catch (NumberFormatException | DOMException | NullPointerException e) {
+                    Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+                }
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                frameScale = Double.valueOf(document.getElementsByTagName("FrameScale").item(0).getTextContent());
+                mainFrame.setFrameScale(frameScale);
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+                mainFrame.setFrameScale(frameScale);
+            }
+            try {
+                gamesList = document.getElementsByTagName("Game");
                 // Load game data
                 ArrayList<GameLabel> gameLabels = new ArrayList<>();
                 for (int i = 0; i < gamesList.getLength(); i++) {
@@ -237,81 +337,27 @@ public class ProcessXML {
                     GameLabel gameLabel = new GameLabel(new Game(icon, path, name, frameScale), mainFrame);
                     gameLabels.add(gameLabel);
                 }
-                
                 // Draw the gameGridPanel with the new GameLabels
                 mainFrame.redrawGameGridPanel(gameLabels);
-
-                if (hasSpc.equalsIgnoreCase("true")) {
-                    mainFrame.setHasSpace(true);
-                } else if (hasBrdr.equalsIgnoreCase("false")) {
-                    mainFrame.setHasSpace(false);
-                }
-
-                if (hasBrdr.equalsIgnoreCase("true")) {
-                    mainFrame.setHasBorder(true);
-                } else if (hasBrdr.equalsIgnoreCase("false")) {
-                    mainFrame.setHasBorder(false);
-                }
-                
-                if (hasShadow.equalsIgnoreCase("true")) {
-                    mainFrame.setHasShadow(true);
-                } else if (hasShadow.equalsIgnoreCase("false")) {
-                    mainFrame.setHasShadow(false);
-                }
-                
-                if (autoExit.equalsIgnoreCase("true")) {
-                    mainFrame.setAutoExit(true);
-                } else if (autoExit.equalsIgnoreCase("false")) {
-                    mainFrame.setAutoExit(false);
-                }
-                
-                if (focusing.equalsIgnoreCase("true")) {
-                    mainFrame.setFocusing(true);
-                } else if (focusing.equalsIgnoreCase("false")) {
-                    mainFrame.setFocusing(false);
-                }
-                
+            } catch (DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+                mainFrame.redrawGameGridPanel(new ArrayList<>());
+            }
+            try {
+                usingSteam = document.getElementsByTagName("UseSteam").item(0).getTextContent();
                 if (usingSteam.equalsIgnoreCase("true")) {
                     mainFrame.setUseSteam(true);
                 } else if (usingSteam.equalsIgnoreCase("false")) {
                     mainFrame.setUseSteam(false);
                 }
-
-                // Apply data to program
-                mainFrame.setBarColor(new Color(Integer.parseInt(barClr)));
-                mainFrame.setButtonColor(new Color(Integer.parseInt(btnsClr)));
-                mainFrame.setBorderColor(new Color(Integer.parseInt(brdrClr)));
-                mainFrame.setBackgroundColor(new Color(Integer.parseInt(bgClr)));
-                mainFrame.setShadowColor(new Color(Integer.parseInt(shdClr)));
-                mainFrame.setTitleText(windowTitle);                
-                mainFrame.setFrameScale(frameScale);
-                mainFrame.setLocation((int) windowPosX, (int) windowPosY);
-                
-            } else {
-                // If the XML file does not exist, simply draw the gameGridPanel
-                mainFrame.redrawGameGridPanel(new ArrayList<>());
-                mainFrame.setBorderAndSize(true, mainFrame.getBorderColor());
-                mainFrame.setLocationRelativeTo(null);
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
             }
-
-            // Catch exceptions
-        } catch (SAXException ex) {
-            JOptionPane.showMessageDialog(null, "XML Error: " + ex.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "XML Error: " + ex.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-        } catch (ParserConfigurationException ex) {
-            JOptionPane.showMessageDialog(null, "XML Error: " + ex.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-        } catch (NumberFormatException | DOMException ex) {
-            JOptionPane.showMessageDialog(null, "XML Error: " + ex.getMessage(), "XML Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-        } catch (NullPointerException ex) {
-            JOptionPane.showMessageDialog(null, "XML Error, program settings will reset" , "XML Error", JOptionPane.ERROR_MESSAGE);
-            File file = new File(System.getProperty("user.home") + "\\GameOrganizerData.xml");
-            file.delete();
-            mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
+        } else {
+            // If the XML file does not exist, simply draw the gameGridPanel
+            mainFrame.redrawGameGridPanel(new ArrayList<>());
+            mainFrame.setBorderAndSize(true, mainFrame.getBorderColor());
+            mainFrame.setLocationRelativeTo(null);
         }
     }
 }
