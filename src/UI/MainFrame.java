@@ -661,6 +661,20 @@ public class MainFrame extends JFrame {
         }
         doExit();
     }
+    
+    /**
+     * Launch Steam in Big Picture mode
+     */
+    private void doLaunchSteamBigPicture() {
+        try {
+            Desktop.getDesktop().browse(new URI("steam://open/bigpicture"));
+        } catch (URISyntaxException ex) {
+            JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
+        }
+        doExit();
+    }
 
     /**
      * Select all of the game's properties after it is dropped.
@@ -813,6 +827,10 @@ public class MainFrame extends JFrame {
             }
             case "DPAD_DOWN": {
                 changeFocusedGamelabel(+3);
+                break;
+            }
+            case "GUIDE_BUTTON": {
+                doLaunchSteamBigPicture();
                 break;
             }
             default:

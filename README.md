@@ -25,6 +25,7 @@ Usage:
 * Pressing any Arrow key navigates through the games
 * Pressing A on an XBOX Controller launches the focused game
 * Pressing any DPAD button on an XBOX Controller navigates through the games
+* Pressing the Guide Button on an XBOX Controller launches steam in Big Picture mode
 * Pressing RB on an XBOX Controller increases the main window's scale
 * Pressing LB on an XBOX Controller decreases the main window's scale
 * Pressing Y on an XBOX Controller centers the main window
