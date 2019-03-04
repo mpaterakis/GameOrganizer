@@ -144,6 +144,15 @@ public class ProcessXML {
             }
             subElement2.appendChild(focusing);
             
+            // UseSteam bool
+            Element useSteam = doc.createElement("UseSteam");
+            if (mainFrame.isUsingSteam()) {
+                useSteam.appendChild(doc.createTextNode("true"));
+            } else {
+                useSteam.appendChild(doc.createTextNode("false"));
+            }
+            subElement2.appendChild(useSteam);
+            
             // Window Title text
             Element windowTitle = doc.createElement("WindowTitle");
             windowTitle.appendChild(doc.createTextNode(mainFrame.getTitleText()));
@@ -211,6 +220,7 @@ public class ProcessXML {
                 String hasShadow = document.getElementsByTagName("HasShadow").item(0).getTextContent();
                 String autoExit = document.getElementsByTagName("AutoExit").item(0).getTextContent();
                 String focusing = document.getElementsByTagName("Focusing").item(0).getTextContent();
+                String usingSteam = document.getElementsByTagName("UseSteam").item(0).getTextContent();
                 String windowTitle = document.getElementsByTagName("WindowTitle").item(0).getTextContent();
                 double windowPosX = Double.valueOf(document.getElementsByTagName("WindowPositionX").item(0).getTextContent());
                 double windowPosY = Double.valueOf(document.getElementsByTagName("WindowPositionY").item(0).getTextContent());
@@ -259,6 +269,12 @@ public class ProcessXML {
                     mainFrame.setFocusing(true);
                 } else if (focusing.equalsIgnoreCase("false")) {
                     mainFrame.setFocusing(false);
+                }
+                
+                if (usingSteam.equalsIgnoreCase("true")) {
+                    mainFrame.setUseSteam(true);
+                } else if (usingSteam.equalsIgnoreCase("false")) {
+                    mainFrame.setUseSteam(false);
                 }
 
                 // Apply data to program

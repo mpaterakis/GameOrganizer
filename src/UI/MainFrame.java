@@ -14,6 +14,8 @@ import com.ivan.xinput.listener.SimpleXInputDeviceListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
@@ -49,7 +51,7 @@ public class MainFrame extends JFrame {
         exitButton.setPreferredSize(new Dimension(15, 16));
         exitButton.setBorder(null);
         try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/Files/Xolonium-Regular.ttf")).deriveFont(12f);
+            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/Files/Xolonium-Special.ttf")).deriveFont(12f);
         } catch (FontFormatException ex) {
             JOptionPane.showMessageDialog(null, "FontFormat Error: Cannot load custom font", "Font Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
@@ -68,6 +70,16 @@ public class MainFrame extends JFrame {
         programSettingsButton.setFont(customFont.deriveFont(15f));
         programSettingsButton.setForeground(buttonColor);
         programSettingsButton.addActionListener(e -> doOpenProgramSettings());
+        
+        steamButton = new JButton("\uE800");
+        steamButton.setBorderPainted(false);
+        steamButton.setFocusPainted(false);
+        steamButton.setContentAreaFilled(false);
+        steamButton.setPreferredSize(new Dimension(15, 16));
+        steamButton.setBorder(null);
+        steamButton.setFont(customFont.deriveFont(12f));
+        steamButton.setForeground(buttonColor);
+        steamButton.addActionListener(e -> doLaunchSteam());
 
         // JLabels
         emptyGridLabel = new JLabel("Drop a game exe here to add it!", SwingConstants.CENTER);
@@ -82,6 +94,7 @@ public class MainFrame extends JFrame {
             doDropFile(files);
         });
         buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(steamButton);
         buttonsPanel.add(programSettingsButton);
         buttonsPanel.add(exitButton);
         buttonsPanel.setBackground(barColor);
@@ -337,6 +350,7 @@ public class MainFrame extends JFrame {
         this.buttonColor = buttonColor;
         exitButton.setForeground(buttonColor);
         programSettingsButton.setForeground(buttonColor);
+        steamButton.setForeground(buttonColor);
         titleLabel.setForeground(buttonColor);
     }
 
@@ -475,6 +489,15 @@ public class MainFrame extends JFrame {
         this.focusedGameLabel = focusedGameLabel;
     }
 
+    public boolean isUsingSteam() {
+        return useSteam;
+    }
+
+    public void setUseSteam(boolean useSteam) {
+        this.useSteam = useSteam;
+        steamButton.setVisible(useSteam);
+    }
+
     /**
      * Redraw the GridLayout with filled blank tiles.
      * 
@@ -609,10 +632,6 @@ public class MainFrame extends JFrame {
      */
     public void doExit() {
         // Save to XML on exit
-        ArrayList<Game> gameList = new ArrayList<>();
-        for (int i = 0; i < gameLabels.size(); i++) {
-            gameList.add(gameLabels.get(i).getGame());
-        }
         ProcessXML.WriteXML(this);
 
         // Fade Out animation and close program
@@ -627,6 +646,20 @@ public class MainFrame extends JFrame {
     private void doOpenProgramSettings() {
         new SettingsDialog(this);
         requestFocus();
+    }
+    
+    /**
+     * Launch Steam
+     */
+    private void doLaunchSteam() {
+        try {
+            Desktop.getDesktop().browse(new URI("steam://open/games"));
+        } catch (URISyntaxException ex) {
+            JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
+        }
+        doExit();
     }
 
     /**
@@ -842,14 +875,14 @@ public class MainFrame extends JFrame {
     // Fields
     private JXPanel shadowPanel;
     private JPanel gameGridPanel, statusBarPanel, buttonsPanel, mainPanel;
-    private JButton exitButton, programSettingsButton;
+    private JButton exitButton, programSettingsButton, steamButton;
     private JLabel emptyGridLabel, titleLabel;
-    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true;
+    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam=true;
     private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
     private ArrayList<GameLabel> gameLabels = new ArrayList<>();
     private int numberOfGames = 0;
     private double frameScale = 1.0;
-    private String gameName, titleText = "Game Organizer";
+    private String gameName, titleText = "Game Organizer", steamLocation = "C:\\Program Files (x86)\\Steam\\Steam.exe";
     private Font customFont;
     private XInputDevice controller;
     private GameLabel focusedGameLabel = null;

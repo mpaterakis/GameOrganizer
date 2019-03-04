@@ -192,6 +192,16 @@ public class SettingsDialog extends JDialog {
             }
         });
 
+        usingSteamCheckBox = new JCheckBox();
+        usingSteamCheckBox.setSelected(mainFrame.isUsingSteam());
+        usingSteamCheckBox.addActionListener(e -> {
+            if (usingSteamCheckBox.isSelected()) {
+                doEnableSteamIcon();
+            } else {
+                doDisableSteamIcon();
+            }
+        });
+
         // JTextFields
         titleField = new JTextField(mainFrame.getTitleText());
 
@@ -219,6 +229,10 @@ public class SettingsDialog extends JDialog {
         borderPanel = new JPanel(new BorderLayout());
         borderPanel.add(new JLabel("  Use border on main window: "), BorderLayout.WEST);
         borderPanel.add(borderButtonsPanel, BorderLayout.EAST);
+        
+        steamPanel = new JPanel(new BorderLayout());
+        steamPanel.add(new JLabel("  Show Steam icon on main window: "), BorderLayout.WEST);
+        steamPanel.add(usingSteamCheckBox, BorderLayout.EAST);
 
         focusingPanel = new JPanel(new BorderLayout());
         focusingPanel.add(new JLabel("  Dim the games that are not focused: "), BorderLayout.WEST);
@@ -232,12 +246,13 @@ public class SettingsDialog extends JDialog {
         sliderPanel.add(new JLabel("  Window Scale:     "), BorderLayout.WEST);
         sliderPanel.add(frameScaleSlider, BorderLayout.CENTER);
 
-        middlePanel = new JPanel(new GridLayout(7, 1));
+        middlePanel = new JPanel(new GridLayout(8, 1));
         middlePanel.add(spareColorButtonsPanel);
         middlePanel.add(shadowPanel);
         middlePanel.add(borderPanel);
         middlePanel.add(focusingPanel);
         middlePanel.add(gameAutoExitPanel);
+        middlePanel.add(steamPanel);
         middlePanel.add(titleSettingsPanel);
         middlePanel.add(sliderPanel);
 
@@ -259,7 +274,7 @@ public class SettingsDialog extends JDialog {
         });
 
         setFocusable(true);
-        setSize(580, 310);
+        setSize(580, 350);
         setTitle("Program Settings");
         setResizable(false);
         setLocationRelativeTo(null);
@@ -385,6 +400,20 @@ public class SettingsDialog extends JDialog {
     }
 
     /**
+     * Enable the Steam icon on MainFrame.
+     */
+    private void doEnableSteamIcon() {
+        mainFrame.setUseSteam(true);
+    }
+
+    /**
+     * Disable the Steam icon on MainFrame.
+     */
+    private void doDisableSteamIcon() {
+        mainFrame.setUseSteam(false);
+    }
+
+    /**
      * Enable focusing for GameLabels.
      */
     private void doEnableFocusing() {
@@ -455,11 +484,11 @@ public class SettingsDialog extends JDialog {
     }
 
     // Fields
-    private JPanel bottomPanel, titleSettingsPanel, gameAutoExitPanel, shadowPanel, shadowButtonsPanel, middlePanel, focusingPanel, borderPanel, borderButtonsPanel, sliderPanel, spareColorButtonsPanel;
+    private JPanel bottomPanel, steamPanel, steamButtonsPanel, titleSettingsPanel, gameAutoExitPanel, shadowPanel, shadowButtonsPanel, middlePanel, focusingPanel, borderPanel, borderButtonsPanel, sliderPanel, spareColorButtonsPanel;
     private JColorChooser barColorChooser, buttonColorChooser, borderColorChooser, backgroundColorChooser, shadowColorChooser;
     private JSlider frameScaleSlider;
     private JButton revertDefaultsButton, changeSpacingOption, changeTitleButton, borderColorButton, shadowColorButton, buttonsColorButton, barColorButton, backgroundColorButton;
-    private JCheckBox autoExitCheckbox, hasShadowCheckbox, hasFocusingCheckbox, hasBorderCheckBox;
+    private JCheckBox autoExitCheckbox, hasShadowCheckbox, hasFocusingCheckbox, hasBorderCheckBox, usingSteamCheckBox;
     private JTextField titleField;
     private MainFrame mainFrame;
 }
