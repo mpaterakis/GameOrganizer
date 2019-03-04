@@ -1,6 +1,8 @@
 # GameOrganizer
 A simple app that helps you organize game shortcuts
 
+![alt text](https://github.com/mpaterakis/GameOrganizer/blob/master/Screenshot1.png)
+
 Features:
 * Can use up to 9 different games
 * Total color customization
