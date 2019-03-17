@@ -70,7 +70,7 @@ public class MainFrame extends JFrame {
         programSettingsButton.setFont(customFont.deriveFont(15f));
         programSettingsButton.setForeground(buttonColor);
         programSettingsButton.addActionListener(e -> doOpenProgramSettings());
-        
+
         steamButton = new JButton("\uE800");
         steamButton.setBorderPainted(false);
         steamButton.setFocusPainted(false);
@@ -164,7 +164,22 @@ public class MainFrame extends JFrame {
                                 doControllerButtonAction(XInputButton.DPAD_DOWN);
                                 timeSinceLastAnalogAction = System.currentTimeMillis();
                             }
-
+                        }
+                        if (System.currentTimeMillis() - timeSinceLastAnalogAction > 5) {
+                            if (controller.getComponents().getAxes().get(XInputAxis.RIGHT_THUMBSTICK_X) > 0.6) {
+                                moveWindow(2, 0);
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                            } else if (controller.getComponents().getAxes().get(XInputAxis.RIGHT_THUMBSTICK_X) < -0.5) {
+                                moveWindow(-2, 0);
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                            }
+                            if (controller.getComponents().getAxes().get(XInputAxis.RIGHT_THUMBSTICK_Y) > 0.5) {
+                                moveWindow(0, -2);
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                            } else if (controller.getComponents().getAxes().get(XInputAxis.RIGHT_THUMBSTICK_Y) < -0.5) {
+                                moveWindow(0, 2);
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                            }
                         }
 
                         try {
@@ -217,7 +232,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Check if MainFrame uses spacing.
-     * 
+     *
      * @return Boolean containing value representative of the check
      */
     public boolean hasSpace() {
@@ -226,7 +241,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get MainFrame's GameLabels ArrayList.
-     * 
+     *
      * @return GameLabels ArrayList of this MainFrame
      */
     public ArrayList<GameLabel> getGameLabels() {
@@ -235,7 +250,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Check if MainFrame has a border.
-     * 
+     *
      * @return Boolean containing value representative of the check
      */
     public boolean hasBorder() {
@@ -244,7 +259,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get the buttons' color.
-     * 
+     *
      * @return Color object containing the buttons' color
      */
     public Color getButtonColor() {
@@ -253,7 +268,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get the bar's color.
-     * 
+     *
      * @return Color object containing the bar's color
      */
     public Color getBarColor() {
@@ -262,7 +277,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get the border's color.
-     * 
+     *
      * @return Color object containing the border's color
      */
     public Color getBorderColor() {
@@ -271,7 +286,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get the background's color.
-     * 
+     *
      * @return Color object containing the background's color
      */
     public Color getBackgroundColor() {
@@ -280,7 +295,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Check if MainFrame uses auto-exit after a game launch.
-     * 
+     *
      * @return Boolean containing value representative of the check
      */
     public boolean getAutoExit() {
@@ -289,7 +304,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Check if MainFrame has a shadow.
-     * 
+     *
      * @return Boolean containing value representative of the check
      */
     public boolean hasShadow() {
@@ -298,7 +313,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get the MainFrame's title text.
-     * 
+     *
      * @return String containing the title's text
      */
     public String getTitleText() {
@@ -307,7 +322,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get the shadow's color.
-     * 
+     *
      * @return Color object containing the shadow's color
      */
     public Color getShadowColor() {
@@ -316,7 +331,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Check if MainFrame has fully booted.
-     * 
+     *
      * @return Boolean containing value representative of the check
      */
     public boolean isFullyBooted() {
@@ -325,7 +340,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Check if MainFrame uses focusing.
-     * 
+     *
      * @return Boolean containing value representative of the check
      */
     public boolean hasFocusing() {
@@ -334,7 +349,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the auto-exit value (after a game is launched).
-     * 
+     *
      * @param autoExit Boolean containing the new auto-exit value.
      */
     public void setAutoExit(boolean autoExit) {
@@ -343,7 +358,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the button color.
-     * 
+     *
      * @param buttonColor Color object containing the new button color
      */
     public void setButtonColor(Color buttonColor) {
@@ -356,7 +371,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the bar color.
-     * 
+     *
      * @param barColor Color object containing the new bar color
      */
     public void setBarColor(Color barColor) {
@@ -367,7 +382,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the added Game's name.
-     * 
+     *
      * @param addedGameName String containing the added Game's name
      */
     public void setAddedGameName(String addedGameName) {
@@ -376,7 +391,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the hasBorder value.
-     * 
+     *
      * @param hasBorder Boolean containing the new hasBorder value
      */
     public void setHasBorder(boolean hasBorder) {
@@ -385,7 +400,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the focusing value.
-     * 
+     *
      * @param focusing Boolean containing the new focusing value
      */
     public void setFocusing(boolean focusing) {
@@ -394,7 +409,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the border color.
-     * 
+     *
      * @param borderColor Color object containing the new border color
      */
     public void setBorderColor(Color borderColor) {
@@ -403,7 +418,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the hasSpace value.
-     * 
+     *
      * @param hasSpace Boolean containing the new hasSpace value
      */
     public void setHasSpace(boolean hasSpace) {
@@ -412,7 +427,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the MainFrame's title text.
-     * 
+     *
      * @param titleText String object containing the MainFrame's title
      */
     public void setTitleText(String titleText) {
@@ -422,7 +437,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the MainFrame's GameLabels.
-     * 
+     *
      * @param gameLabels GameLabels ArrayList to be set
      */
     public void setGameLabels(ArrayList<GameLabel> gameLabels) {
@@ -431,7 +446,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the hasShadow value.
-     * 
+     *
      * @param hasShadow Boolean containing the new hasShadow value
      */
     public void setHasShadow(boolean hasShadow) {
@@ -440,7 +455,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the shadow color.
-     * 
+     *
      * @param shadowColor Color object containing the new shadow color
      */
     public void setShadowColor(Color shadowColor) {
@@ -450,7 +465,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get the MainFrame's frame scale.
-     * 
+     *
      * @return Double object containing the frame scale value.
      */
     public double getFrameScale() {
@@ -459,7 +474,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the MainFrame's frame scale.
-     * 
+     *
      * @param frameScale Double object containing the frame scale value.
      */
     public void setFrameScale(double frameScale) {
@@ -473,7 +488,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get the currently focused GameLabel.
-     * 
+     *
      * @return GameLabel that is focused
      */
     public JLabel getFocusedGameLabel() {
@@ -482,7 +497,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the currently focused GameLabel.
-     * 
+     *
      * @param focusedGameLabel GameLabel to be focused
      */
     public void setFocusedGameLabel(GameLabel focusedGameLabel) {
@@ -500,7 +515,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Redraw the GridLayout with filled blank tiles.
-     * 
+     *
      * @param gameLabels GameLabel ArrayList to be used for the redrawing
      */
     public void redrawGameGridPanel(ArrayList<GameLabel> gameLabels) {
@@ -525,7 +540,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the border and window size.
-     * 
+     *
      * @param hasBorder Boolean object (true if MainFrame has border, false otherwise)
      * @param borderColor Color object containing the new border Color
      */
@@ -557,7 +572,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Set the background color.
-     * 
+     *
      * @param backgroundColor Color object containing the new background color
      */
     public void setBackgroundColor(Color backgroundColor) {
@@ -647,7 +662,7 @@ public class MainFrame extends JFrame {
         new SettingsDialog(this);
         requestFocus();
     }
-    
+
     /**
      * Launch Steam
      */
@@ -661,7 +676,7 @@ public class MainFrame extends JFrame {
         }
         doExit();
     }
-    
+
     /**
      * Launch Steam in Big Picture mode
      */
@@ -678,7 +693,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Select all of the game's properties after it is dropped.
-     * 
+     *
      * @param files File object containing the Game file that was dropped
      */
     private void doDropFile(java.io.File[] files) {
@@ -707,7 +722,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Changes the main window's appearance according to each key press.
-     * 
+     *
      * @param e KeyEvent that was triggered
      */
     private void doKeyAction(KeyEvent e) {
@@ -755,6 +770,7 @@ public class MainFrame extends JFrame {
             fadeOutJFrame();
             frameScale -= 0.1;
             setFrameScale(frameScale);
+            fixWindowPosition();
             fadeInJFrame();
         }
     }
@@ -767,13 +783,30 @@ public class MainFrame extends JFrame {
             fadeOutJFrame();
             frameScale += 0.1;
             setFrameScale(frameScale);
+            fixWindowPosition();
             fadeInJFrame();
         }
     }
 
     /**
+     * Adjust main window's position if it's out of bounds
+     */
+    private void fixWindowPosition() {
+        if (getLocation().x + mainPanel.getSize().width >= Toolkit.getDefaultToolkit().getScreenSize().getWidth()) {
+            setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - mainPanel.getSize().width), getLocation().y);
+        } else if (getLocation().x < 0) {
+            setLocation(-7, getLocation().y);
+        }
+        if (getLocation().y + mainPanel.getSize().height >= Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
+            setLocation(getLocation().x, (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - mainPanel.getSize().height));
+        } else if (getLocation().y < -0) {
+            setLocation(getLocation().x , -7);
+        }
+    }
+
+    /**
      * Navigate the menu according to each controller button press.
-     * 
+     *
      * @param button XInputButton object containing the button that was pressed
      */
     private void doControllerButtonAction(XInputButton button) {
@@ -840,9 +873,8 @@ public class MainFrame extends JFrame {
 
     /**
      * Change the focused GameLabel.
-     * 
-     * @param indexDelta Integer containing the delta (difference) of the new 
-     * focused GameLabel compared to the previous one.
+     *
+     * @param indexDelta Integer containing the delta (difference) of the new focused GameLabel compared to the previous one.
      */
     private void changeFocusedGamelabel(int indexDelta) {
         if (getFocusedGameLabel() != null) {
@@ -890,12 +922,24 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Move main window on the x and y axis according to given values
+     */
+    private void moveWindow(int xIncrement, int yIncrement) {
+        int frameSizeDiff = shadowPanel.getSize().height - mainPanel.getSize().height;
+        if (getLocation().x + xIncrement >= -frameSizeDiff && getLocation().y + yIncrement >= -frameSizeDiff
+                && getLocation().x + xIncrement + mainPanel.getSize().width <= Toolkit.getDefaultToolkit().getScreenSize().getWidth()
+                && getLocation().y + yIncrement + mainPanel.getSize().height <= Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
+            setLocation(getLocation().x + xIncrement, getLocation().y + yIncrement);
+        }
+    }
+
     // Fields
     private JXPanel shadowPanel;
     private JPanel gameGridPanel, statusBarPanel, buttonsPanel, mainPanel;
     private JButton exitButton, programSettingsButton, steamButton;
     private JLabel emptyGridLabel, titleLabel;
-    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam=true;
+    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true;
     private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
     private ArrayList<GameLabel> gameLabels = new ArrayList<>();
     private int numberOfGames = 0;

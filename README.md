@@ -25,8 +25,10 @@ Usage:
 * Pressing Add (+) increases the main window's scale
 * Pressing Subtract (-) decreases the main window's scale
 * Pressing any Arrow key navigates through the games
-* Pressing A on an XBOX Controller launches the focused game
 * Pressing any DPAD button on an XBOX Controller navigates through the games
+* Moving the Left Stick on an XBOX Controller also navigates through the games
+* Moving the Right Stick on an XBOX Controller moves the main window
+* Pressing A on an XBOX Controller launches the focused game
 * Pressing the Guide Button on an XBOX Controller launches Steam in Big Picture mode
 * Pressing RB on an XBOX Controller increases the main window's scale
 * Pressing LB on an XBOX Controller decreases the main window's scale
