@@ -15,6 +15,7 @@ Features:
 * Option to exit GameOrganizer after a game is launched
 * Ability to launch the Steam Client
 * Allows editing of all the game data after each game is added
+* Mouse cursor gets hidden when an XBOX Controller action is registered
 
 Usage:
 * Simply Drag-and-Drop a file onto the GameOrganizer window to create its shortcut

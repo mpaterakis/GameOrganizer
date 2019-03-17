@@ -13,6 +13,7 @@ import com.ivan.xinput.exceptions.XInputNotLoadedException;
 import com.ivan.xinput.listener.SimpleXInputDeviceListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -132,6 +133,25 @@ public class MainFrame extends JFrame {
             }
         });
 
+        // MouseAdapter
+        MouseAdapter mouseAdapter = new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                // Enable the cursor on main window when the mouse moves
+                if (mouseX != e.getXOnScreen() || mouseY != e.getYOnScreen()) {
+                    mouseX = e.getXOnScreen();
+                    mouseY = e.getYOnScreen();
+                    enableCursor();
+                }
+            }
+        };
+        mouseX = MouseInfo.getPointerInfo().getLocation().x;
+        mouseY = MouseInfo.getPointerInfo().getLocation().y;
+
+        // MouseMotionListener
+        addMouseMotionListener(mouseAdapter);
+        statusBarPanel.addMouseMotionListener(mouseAdapter);
+
         // XInputDeviceListener
         try {
             controller = XInputDevice.getDeviceFor(0);
@@ -169,16 +189,20 @@ public class MainFrame extends JFrame {
                             if (controller.getComponents().getAxes().get(XInputAxis.RIGHT_THUMBSTICK_X) > 0.6) {
                                 moveWindow(2, 0);
                                 timeSinceLastAnalogAction = System.currentTimeMillis();
+                                disableCursor();
                             } else if (controller.getComponents().getAxes().get(XInputAxis.RIGHT_THUMBSTICK_X) < -0.5) {
                                 moveWindow(-2, 0);
                                 timeSinceLastAnalogAction = System.currentTimeMillis();
+                                disableCursor();
                             }
                             if (controller.getComponents().getAxes().get(XInputAxis.RIGHT_THUMBSTICK_Y) > 0.5) {
                                 moveWindow(0, -2);
                                 timeSinceLastAnalogAction = System.currentTimeMillis();
+                                disableCursor();
                             } else if (controller.getComponents().getAxes().get(XInputAxis.RIGHT_THUMBSTICK_Y) < -0.5) {
                                 moveWindow(0, 2);
                                 timeSinceLastAnalogAction = System.currentTimeMillis();
+                                disableCursor();
                             }
                         }
 
@@ -190,8 +214,8 @@ public class MainFrame extends JFrame {
                     }
                 });
                 listenToControllerThread.start();
+                disableCursor();
             }
-
         } catch (XInputNotLoadedException ex) {
             // Do nothing, controller functions will be disabled
         }
@@ -504,13 +528,64 @@ public class MainFrame extends JFrame {
         this.focusedGameLabel = focusedGameLabel;
     }
 
+    /**
+     * Check the status (enabled/disabled) of the Steam icon.
+     *
+     * @return The status (enabled/disabled) of the Steam icon.
+     */
     public boolean isUsingSteam() {
         return useSteam;
     }
 
+    /**
+     * Set the new status (enabled/disabled) of the Steam icon.
+     *
+     * @param useSteam The new status of the Steam Icon
+     */
     public void setUseSteam(boolean useSteam) {
         this.useSteam = useSteam;
         steamButton.setVisible(useSteam);
+    }
+
+    /**
+     * Get the status of ignoreMouse.
+     *
+     * @return The status of ignoreMouse
+     */
+    public boolean isIgnoreMouse() {
+        return ignoreMouse;
+    }
+
+    /**
+     * Set the status of ignoreMouse.
+     *
+     * @param ignoreMouse The new status of ignoreMouse
+     */
+    public void setIgnoreMouse(boolean ignoreMouse) {
+        this.ignoreMouse = ignoreMouse;
+    }
+
+    /**
+     * Get mouse position.
+     *
+     * @return Integer table with the X and Y position of the mouse
+     */
+    public int[] getFrameMousePosition() {
+        int[] mousePosition = new int[2];
+        mousePosition[0] = mouseX;
+        mousePosition[1] = mouseY;
+        return mousePosition;
+    }
+
+    /**
+     * Set mouse position.
+     *
+     * @param mouseX X position of mouse
+     * @param mouseY Y position of mouse
+     */
+    public void setFrameMousePosition(int mouseX, int mouseY) {
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
     }
 
     /**
@@ -582,7 +657,7 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Set the MainFrame's shadow
+     * Set the MainFrame's shadow.
      */
     public void paintShadow() {
         DropShadowBorder shadow = new DropShadowBorder();
@@ -664,7 +739,7 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Launch Steam
+     * Launch Steam.
      */
     private void doLaunchSteam() {
         try {
@@ -678,7 +753,7 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Launch Steam in Big Picture mode
+     * Launch Steam in Big Picture mode.
      */
     private void doLaunchSteamBigPicture() {
         try {
@@ -789,7 +864,7 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Adjust main window's position if it's out of bounds
+     * Adjust main window's position if it's out of bounds.
      */
     private void fixWindowPosition() {
         if (getLocation().x + mainPanel.getSize().width >= Toolkit.getDefaultToolkit().getScreenSize().getWidth()) {
@@ -800,7 +875,7 @@ public class MainFrame extends JFrame {
         if (getLocation().y + mainPanel.getSize().height >= Toolkit.getDefaultToolkit().getScreenSize().getHeight()) {
             setLocation(getLocation().x, (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() - mainPanel.getSize().height));
         } else if (getLocation().y < -0) {
-            setLocation(getLocation().x , -7);
+            setLocation(getLocation().x, -7);
         }
     }
 
@@ -810,6 +885,7 @@ public class MainFrame extends JFrame {
      * @param button XInputButton object containing the button that was pressed
      */
     private void doControllerButtonAction(XInputButton button) {
+        disableCursor();
         switch (button.toString()) {
 
             // If A is pressed, launch the focused game
@@ -923,7 +999,7 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Move main window on the x and y axis according to given values
+     * Move main window on the x and y axis according to given values.
      */
     private void moveWindow(int xIncrement, int yIncrement) {
         int frameSizeDiff = shadowPanel.getSize().height - mainPanel.getSize().height;
@@ -934,15 +1010,43 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Disable the cursor on the main window.
+     */
+    private void disableCursor() {
+        if (!ignoreMouse) {
+            // Create a new blank cursor.
+            Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+                    new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
+            // Set the blank cursor to the JFrame.
+            setCursor(blankCursor);
+            statusBarPanel.setCursor(blankCursor);
+            ignoreMouse = true;
+            mouseX = MouseInfo.getPointerInfo().getLocation().x;
+            mouseY = MouseInfo.getPointerInfo().getLocation().y;
+        }
+    }
+
+    /**
+     * Enable the cursor on the main window.
+     */
+    public void enableCursor() {
+        if (ignoreMouse) {
+            setCursor(Cursor.getDefaultCursor());
+            statusBarPanel.setCursor(Cursor.getDefaultCursor());
+            ignoreMouse = false;
+        }
+    }
+
     // Fields
     private JXPanel shadowPanel;
     private JPanel gameGridPanel, statusBarPanel, buttonsPanel, mainPanel;
     private JButton exitButton, programSettingsButton, steamButton;
     private JLabel emptyGridLabel, titleLabel;
-    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true;
+    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false;
     private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
     private ArrayList<GameLabel> gameLabels = new ArrayList<>();
-    private int numberOfGames = 0;
+    private int numberOfGames = 0, mouseX = 0, mouseY = 0;
     private double frameScale = 1.0;
     private String gameName, titleText = "Game Organizer", steamLocation = "C:\\Program Files (x86)\\Steam\\Steam.exe";
     private Font customFont;

@@ -16,8 +16,7 @@ import javax.swing.*;
 import org.jdesktop.swingx.util.OS;
 
 /**
- * A GameLabel object displays the game icon, can launch the game and
- * open its GameSettingsDialog.
+ * A GameLabel object displays the game icon, can launch the game and open its GameSettingsDialog.
  *
  * @author mpaterakis
  */
@@ -25,7 +24,7 @@ public class GameLabel extends JLabel {
 
     /**
      * Create a GameLabel object.
-     * 
+     *
      * @param game Game object for this GameLabel
      * @param mainFrame MainFrame containing this GameLabel
      */
@@ -44,7 +43,7 @@ public class GameLabel extends JLabel {
         bgImage = new AlphaImageIcon(game.getGameIcon(), 1.0f);
         setIcon(bgImage);
 
-        // Add MouseListener()
+        // Add MouseListener
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -55,13 +54,31 @@ public class GameLabel extends JLabel {
             @Override
             public void mouseEntered(MouseEvent e) {
                 // Focus on this game
-                focusOnGameLabel();
+                if (!mainFrame.isIgnoreMouse()) {
+                    focusOnGameLabel();
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                // Regain focus of all game
-                resetGameLabelFocus(mainFrame);
+                // Reset focus of all games
+                if (!mainFrame.isIgnoreMouse()) {
+                    resetGameLabelFocus(mainFrame);
+                }
+            }
+        });
+
+        // Add MouseMotionListener
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (mainFrame.isIgnoreMouse() && (mainFrame.getFrameMousePosition()[0] != e.getXOnScreen() || mainFrame.getFrameMousePosition()[1] != e.getYOnScreen())) {
+                    // Focus on this game
+                    mainFrame.setFrameMousePosition(e.getXOnScreen(), e.getYOnScreen());
+                    resetGameLabelFocus(mainFrame);
+                    focusOnGameLabel();
+                    mainFrame.enableCursor();
+                }
             }
         });
 
@@ -71,7 +88,7 @@ public class GameLabel extends JLabel {
 
     /**
      * Get the GameLabel's Game object.
-     * 
+     *
      * @return Game
      */
     public Game getGame() {
@@ -108,7 +125,7 @@ public class GameLabel extends JLabel {
 
     /**
      * Manage the click that was issued and make an action.
-     * 
+     *
      * @param e MouseEvent that was issued
      */
     private void manageClick(MouseEvent e) {
@@ -116,8 +133,8 @@ public class GameLabel extends JLabel {
         Point p = e.getPoint();
         int clickX = (int) p.getX();
         int clickY = (int) p.getY();
-        if ((mainFrame.hasSpace() && clickX < 256 * mainFrame.getFrameScale() && clickY < 263 * mainFrame.getFrameScale() && clickY > 6) 
-                || (!mainFrame.hasSpace() && clickX < 256  * mainFrame.getFrameScale() && clickY < 263  * mainFrame.getFrameScale())) {
+        if ((mainFrame.hasSpace() && clickX < 256 * mainFrame.getFrameScale() && clickY < 263 * mainFrame.getFrameScale() && clickY > 6)
+                || (!mainFrame.hasSpace() && clickX < 256 * mainFrame.getFrameScale() && clickY < 263 * mainFrame.getFrameScale())) {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 launchGame();
 
@@ -157,7 +174,7 @@ public class GameLabel extends JLabel {
 
     /**
      * Reset focus of all the GameLabels.
-     * 
+     *
      * @param mainFrame MainFrame object containing this GameLabel
      */
     public static void resetGameLabelFocus(MainFrame mainFrame) {
