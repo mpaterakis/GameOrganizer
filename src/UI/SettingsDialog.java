@@ -53,7 +53,6 @@ public class SettingsDialog extends JDialog {
 
         borderColorChooser = new JColorChooser();
         borderColorChooser.setColor(mainFrame.getBorderColor());
-        System.out.println(mainFrame.getBorderColor());
         borderColorChooser.setBorder(BorderFactory.createTitledBorder("Window Border Color"));
         borderColorChooser.setName("Window Border Color");
         borderColorChooser.setPreviewPanel(new JPanel());
@@ -75,9 +74,9 @@ public class SettingsDialog extends JDialog {
         shadowColorChooser.getSelectionModel().addChangeListener(e -> doSetShadowColor());
 
         // JSliders
-        frameScaleSlider = new JSlider(5, 15, (int) (mainFrame.getFrameScale() * 10));
+        frameScaleSlider = new JSlider(5, (int) (mainFrame.getMaxFrameScale() * 10), (int) (mainFrame.getFrameScale() * 10));
         Hashtable sliderTable = new Hashtable();
-        for (int i = 5; i < 16; i++) {
+        for (int i = 5; i < (int) (mainFrame.getMaxFrameScale() * 10) + 1; i++) {
             sliderTable.put(i, new JLabel(String.valueOf((double) i / 10)));
         }
         frameScaleSlider.setLabelTable(sliderTable);
@@ -99,7 +98,7 @@ public class SettingsDialog extends JDialog {
                         }
                         break;
                     case KeyEvent.VK_RIGHT:
-                        if (mainFrame.getFrameScale() < 1.5) {
+                        if (mainFrame.getFrameScale() < mainFrame.getMaxFrameScale()) {
                             mainFrame.setFrameScale(mainFrame.getFrameScale() + 0.1);
                         }
                         break;
@@ -436,6 +435,7 @@ public class SettingsDialog extends JDialog {
     private void doSetFrameScale(double frameScale) {
         mainFrame.setFrameScale(frameScale);
         mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
+        mainFrame.fixWindowPosition();
     }
 
     /**
@@ -484,7 +484,7 @@ public class SettingsDialog extends JDialog {
     }
 
     // Fields
-    private JPanel bottomPanel, steamPanel, steamButtonsPanel, titleSettingsPanel, gameAutoExitPanel, shadowPanel, shadowButtonsPanel, middlePanel, focusingPanel, borderPanel, borderButtonsPanel, sliderPanel, spareColorButtonsPanel;
+    private JPanel bottomPanel, steamPanel, titleSettingsPanel, gameAutoExitPanel, shadowPanel, shadowButtonsPanel, middlePanel, focusingPanel, borderPanel, borderButtonsPanel, sliderPanel, spareColorButtonsPanel;
     private JColorChooser barColorChooser, buttonColorChooser, borderColorChooser, backgroundColorChooser, shadowColorChooser;
     private JSlider frameScaleSlider;
     private JButton revertDefaultsButton, changeSpacingOption, changeTitleButton, borderColorButton, shadowColorButton, buttonsColorButton, barColorButton, backgroundColorButton;

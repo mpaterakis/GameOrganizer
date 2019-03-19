@@ -15,8 +15,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
@@ -495,6 +498,16 @@ public class MainFrame extends JFrame {
     public double getFrameScale() {
         return frameScale;
     }
+    
+    /**
+     * Get the maximum possible frame scale for the current screen.
+     * 
+     * @return The maximum possible frame scale for the current screen
+     */
+    public double getMaxFrameScale() {
+        double maxFrameScale = BigDecimal.valueOf(Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 860).setScale(1, RoundingMode.HALF_UP).doubleValue();
+        return maxFrameScale;
+    }
 
     /**
      * Set the MainFrame's frame scale.
@@ -502,7 +515,8 @@ public class MainFrame extends JFrame {
      * @param frameScale Double object containing the frame scale value.
      */
     public void setFrameScale(double frameScale) {
-        this.frameScale = frameScale;
+        // "Filter" possible noise caused by Double
+        this.frameScale = BigDecimal.valueOf(frameScale).setScale(1, RoundingMode.HALF_UP).doubleValue();
         setBorderAndSize(hasBorder, borderColor);
         for (int i = 0; i < gameLabels.size(); i++) {
             gameLabels.get(i).getGame().setFrameScale(frameScale);
@@ -854,7 +868,7 @@ public class MainFrame extends JFrame {
      * Increase the MainFrame's scale.
      */
     public void increaseScale() {
-        if (frameScale < 1.5) {
+        if (frameScale < getMaxFrameScale()) {
             fadeOutJFrame();
             frameScale += 0.1;
             setFrameScale(frameScale);
@@ -866,7 +880,7 @@ public class MainFrame extends JFrame {
     /**
      * Adjust main window's position if it's out of bounds.
      */
-    private void fixWindowPosition() {
+    public void fixWindowPosition() {
         if (getLocation().x + mainPanel.getSize().width >= Toolkit.getDefaultToolkit().getScreenSize().getWidth()) {
             setLocation((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() - mainPanel.getSize().width), getLocation().y);
         } else if (getLocation().x < 0) {
