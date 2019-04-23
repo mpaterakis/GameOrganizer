@@ -906,6 +906,20 @@ public class MainFrame extends JFrame {
     }
 
     /**
+     * Toggle the secret GameLabels.
+     */
+    public void toggleSecretGameLabels() {
+        if (secretGamesShown) {
+            secretGamesShown = false;
+            activeGameLabels = mainGameLabels;
+        } else {
+            secretGamesShown = true;
+            activeGameLabels = secretGameLabels;
+        }
+        redrawGameGridPanel(activeGameLabels);
+    }
+
+    /**
      * (Re)Center the MainFrame.
      */
     public void centerWindow() {
@@ -1017,6 +1031,10 @@ public class MainFrame extends JFrame {
             }
             case "GUIDE_BUTTON": {
                 doLaunchSteamBigPicture();
+                break;
+            }
+            case "START": {
+                toggleSecretGameLabels();
                 break;
             }
             default:
