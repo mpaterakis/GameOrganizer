@@ -28,7 +28,7 @@ public class GameSettingsDialog extends JDialog {
     public GameSettingsDialog(Game game, MainFrame mainFrame) {
         this.game = originalGame = game;
         this.mainFrame = mainFrame;
-        this.originalGameLabels = new ArrayList<>(mainFrame.getGameLabels());
+        this.originalGameLabels = new ArrayList<>(mainFrame.getActiveGameLabels());
         initComponents();
     }
 
@@ -87,7 +87,7 @@ public class GameSettingsDialog extends JDialog {
         orderPlusButton = new JButton("+");
         orderPlusButton.setBackground(new Color(209, 209, 209));
         orderPlusButton.setFocusPainted(false);
-        if (Integer.valueOf(orderField.getText()) == mainFrame.getGameLabels().size()) {
+        if (Integer.valueOf(orderField.getText()) == mainFrame.getActiveGameLabels().size()) {
             orderPlusButton.setEnabled(false);
         }
         orderPlusButton.addActionListener(e -> doOrderPlus());
@@ -163,8 +163,8 @@ public class GameSettingsDialog extends JDialog {
      * @return Integer containing the Game's order number
      */
     private int getGameOrderNumber() {
-        for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
-            if (mainFrame.getGameLabels().get(i).getGame() == game) {
+        for (int i = 0; i < mainFrame.getActiveGameLabels().size(); i++) {
+            if (mainFrame.getActiveGameLabels().get(i).getGame() == game) {
                 return i + 1;
             }
         }
@@ -179,10 +179,10 @@ public class GameSettingsDialog extends JDialog {
      */
     private void reorderGameLabels(int oldPosition, int newPosition) {
         // Swap positions
-        Collections.swap(mainFrame.getGameLabels(), oldPosition, newPosition);
+        Collections.swap(mainFrame.getActiveGameLabels(), oldPosition, newPosition);
 
         // Redraw gameGridPanel
-        mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
+        mainFrame.redrawGameGridPanel(mainFrame.getActiveGameLabels());
     }
 
     /**
@@ -214,14 +214,14 @@ public class GameSettingsDialog extends JDialog {
      * Choose the Game's icon.
      */
     private void doChooseIcon() {
-        iconField.setText(SpareDialogs.createGameIconPicker());
+        iconField.setText(SpareDialogs.createGameIconPicker(new File(game.getGamePath()).getParentFile().getAbsolutePath()));
     }
 
     // Open parent folder
     private void doOpenDir() {
         try {
             Desktop.getDesktop().open(new File(game.getGamePath()).getParentFile());
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "This file has no parent directory", "No Parent Directory", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -230,10 +230,10 @@ public class GameSettingsDialog extends JDialog {
      * Remove this Game.
      */
     private void doRemoveGame() {
-        for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
+        for (int i = 0; i < mainFrame.getActiveGameLabels().size(); i++) {
             // Make sure we got the correct game
-            if (mainFrame.getGameLabels().get(i).getGame().getGamePath() == originalGame.getGamePath()
-                    && mainFrame.getGameLabels().get(i).getGame().getGameName() == originalGame.getGameName()) {
+            if (mainFrame.getActiveGameLabels().get(i).getGame().getGamePath() == originalGame.getGamePath()
+                    && mainFrame.getActiveGameLabels().get(i).getGame().getGameName() == originalGame.getGameName()) {
 
                 // JOptionPane prompt before deletion
                 // Creating buttons for JOptionPane
@@ -244,7 +244,7 @@ public class GameSettingsDialog extends JDialog {
                 final int j = i;
                 yesButton.addActionListener((ActionEvent actionEvent) -> {
                     // Get gameLabels, remove this instance and set it as the new gameLabels
-                    ArrayList<GameLabel> gameLabels = mainFrame.getGameLabels();
+                    ArrayList<GameLabel> gameLabels = mainFrame.getActiveGameLabels();
                     gameLabels.remove(j);
                     mainFrame.redrawGameGridPanel(gameLabels);
                     
@@ -309,7 +309,7 @@ public class GameSettingsDialog extends JDialog {
         orderMinusButton.setBackground(new Color(209, 209, 209));
 
         // Prevent from going out of bounds
-        if (Integer.valueOf(orderField.getText()) == mainFrame.getGameLabels().size()) {
+        if (Integer.valueOf(orderField.getText()) == mainFrame.getActiveGameLabels().size()) {
             orderPlusButton.setEnabled(false);
             orderPlusButton.setBackground(Color.LIGHT_GRAY);
         }

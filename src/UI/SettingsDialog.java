@@ -417,7 +417,7 @@ public class SettingsDialog extends JDialog {
      */
     private void doEnableFocusing() {
         mainFrame.setFocusing(true);
-        mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
+        mainFrame.redrawGameGridPanel(mainFrame.getActiveGameLabels());
     }
 
     /**
@@ -434,7 +434,7 @@ public class SettingsDialog extends JDialog {
      */
     private void doSetFrameScale(double frameScale) {
         mainFrame.setFrameScale(frameScale);
-        mainFrame.redrawGameGridPanel(mainFrame.getGameLabels());
+        mainFrame.redrawGameGridPanel(mainFrame.getActiveGameLabels());
         mainFrame.fixWindowPosition();
     }
 

@@ -69,11 +69,10 @@ public class SpareDialogs {
      * 
      * @return String containing the picked icon's path
      */
-    public static String createGameIconPicker() {
+    public static String createGameIconPicker(String gameLocation) {
         
         // Set up JFileChooser
-        String userhome = System.getProperty("user.home");
-        JFileChooser chooser = new JFileChooser(userhome);
+        JFileChooser chooser = new JFileChooser(gameLocation);
         chooser.setDialogTitle("Choose Game Tile Image");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);

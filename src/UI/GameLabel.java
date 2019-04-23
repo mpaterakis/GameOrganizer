@@ -162,9 +162,9 @@ public class GameLabel extends JLabel {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
-                if (mainFrame.getGameLabels().get(i) != this) {
-                    mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon(), 0.5f));
+            for (int i = 0; i < mainFrame.getActiveGameLabels().size(); i++) {
+                if (mainFrame.getActiveGameLabels().get(i) != this) {
+                    mainFrame.getActiveGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getActiveGameLabels().get(i).getGame().getGameIcon(), 0.5f));
                 }
             }
             setIcon(new AlphaImageIcon(getGame().getGameIcon(), 1.0f));
@@ -179,8 +179,8 @@ public class GameLabel extends JLabel {
      */
     public static void resetGameLabelFocus(MainFrame mainFrame) {
         if (mainFrame.hasFocusing()) {
-            for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
-                mainFrame.getGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getGameLabels().get(i).getGame().getGameIcon(), 1.0f));
+            for (int i = 0; i < mainFrame.getActiveGameLabels().size(); i++) {
+                mainFrame.getActiveGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getActiveGameLabels().get(i).getGame().getGameIcon(), 1.0f));
             }
             mainFrame.setFocusedGameLabel(null);
         }

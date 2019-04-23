@@ -42,11 +42,11 @@ public class ProcessXML {
             doc.appendChild(rootElement);
 
             // Game list
-            Element subElement = doc.createElement("GameList");
+            Element subElement = doc.createElement("MainGameList");
             rootElement.appendChild(subElement);
 
-            // Games list
-            for (int i = 0; i < mainFrame.getGameLabels().size(); i++) {
+            // Main games list
+            for (int i = 0; i < mainFrame.getMainGameLabels().size(); i++) {
                 // Game elements
                 Element game = doc.createElement("Game");
                 subElement.appendChild(game);
@@ -58,20 +58,52 @@ public class ProcessXML {
 
                 // Name elements
                 Element gamename = doc.createElement("Name");
-                gamename.appendChild(doc.createTextNode(mainFrame.getGameLabels().get(i).getGame().getGameName()));
+                gamename.appendChild(doc.createTextNode(mainFrame.getMainGameLabels().get(i).getGame().getGameName()));
                 game.appendChild(gamename);
 
                 // Icon elements
                 Element gameicon = doc.createElement("Icon");
-                gameicon.appendChild(doc.createTextNode(mainFrame.getGameLabels().get(i).getGame().getGameIconPath()));
+                gameicon.appendChild(doc.createTextNode(mainFrame.getMainGameLabels().get(i).getGame().getGameIconPath()));
                 game.appendChild(gameicon);
 
                 // Exe locaiton elements
                 Element gamepath = doc.createElement("Path");
-                gamepath.appendChild(doc.createTextNode(mainFrame.getGameLabels().get(i).getGame().getGamePath()));
+                gamepath.appendChild(doc.createTextNode(mainFrame.getMainGameLabels().get(i).getGame().getGamePath()));
                 game.appendChild(gamepath);
             }
+            
+            
+            // Game list
+            Element subElement1 = doc.createElement("SecretGameList");
+            rootElement.appendChild(subElement1);
+            
+            // Secret games list
+            for (int i = 0; i < mainFrame.getSecretGameLabels().size(); i++) {
+                // Game elements
+                Element game = doc.createElement("SecretGame");
+                subElement1.appendChild(game);
 
+                // Set attribute to staff element
+                Attr attr = doc.createAttribute("id");
+                attr.setValue(Integer.toString(i + 1));
+                game.setAttributeNode(attr);
+
+                // Name elements
+                Element gamename = doc.createElement("Name");
+                gamename.appendChild(doc.createTextNode(mainFrame.getSecretGameLabels().get(i).getGame().getGameName()));
+                game.appendChild(gamename);
+
+                // Icon elements
+                Element gameicon = doc.createElement("Icon");
+                gameicon.appendChild(doc.createTextNode(mainFrame.getSecretGameLabels().get(i).getGame().getGameIconPath()));
+                game.appendChild(gameicon);
+
+                // Exe locaiton elements
+                Element gamepath = doc.createElement("Path");
+                gamepath.appendChild(doc.createTextNode(mainFrame.getSecretGameLabels().get(i).getGame().getGamePath()));
+                game.appendChild(gamepath);
+            }
+            
             // Window properties
             Element subElement2 = doc.createElement("WindowProperties");
             rootElement.appendChild(subElement2);
@@ -207,7 +239,7 @@ public class ProcessXML {
             // Initialize values
             String barClr = "", btnsClr = "", brdrClr = "", bgClr = "", shdClr = "", hasBrdr = "", hasSpc = "", hasShadow = "", autoExit = "", focusing = "", usingSteam = "", windowTitle = "";
             double windowPosX = 0, windowPosY = 0, frameScale = 1;
-            NodeList gamesList = null;
+            NodeList gamesList = null, secretGamesList = null;
             Document document = null;
             
             try {
@@ -327,8 +359,10 @@ public class ProcessXML {
             }
             try {
                 gamesList = document.getElementsByTagName("Game");
+                secretGamesList = document.getElementsByTagName("SecretGame");
                 // Load game data
                 ArrayList<GameLabel> gameLabels = new ArrayList<>();
+                ArrayList<GameLabel> secretGameLabels = new ArrayList<>();
                 for (int i = 0; i < gamesList.getLength(); i++) {
                     // Set data to Strings and create GameLabels
                     String name = ((Element) gamesList.item(i)).getElementsByTagName("Name").item(0).getTextContent();
@@ -337,6 +371,18 @@ public class ProcessXML {
                     GameLabel gameLabel = new GameLabel(new Game(icon, path, name, frameScale), mainFrame);
                     gameLabels.add(gameLabel);
                 }
+                for (int i = 0; i < secretGamesList.getLength(); i++) {
+                    // Set data to Strings and create GameLabels
+                    String name = ((Element) secretGamesList.item(i)).getElementsByTagName("Name").item(0).getTextContent();
+                    String icon = ((Element) secretGamesList.item(i)).getElementsByTagName("Icon").item(0).getTextContent();
+                    String path = ((Element) secretGamesList.item(i)).getElementsByTagName("Path").item(0).getTextContent();
+                    GameLabel gameLabel = new GameLabel(new Game(icon, path, name, frameScale), mainFrame);
+                    secretGameLabels.add(gameLabel);
+                }
+                
+                // Set the secret GameLabels
+                mainFrame.setSecretGameLabels(secretGameLabels);
+                
                 // Draw the gameGridPanel with the new GameLabels
                 mainFrame.redrawGameGridPanel(gameLabels);
             } catch (DOMException | NullPointerException e) {

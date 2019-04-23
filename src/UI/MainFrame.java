@@ -267,12 +267,30 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Get MainFrame's GameLabels ArrayList.
+     * Get MainFrame's active GameLabels ArrayList.
      *
      * @return GameLabels ArrayList of this MainFrame
      */
-    public ArrayList<GameLabel> getGameLabels() {
-        return gameLabels;
+    public ArrayList<GameLabel> getActiveGameLabels() {
+        return activeGameLabels;
+    }
+
+    /**
+     * Get MainFrame's main GameLabels ArrayList.
+     *
+     * @return GameLabels ArrayList of this MainFrame
+     */
+    public ArrayList<GameLabel> getMainGameLabels() {
+        return mainGameLabels;
+    }
+
+    /**
+     * Get MainFrame's secret GameLabels ArrayList.
+     *
+     * @return GameLabels ArrayList of this MainFrame
+     */
+    public ArrayList<GameLabel> getSecretGameLabels() {
+        return secretGameLabels;
     }
 
     /**
@@ -463,12 +481,30 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Set the MainFrame's GameLabels.
+     * Set the MainFrame's main GameLabels.
      *
-     * @param gameLabels GameLabels ArrayList to be set
+     * @param activeGameLabels GameLabels ArrayList to be set
      */
-    public void setGameLabels(ArrayList<GameLabel> gameLabels) {
-        this.gameLabels = gameLabels;
+    public void setMainGameLabels(ArrayList<GameLabel> mainGameLabels) {
+        this.mainGameLabels = mainGameLabels;
+    }
+
+    /**
+     * Set the MainFrame's active GameLabels.
+     *
+     * @param activeGameLabels GameLabels ArrayList to be set
+     */
+    public void setActiveGameLabels(ArrayList<GameLabel> activeGameLabels) {
+        this.activeGameLabels = activeGameLabels;
+    }
+
+    /**
+     * Set the MainFrame's secret GameLabels.
+     *
+     * @param activeGameLabels GameLabels ArrayList to be set
+     */
+    public void setSecretGameLabels(ArrayList<GameLabel> secretGameLabels) {
+        this.secretGameLabels = secretGameLabels;
     }
 
     /**
@@ -498,10 +534,10 @@ public class MainFrame extends JFrame {
     public double getFrameScale() {
         return frameScale;
     }
-    
+
     /**
      * Get the maximum possible frame scale for the current screen.
-     * 
+     *
      * @return The maximum possible frame scale for the current screen
      */
     public double getMaxFrameScale() {
@@ -518,9 +554,9 @@ public class MainFrame extends JFrame {
         // "Filter" possible noise caused by Double
         this.frameScale = BigDecimal.valueOf(frameScale).setScale(1, RoundingMode.HALF_UP).doubleValue();
         setBorderAndSize(hasBorder, borderColor);
-        for (int i = 0; i < gameLabels.size(); i++) {
-            gameLabels.get(i).getGame().setFrameScale(frameScale);
-            gameLabels.get(i).setIcon(gameLabels.get(i).getGame().getGameIcon());
+        for (int i = 0; i < activeGameLabels.size(); i++) {
+            activeGameLabels.get(i).getGame().setFrameScale(frameScale);
+            activeGameLabels.get(i).setIcon(activeGameLabels.get(i).getGame().getGameIcon());
         }
     }
 
@@ -605,21 +641,26 @@ public class MainFrame extends JFrame {
     /**
      * Redraw the GridLayout with filled blank tiles.
      *
-     * @param gameLabels GameLabel ArrayList to be used for the redrawing
+     * @param activeGameLabels GameLabel ArrayList to be used for the redrawing
      */
-    public void redrawGameGridPanel(ArrayList<GameLabel> gameLabels) {
-        this.gameLabels = gameLabels;
-        numberOfGames = gameLabels.size();
+    public void redrawGameGridPanel(ArrayList<GameLabel> activeGameLabels) {
+        this.activeGameLabels = activeGameLabels;
+        if (secretGamesShown) {
+            secretGameLabels = activeGameLabels;
+        } else {
+            mainGameLabels = activeGameLabels;
+        }
+        numberOfGames = activeGameLabels.size();
         if (numberOfGames == 0) {
             gameGridPanel.removeAll();
             gameGridPanel.add(emptyGridLabel);
         } else {
             // Emptying gameGridPanel to avoid adding more tiles than necessary
             gameGridPanel.removeAll();
-            for (int i = 0; i < gameLabels.size(); i++) {
-                gameGridPanel.add(gameLabels.get(i));
+            for (int i = 0; i < activeGameLabels.size(); i++) {
+                gameGridPanel.add(activeGameLabels.get(i));
             }
-            for (int i = gameLabels.size(); i < 9; i++) {
+            for (int i = activeGameLabels.size(); i < 9; i++) {
                 gameGridPanel.add(new JLabel());
             }
         }
@@ -790,22 +831,22 @@ public class MainFrame extends JFrame {
         if (numberOfGames < 9) {
 
             // Select Image
-            String iconFile = SpareDialogs.createGameIconPicker();
+            String iconFile = SpareDialogs.createGameIconPicker(files[0].getParent());
 
             // Select Game Name                    
-            SpareDialogs.createGameNameDialog(this, files[0].getAbsoluteFile().getName());
+            SpareDialogs.createGameNameDialog(this, files[0].getAbsoluteFile().getName().split(".exe")[0].split(".bat")[0]);
 
-            numberOfGames = gameLabels.size() + 1;
+            numberOfGames = activeGameLabels.size() + 1;
 
             // Create new GameLabel object
             GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), gameName, frameScale), this);
-            gameLabels.add(gameLabel);
+            activeGameLabels.add(gameLabel);
 
             // Add gameLabel to gameGridPanel
             gameGridPanel.add(gameLabel);
 
             // Redraw the gameGridPanel
-            redrawGameGridPanel(gameLabels);
+            redrawGameGridPanel(activeGameLabels);
         }
     }
 
@@ -839,7 +880,29 @@ public class MainFrame extends JFrame {
             changeFocusedGamelabel(-1);
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             changeFocusedGamelabel(1);
+        } else if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
+            showSecretGameLabels();
+        } else if (e.getKeyCode() == KeyEvent.VK_PAGE_UP) {
+            hideSecretGameLabels();
         }
+    }
+
+    /**
+     * Show the secret GameLabels.
+     */
+    public void showSecretGameLabels() {
+        secretGamesShown = true;
+        activeGameLabels = secretGameLabels;
+        redrawGameGridPanel(activeGameLabels);
+    }
+
+    /**
+     * Hide the secret GameLabels.
+     */
+    public void hideSecretGameLabels() {
+        secretGamesShown = false;
+        activeGameLabels = mainGameLabels;
+        redrawGameGridPanel(activeGameLabels);
     }
 
     /**
@@ -935,7 +998,7 @@ public class MainFrame extends JFrame {
                 break;
             }
 
-            // If a DPAD button is pressed, navigate the gameLabels
+            // If a DPAD button is pressed, navigate the activeGameLabels
             case "DPAD_LEFT": {
                 changeFocusedGamelabel(-1);
                 break;
@@ -968,41 +1031,41 @@ public class MainFrame extends JFrame {
      */
     private void changeFocusedGamelabel(int indexDelta) {
         if (getFocusedGameLabel() != null) {
-            for (int i = 0; i < gameLabels.size(); i++) {
-                if (focusedGameLabel == gameLabels.get(i) && i + indexDelta >= 0 && i + indexDelta < gameLabels.size()) {
-                    gameLabels.get(i + indexDelta).focusOnGameLabel();
+            for (int i = 0; i < activeGameLabels.size(); i++) {
+                if (focusedGameLabel == activeGameLabels.get(i) && i + indexDelta >= 0 && i + indexDelta < activeGameLabels.size()) {
+                    activeGameLabels.get(i + indexDelta).focusOnGameLabel();
                     break;
                 }
             }
         } else {
-            if (!gameLabels.isEmpty()) {
+            if (!activeGameLabels.isEmpty()) {
                 switch (indexDelta) {
                     case 1: {
-                        if (gameLabels.size() >= 2) {
-                            gameLabels.get(2).focusOnGameLabel();
+                        if (activeGameLabels.size() >= 2) {
+                            activeGameLabels.get(2).focusOnGameLabel();
                         } else {
-                            gameLabels.get(0).focusOnGameLabel();
+                            activeGameLabels.get(0).focusOnGameLabel();
                         }
                         break;
                     }
                     case 3: {
-                        if (gameLabels.size() >= 1) {
-                            gameLabels.get(1).focusOnGameLabel();
+                        if (activeGameLabels.size() >= 1) {
+                            activeGameLabels.get(1).focusOnGameLabel();
                         } else {
-                            gameLabels.get(0).focusOnGameLabel();
+                            activeGameLabels.get(0).focusOnGameLabel();
                         }
                         break;
                     }
                     case -3: {
-                        if (gameLabels.size() >= 7) {
-                            gameLabels.get(7).focusOnGameLabel();
+                        if (activeGameLabels.size() >= 7) {
+                            activeGameLabels.get(7).focusOnGameLabel();
                         } else {
-                            gameLabels.get(0).focusOnGameLabel();
+                            activeGameLabels.get(0).focusOnGameLabel();
                         }
                         break;
                     }
                     case -1: {
-                        gameLabels.get(0).focusOnGameLabel();
+                        activeGameLabels.get(0).focusOnGameLabel();
                         break;
                     }
                     default:
@@ -1057,9 +1120,9 @@ public class MainFrame extends JFrame {
     private JPanel gameGridPanel, statusBarPanel, buttonsPanel, mainPanel;
     private JButton exitButton, programSettingsButton, steamButton;
     private JLabel emptyGridLabel, titleLabel;
-    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false;
+    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false, secretGamesShown = false;
     private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
-    private ArrayList<GameLabel> gameLabels = new ArrayList<>();
+    private ArrayList<GameLabel> mainGameLabels = new ArrayList<>(), secretGameLabels = new ArrayList<>(), activeGameLabels = new ArrayList<>();
     private int numberOfGames = 0, mouseX = 0, mouseY = 0;
     private double frameScale = 1.0;
     private String gameName, titleText = "Game Organizer", steamLocation = "C:\\Program Files (x86)\\Steam\\Steam.exe";

@@ -4,7 +4,7 @@ A simple app that helps you organize game shortcuts
 ![alt text](https://github.com/mpaterakis/GameOrganizer/blob/master/Screenshot1.png)
 
 Features:
-* Can use up to 9 different games
+* Can use up to 18 different games in 2 3x3 grids
 * Total color customization
 * 2 different spacing modes
 * Rescalable window
@@ -22,15 +22,20 @@ Usage:
 * A prompt asking for a game icon and a game name will follow
 * Right clicking a game's icon opens up the Game's Settings Menu
 * Left clicking a game's icon will launch the game
+* Scrolling Down shows the secret games menu
+* Scrolling Up hides the secret games menu
 * Pressing F5 centers the main window
 * Pressing Add (+) increases the main window's scale
 * Pressing Subtract (-) decreases the main window's scale
 * Pressing any Arrow key navigates through the games
+* Pressing Page Down shows the secret games menu
+* Pressing Page Up hides the secret games menu
 * Pressing any DPAD button on an XBOX Controller navigates through the games
 * Moving the Left Stick on an XBOX Controller also navigates through the games
 * Moving the Right Stick on an XBOX Controller moves the main window
 * Pressing A on an XBOX Controller launches the focused game
 * Pressing the Guide Button on an XBOX Controller launches Steam in Big Picture mode
+* Pressing Start on an XBOX Controller toggles the secret game menu (Show/Hide)
 * Pressing RB on an XBOX Controller increases the main window's scale
 * Pressing LB on an XBOX Controller decreases the main window's scale
 * Pressing Y on an XBOX Controller centers the main window
