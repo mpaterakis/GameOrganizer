@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
@@ -147,13 +146,26 @@ public class MainFrame extends JFrame {
                     enableCursor();
                 }
             }
+
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int notches = e.getWheelRotation();
+                // If scroll up
+                if (notches < 0) {
+                    hideSecretGameLabels();
+                } else {
+                    showSecretGameLabels();
+                }
+            }
         };
         mouseX = MouseInfo.getPointerInfo().getLocation().x;
         mouseY = MouseInfo.getPointerInfo().getLocation().y;
 
         // MouseMotionListener
         addMouseMotionListener(mouseAdapter);
+        addMouseWheelListener(mouseAdapter);
         statusBarPanel.addMouseMotionListener(mouseAdapter);
+        statusBarPanel.addMouseWheelListener(mouseAdapter);
 
         // XInputDeviceListener
         try {
