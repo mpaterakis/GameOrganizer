@@ -904,6 +904,8 @@ public class MainFrame extends JFrame {
      */
     public void showSecretGameLabels() {
         secretGamesShown = true;
+        focusedMainGameLabelCached = focusedGameLabel;
+        focusedGameLabel = focusedSecretGameLabelCached;
         activeGameLabels = secretGameLabels;
         redrawGameGridPanel(activeGameLabels);
     }
@@ -913,6 +915,8 @@ public class MainFrame extends JFrame {
      */
     public void hideSecretGameLabels() {
         secretGamesShown = false;
+        focusedSecretGameLabelCached = focusedGameLabel;
+        focusedGameLabel = focusedMainGameLabelCached;
         activeGameLabels = mainGameLabels;
         redrawGameGridPanel(activeGameLabels);
     }
@@ -922,11 +926,9 @@ public class MainFrame extends JFrame {
      */
     public void toggleSecretGameLabels() {
         if (secretGamesShown) {
-            secretGamesShown = false;
-            activeGameLabels = mainGameLabels;
+            hideSecretGameLabels();
         } else {
-            secretGamesShown = true;
-            activeGameLabels = secretGameLabels;
+            showSecretGameLabels();
         }
         redrawGameGridPanel(activeGameLabels);
     }
@@ -1158,5 +1160,5 @@ public class MainFrame extends JFrame {
     private String gameName, titleText = "Game Organizer", steamLocation = "C:\\Program Files (x86)\\Steam\\Steam.exe";
     private Font customFont;
     private XInputDevice controller;
-    private GameLabel focusedGameLabel = null;
+    private GameLabel focusedGameLabel = null, focusedSecretGameLabelCached = null, focusedMainGameLabelCached = null;
 }
