@@ -141,7 +141,7 @@ public class GameLabel extends JLabel {
             } else if (e.getButton() == MouseEvent.BUTTON3) {
 
                 // Open game's settings if right click is pressed
-                new GameSettingsDialog(game, mainFrame);
+                new GameSettingsDialog(this, mainFrame);
                 bgImage = new AlphaImageIcon(game.getGameIcon(), 1.0f);
                 setIcon(bgImage);
             }

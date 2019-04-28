@@ -628,6 +628,14 @@ public class MainFrame extends JFrame {
     }
 
     /**
+     * Get the status of secretGamesShown
+     * @return The status of secretGamesShown
+     */
+    public boolean secretGamesShown() {
+        return secretGamesShown;
+    }
+
+    /**
      * Get mouse position.
      *
      * @return Integer table with the X and Y position of the mouse

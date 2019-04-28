@@ -21,12 +21,13 @@ public class GameSettingsDialog extends JDialog {
 
     /**
      * Create a new GameSettingsDialog object.
-     * 
+     *
      * @param game Game object whose values will be shown and edited
      * @param mainFrame MainFrame object containing the GameLabel that holds the game
      */
-    public GameSettingsDialog(Game game, MainFrame mainFrame) {
-        this.game = originalGame = game;
+    public GameSettingsDialog(GameLabel gameLabel, MainFrame mainFrame) {
+        this.gameLabel = gameLabel;
+        this.game = gameLabel.getGame();
         this.mainFrame = mainFrame;
         this.originalGameLabels = new ArrayList<>(mainFrame.getActiveGameLabels());
         initComponents();
@@ -76,6 +77,13 @@ public class GameSettingsDialog extends JDialog {
         removeGameButton.setBackground(new Color(209, 209, 209));
         removeGameButton.addActionListener(e -> doRemoveGame());
 
+        moveToMainGamesButton = new JButton("Move to Main Game Menu");
+        moveToMainGamesButton.setBackground(new Color(209, 209, 209));
+        moveToMainGamesButton.addActionListener(e -> doMoveToMainGames());
+        if (mainFrame.getMainGameLabels().size() == 9) {
+            moveToMainGamesButton.setEnabled(false);
+        }
+
         orderMinusButton = new JButton("-");
         orderMinusButton.setBackground(new Color(209, 209, 209));
         orderMinusButton.setFocusPainted(false);
@@ -107,6 +115,9 @@ public class GameSettingsDialog extends JDialog {
         buttonsPanel.add(cancelButton);
         buttonsPanel.add(openDirButton);
         buttonsPanel.add(removeGameButton);
+        if (mainFrame.secretGamesShown()) {
+            buttonsPanel.add(moveToMainGamesButton);
+        }
 
         labelsPanel.add(orderLabel);
         labelsPanel.add(nameLabel);
@@ -159,7 +170,7 @@ public class GameSettingsDialog extends JDialog {
 
     /**
      * Get the Game's order number (on the MainFrame).
-     * 
+     *
      * @return Integer containing the Game's order number
      */
     private int getGameOrderNumber() {
@@ -173,7 +184,7 @@ public class GameSettingsDialog extends JDialog {
 
     /**
      * Reorder the GameLabels on the MainFrame.
-     * 
+     *
      * @param oldPosition Integer containing the old position of a GameLabel
      * @param newPosition Integer containing the new position of a GameLabel
      */
@@ -230,43 +241,34 @@ public class GameSettingsDialog extends JDialog {
      * Remove this Game.
      */
     private void doRemoveGame() {
-        for (int i = 0; i < mainFrame.getActiveGameLabels().size(); i++) {
-            // Make sure we got the correct game
-            if (mainFrame.getActiveGameLabels().get(i).getGame().getGamePath() == originalGame.getGamePath()
-                    && mainFrame.getActiveGameLabels().get(i).getGame().getGameName() == originalGame.getGameName()) {
+        // JOptionPane prompt before deletion
+        // Creating buttons for JOptionPane
+        // Creating "YES" JButton
+        JButton yesButton = new JButton("YES");
+        yesButton.setBackground(new Color(209, 209, 209));
+        yesButton.setFocusPainted(false);
+        yesButton.addActionListener((ActionEvent actionEvent) -> {
+            // Get gameLabels, remove this instance and set it as the new gameLabels
+            ArrayList<GameLabel> gameLabels = mainFrame.getActiveGameLabels();
+            mainFrame.getActiveGameLabels().remove(gameLabel);
+            mainFrame.redrawGameGridPanel(gameLabels);
 
-                // JOptionPane prompt before deletion
-                // Creating buttons for JOptionPane
-                // Creating "YES" JButton
-                JButton yesButton = new JButton("YES");
-                yesButton.setBackground(new Color(209, 209, 209));
-                yesButton.setFocusPainted(false);
-                final int j = i;
-                yesButton.addActionListener((ActionEvent actionEvent) -> {
-                    // Get gameLabels, remove this instance and set it as the new gameLabels
-                    ArrayList<GameLabel> gameLabels = mainFrame.getActiveGameLabels();
-                    gameLabels.remove(j);
-                    mainFrame.redrawGameGridPanel(gameLabels);
-                    
-                    // Close the dialogs
-                    SwingUtilities.getWindowAncestor(yesButton).dispose();
-                    dispose();
-                });
+            // Close the dialogs
+            SwingUtilities.getWindowAncestor(yesButton).dispose();
+            dispose();
+        });
 
-                // Creating "NO" JButton
-                JButton noButton = new JButton("NO");
-                noButton.setBackground(new Color(209, 209, 209));
-                noButton.setFocusPainted(false);
-                noButton.addActionListener(e -> SwingUtilities.getWindowAncestor(yesButton).dispose());
-                JButton[] customButtons = {yesButton, noButton};
+        // Creating "NO" JButton
+        JButton noButton = new JButton("NO");
+        noButton.setBackground(new Color(209, 209, 209));
+        noButton.setFocusPainted(false);
+        noButton.addActionListener(e -> SwingUtilities.getWindowAncestor(yesButton).dispose());
+        JButton[] customButtons = {yesButton, noButton};
 
-                // Show JOptionPane with custom buttons
-                JOptionPane.showOptionDialog(null, "Are you sure you want to remove " + game.getGameName() + "?",
-                        "Removal Confirmation", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
-                        customButtons, customButtons[0]);
-
-            }
-        }
+        // Show JOptionPane with custom buttons
+        JOptionPane.showOptionDialog(null, "Are you sure you want to remove " + game.getGameName() + "?",
+                "Removal Confirmation", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                customButtons, customButtons[0]);
     }
 
     /**
@@ -315,9 +317,46 @@ public class GameSettingsDialog extends JDialog {
         }
     }
 
+    /**
+     * Move game to main game menu.
+     */
+    private void doMoveToMainGames() {
+        if (mainFrame.getMainGameLabels().size() < 9) {
+            // JOptionPane prompt before deletion
+            // Creating buttons for JOptionPane
+            // Creating "YES" JButton
+            JButton yesButton = new JButton("YES");
+            yesButton.setBackground(new Color(209, 209, 209));
+            yesButton.setFocusPainted(false);
+            yesButton.addActionListener((ActionEvent actionEvent) -> {
+                // Get gameLabels, remove this instance and set it as the new gameLabels
+                mainFrame.getMainGameLabels().add(gameLabel);
+                mainFrame.getActiveGameLabels().remove(gameLabel);
+                mainFrame.redrawGameGridPanel(mainFrame.getActiveGameLabels());
+
+                // Close the dialogs
+                SwingUtilities.getWindowAncestor(yesButton).dispose();
+                dispose();
+            });
+
+            // Creating "NO" JButton
+            JButton noButton = new JButton("NO");
+            noButton.setBackground(new Color(209, 209, 209));
+            noButton.setFocusPainted(false);
+            noButton.addActionListener(e -> SwingUtilities.getWindowAncestor(yesButton).dispose());
+            JButton[] customButtons = {yesButton, noButton};
+
+            // Show JOptionPane with custom buttons
+            JOptionPane.showOptionDialog(null, "Are you sure you want to move " + game.getGameName() + " to Main Games menu?",
+                    "Moving Confirmation", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                    customButtons, customButtons[0]);
+        }
+    }
+
     // Fields
     private Game game, originalGame;
-    private JButton okButton, choosePathButton, chooseIconButton, cancelButton, removeGameButton, openDirButton, orderPlusButton, orderMinusButton;
+    private GameLabel gameLabel;
+    private JButton okButton, choosePathButton, chooseIconButton, cancelButton, removeGameButton, openDirButton, orderPlusButton, orderMinusButton, moveToMainGamesButton;
     private JLabel nameLabel, pathLabel, iconLabel, orderLabel;
     private JTextField nameField, pathField, iconField, orderField;
     private JPanel mainPanel, centerPanel, buttonsPanel, labelsPanel, chooserFieldsPanel, chooserButtonsPanel, filechoosersPanel, orderPanel, orderAndNamePanel;

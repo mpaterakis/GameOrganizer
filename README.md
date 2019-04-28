@@ -10,11 +10,12 @@ Features:
 * Rescalable window
 * Customizable window title
 * Customizable shadow
-* Customizable grid order
+* Customizable game order
 * Option to dim the non-focused game tiles
 * Option to exit GameOrganizer after a game is launched
 * Ability to launch the Steam Client
 * Allows editing of all the game data after each game is added
+* Ability to move games from Secret Games Menu to Main Games Menu
 * Mouse cursor gets hidden when an XBOX Controller action is registered
 
 Usage:
