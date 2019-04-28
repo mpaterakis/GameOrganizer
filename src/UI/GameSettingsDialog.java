@@ -77,7 +77,7 @@ public class GameSettingsDialog extends JDialog {
         removeGameButton.setBackground(new Color(209, 209, 209));
         removeGameButton.addActionListener(e -> doRemoveGame());
 
-        moveToMainGamesButton = new JButton("Move to Main Game Menu");
+        moveToMainGamesButton = new JButton("Move to Main Games Menu");
         moveToMainGamesButton.setBackground(new Color(209, 209, 209));
         moveToMainGamesButton.addActionListener(e -> doMoveToMainGames());
         if (mainFrame.getMainGameLabels().size() == 9) {
