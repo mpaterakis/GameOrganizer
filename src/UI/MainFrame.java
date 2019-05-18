@@ -577,9 +577,13 @@ public class MainFrame extends JFrame {
         // "Filter" possible noise caused by Double
         this.frameScale = BigDecimal.valueOf(frameScale).setScale(1, RoundingMode.HALF_UP).doubleValue();
         setBorderAndSize(hasBorder, borderColor);
-        for (int i = 0; i < activeGameLabels.size(); i++) {
-            activeGameLabels.get(i).getGame().setFrameScale(frameScale);
-            activeGameLabels.get(i).setIcon(activeGameLabels.get(i).getGame().getGameIcon());
+        for (int i = 0; i < mainGameLabels.size(); i++) {
+            mainGameLabels.get(i).getGame().setFrameScale(frameScale);
+            mainGameLabels.get(i).setIcon(mainGameLabels.get(i).getGame().getGameIcon());
+        }
+        for (int i = 0; i < secretGameLabels.size(); i++) {
+            secretGameLabels.get(i).getGame().setFrameScale(frameScale);
+            secretGameLabels.get(i).setIcon(secretGameLabels.get(i).getGame().getGameIcon());
         }
     }
 
