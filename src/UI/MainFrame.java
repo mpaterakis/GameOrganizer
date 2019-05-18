@@ -220,6 +220,17 @@ public class MainFrame extends JFrame {
                                 disableCursor();
                             }
                         }
+                        if (System.currentTimeMillis() - timeSinceLastAnalogAction > 5) {
+                            if (controller.getComponents().getAxes().get(XInputAxis.RIGHT_TRIGGER) > 0.5) {
+                                increaseScale();
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                                disableCursor();
+                            } else if (controller.getComponents().getAxes().get(XInputAxis.LEFT_TRIGGER) > 0.5) {
+                                decreaseScale();
+                                timeSinceLastAnalogAction = System.currentTimeMillis();
+                                disableCursor();
+                            }
+                        }
 
                         try {
                             Thread.sleep(5);
@@ -629,6 +640,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Get the status of secretGamesShown
+     *
      * @return The status of secretGamesShown
      */
     public boolean secretGamesShown() {
@@ -1024,13 +1036,13 @@ public class MainFrame extends JFrame {
             // If LT is pressed, decrease the window's scale
             //case "" XInputAxis.LEFT_THUMBSTICK_X
             case "LEFT_SHOULDER": {
-                decreaseScale();
+                hideSecretGameLabels();
                 break;
             }
 
             // If RT is pressed, increase the window's scale
             case "RIGHT_SHOULDER": {
-                increaseScale();
+                showSecretGameLabels();
                 break;
             }
 
@@ -1053,10 +1065,6 @@ public class MainFrame extends JFrame {
             }
             case "GUIDE_BUTTON": {
                 doLaunchSteamBigPicture();
-                break;
-            }
-            case "START": {
-                toggleSecretGameLabels();
                 break;
             }
             default:
