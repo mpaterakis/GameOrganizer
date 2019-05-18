@@ -7,7 +7,6 @@ import GameOrganizer.Game;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -54,11 +53,11 @@ public class GameSettingsDialog extends JDialog {
 
         // JButtons
         cancelButton = new JButton("Cancel");
-        cancelButton.setBackground(new Color(209, 209, 209));
+        cancelButton.setBackground(new Color(190, 190, 190));
         cancelButton.addActionListener(e -> doCancel());
 
         okButton = new JButton("OK");
-        okButton.setBackground(new Color(209, 209, 209));
+        okButton.setBackground(new Color(190, 190, 190));
         okButton.addActionListener(e -> doOk());
 
         choosePathButton = new JButton("Change Exe");
@@ -84,6 +83,13 @@ public class GameSettingsDialog extends JDialog {
             moveToMainGamesButton.setEnabled(false);
         }
 
+        moveToSecretGamesButton = new JButton("Move to Secret Games Menu");
+        moveToSecretGamesButton.setBackground(new Color(209, 209, 209));
+        moveToSecretGamesButton.addActionListener(e -> doMoveToSecretGames());
+        if (mainFrame.getSecretGameLabels().size() == 9) {
+            moveToSecretGamesButton.setEnabled(false);
+        }
+
         orderMinusButton = new JButton("-");
         orderMinusButton.setBackground(new Color(209, 209, 209));
         orderMinusButton.setFocusPainted(false);
@@ -107,17 +113,25 @@ public class GameSettingsDialog extends JDialog {
         chooserButtonsPanel = new JPanel(new GridLayout(2, 1));
         chooserFieldsPanel = new JPanel(new GridLayout(2, 1));
         filechoosersPanel = new JPanel(new BorderLayout());
-        buttonsPanel = new JPanel(new FlowLayout());
+        buttonsPanel = new JPanel(new GridLayout(2,1));
+        JPanel buttonsPanelTop = new JPanel(new FlowLayout());
+        JPanel buttonsPanelBottom = new JPanel(new FlowLayout());
         orderPanel = new JPanel(new BorderLayout());
         orderAndNamePanel = new JPanel(new GridLayout(2, 1));
 
-        buttonsPanel.add(okButton);
-        buttonsPanel.add(cancelButton);
-        buttonsPanel.add(openDirButton);
-        buttonsPanel.add(removeGameButton);
+        buttonsPanelBottom.add(okButton);
+        buttonsPanelBottom.add(cancelButton);
+        
+        buttonsPanelTop.add(openDirButton);
+        buttonsPanelTop.add(removeGameButton);
         if (mainFrame.secretGamesShown()) {
-            buttonsPanel.add(moveToMainGamesButton);
+            buttonsPanelTop.add(moveToMainGamesButton);
+        } else {
+            buttonsPanelTop.add(moveToSecretGamesButton);
         }
+        
+        buttonsPanel.add(buttonsPanelTop);
+        buttonsPanel.add(buttonsPanelBottom);
 
         labelsPanel.add(orderLabel);
         labelsPanel.add(nameLabel);
@@ -353,10 +367,46 @@ public class GameSettingsDialog extends JDialog {
         }
     }
 
+    /**
+     * Move game to secret game menu.
+     */
+    private void doMoveToSecretGames() {
+        if (mainFrame.getSecretGameLabels().size() < 9) {
+            // JOptionPane prompt before deletion
+            // Creating buttons for JOptionPane
+            // Creating "YES" JButton
+            JButton yesButton = new JButton("YES");
+            yesButton.setBackground(new Color(209, 209, 209));
+            yesButton.setFocusPainted(false);
+            yesButton.addActionListener((ActionEvent actionEvent) -> {
+                // Get gameLabels, remove this instance and set it as the new gameLabels
+                mainFrame.getSecretGameLabels().add(gameLabel);
+                mainFrame.getActiveGameLabels().remove(gameLabel);
+                mainFrame.redrawGameGridPanel(mainFrame.getActiveGameLabels());
+
+                // Close the dialogs
+                SwingUtilities.getWindowAncestor(yesButton).dispose();
+                dispose();
+            });
+
+            // Creating "NO" JButton
+            JButton noButton = new JButton("NO");
+            noButton.setBackground(new Color(209, 209, 209));
+            noButton.setFocusPainted(false);
+            noButton.addActionListener(e -> SwingUtilities.getWindowAncestor(yesButton).dispose());
+            JButton[] customButtons = {yesButton, noButton};
+
+            // Show JOptionPane with custom buttons
+            JOptionPane.showOptionDialog(null, "Are you sure you want to move " + game.getGameName() + " to Secret Games menu?",
+                    "Moving Confirmation", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                    customButtons, customButtons[0]);
+        }
+    }
+
     // Fields
-    private Game game, originalGame;
+    private Game game;
     private GameLabel gameLabel;
-    private JButton okButton, choosePathButton, chooseIconButton, cancelButton, removeGameButton, openDirButton, orderPlusButton, orderMinusButton, moveToMainGamesButton;
+    private JButton okButton, choosePathButton, chooseIconButton, cancelButton, removeGameButton, openDirButton, orderPlusButton, orderMinusButton, moveToMainGamesButton, moveToSecretGamesButton;
     private JLabel nameLabel, pathLabel, iconLabel, orderLabel;
     private JTextField nameField, pathField, iconField, orderField;
     private JPanel mainPanel, centerPanel, buttonsPanel, labelsPanel, chooserFieldsPanel, chooserButtonsPanel, filechoosersPanel, orderPanel, orderAndNamePanel;
