@@ -927,22 +927,26 @@ public class MainFrame extends JFrame {
      * Show the secret GameLabels.
      */
     public void showSecretGameLabels() {
-        secretGamesShown = true;
-        focusedMainGameLabelCached = focusedGameLabel;
-        focusedGameLabel = focusedSecretGameLabelCached;
-        activeGameLabels = secretGameLabels;
-        redrawGameGridPanel(activeGameLabels);
+        if (!secretGamesShown) {
+            secretGamesShown = true;
+            focusedMainGameLabelCached = focusedGameLabel;
+            focusedGameLabel = focusedSecretGameLabelCached;
+            activeGameLabels = secretGameLabels;
+            redrawGameGridPanel(activeGameLabels);
+        }
     }
 
     /**
      * Hide the secret GameLabels.
      */
     public void hideSecretGameLabels() {
-        secretGamesShown = false;
-        focusedSecretGameLabelCached = focusedGameLabel;
-        focusedGameLabel = focusedMainGameLabelCached;
-        activeGameLabels = mainGameLabels;
-        redrawGameGridPanel(activeGameLabels);
+        if (secretGamesShown) {
+            secretGamesShown = false;
+            focusedSecretGameLabelCached = focusedGameLabel;
+            focusedGameLabel = focusedMainGameLabelCached;
+            activeGameLabels = mainGameLabels;
+            redrawGameGridPanel(activeGameLabels);
+        }
     }
 
     /**
