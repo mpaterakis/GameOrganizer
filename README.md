@@ -37,8 +37,10 @@ Usage:
 * Pressing A on an XBOX Controller launches the focused game
 * Pressing the Guide Button on an XBOX Controller launches Steam in Big Picture mode
 * Pressing Start on an XBOX Controller toggles the secret game menu (Show/Hide)
-* Pressing RB on an XBOX Controller increases the main window's scale
-* Pressing LB on an XBOX Controller decreases the main window's scale
+* Pressing RB on an XBOX Controller shows the secret games menu
+* Pressing LB on an XBOX Controller hides the secret games menu
+* Pressing RT on an XBOX Controller increases the main window's scale
+* Pressing LT on an XBOX Controller decreases the main window's scale
 * Pressing Y on an XBOX Controller centers the main window
 * Pressing B on an XBOX Controller exits the program
 
