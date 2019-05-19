@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 
 /**
@@ -201,6 +202,16 @@ public class SettingsDialog extends JDialog {
             }
         });
 
+        showMenuCheckbox = new JCheckBox();
+        showMenuCheckbox.setSelected(mainFrame.isShowingNewMenuButton());
+        showMenuCheckbox.addActionListener(e -> {
+            if (showMenuCheckbox.isSelected()) {
+                doEnableNewMenuButton();
+            } else {
+                doDisableNewMenuButton();
+            }
+        });
+
         // JTextFields
         titleField = new JTextField(mainFrame.getTitleText());
 
@@ -232,6 +243,10 @@ public class SettingsDialog extends JDialog {
         steamPanel = new JPanel(new BorderLayout());
         steamPanel.add(new JLabel("  Show Steam icon on main window: "), BorderLayout.WEST);
         steamPanel.add(usingSteamCheckBox, BorderLayout.EAST);
+        
+        menuPanel = new JPanel(new BorderLayout());
+        menuPanel.add(new JLabel("  Show 'New Menu' button on main window: "), BorderLayout.WEST);
+        menuPanel.add(showMenuCheckbox, BorderLayout.EAST);
 
         focusingPanel = new JPanel(new BorderLayout());
         focusingPanel.add(new JLabel("  Dim the games that are not focused: "), BorderLayout.WEST);
@@ -245,15 +260,17 @@ public class SettingsDialog extends JDialog {
         sliderPanel.add(new JLabel("  Window Scale:     "), BorderLayout.WEST);
         sliderPanel.add(frameScaleSlider, BorderLayout.CENTER);
 
-        middlePanel = new JPanel(new GridLayout(8, 1));
+        middlePanel = new JPanel(new GridLayout(9, 1));
         middlePanel.add(spareColorButtonsPanel);
         middlePanel.add(shadowPanel);
         middlePanel.add(borderPanel);
         middlePanel.add(focusingPanel);
         middlePanel.add(gameAutoExitPanel);
         middlePanel.add(steamPanel);
+        middlePanel.add(menuPanel);
         middlePanel.add(titleSettingsPanel);
         middlePanel.add(sliderPanel);
+        middlePanel.setBorder(new TitledBorder("Settings"));
 
         bottomPanel = new JPanel(new FlowLayout());
         bottomPanel.add(changeSpacingOption);
@@ -273,7 +290,7 @@ public class SettingsDialog extends JDialog {
         });
 
         setFocusable(true);
-        setSize(580, 350);
+        setSize(580, 400);
         setTitle("Program Settings");
         setResizable(false);
         setLocationRelativeTo(null);
@@ -413,6 +430,20 @@ public class SettingsDialog extends JDialog {
     }
 
     /**
+     * Enable the New Menu button on MainFrame.
+     */
+    private void doEnableNewMenuButton() {
+        mainFrame.setShowingNewMenuButton(true);
+    }
+
+    /**
+     * Disable the New Menu button on MainFrame.
+     */
+    private void doDisableNewMenuButton() {
+        mainFrame.setShowingNewMenuButton(false);
+    }
+
+    /**
      * Enable focusing for GameLabels.
      */
     private void doEnableFocusing() {
@@ -484,11 +515,11 @@ public class SettingsDialog extends JDialog {
     }
 
     // Fields
-    private JPanel bottomPanel, steamPanel, titleSettingsPanel, gameAutoExitPanel, shadowPanel, shadowButtonsPanel, middlePanel, focusingPanel, borderPanel, borderButtonsPanel, sliderPanel, spareColorButtonsPanel;
+    private JPanel bottomPanel, steamPanel, titleSettingsPanel, gameAutoExitPanel, shadowPanel, shadowButtonsPanel, middlePanel, focusingPanel, borderPanel, borderButtonsPanel, sliderPanel, spareColorButtonsPanel, menuPanel;
     private JColorChooser barColorChooser, buttonColorChooser, borderColorChooser, backgroundColorChooser, shadowColorChooser;
     private JSlider frameScaleSlider;
     private JButton revertDefaultsButton, changeSpacingOption, changeTitleButton, borderColorButton, shadowColorButton, buttonsColorButton, barColorButton, backgroundColorButton;
-    private JCheckBox autoExitCheckbox, hasShadowCheckbox, hasFocusingCheckbox, hasBorderCheckBox, usingSteamCheckBox;
+    private JCheckBox autoExitCheckbox, hasShadowCheckbox, hasFocusingCheckbox, hasBorderCheckBox, usingSteamCheckBox, showMenuCheckbox;
     private JTextField titleField;
     private MainFrame mainFrame;
 }

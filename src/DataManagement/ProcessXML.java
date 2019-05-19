@@ -41,69 +41,40 @@ public class ProcessXML {
             Element rootElement = doc.createElement("GameOrganizerData");
             doc.appendChild(rootElement);
 
-            // Game list
-            Element subElement = doc.createElement("MainGameList");
-            rootElement.appendChild(subElement);
+            // Game Labels lists
+            for (int i = 0; i < mainFrame.getGameLabelLists().size(); i++) {
 
-            // Main games list
-            for (int i = 0; i < mainFrame.getMainGameLabels().size(); i++) {
-                // Game elements
-                Element game = doc.createElement("Game");
-                subElement.appendChild(game);
+                // Game list
+                Element subElement = doc.createElement("GameList");
+                rootElement.appendChild(subElement);
 
-                // Set attribute to staff element
-                Attr attr = doc.createAttribute("id");
-                attr.setValue(Integer.toString(i + 1));
-                game.setAttributeNode(attr);
+                for (int j = 0; j < mainFrame.getGameLabelLists().get(i).size(); j++) {
+                    // Game elements
+                    Element game = doc.createElement("Game");
+                    subElement.appendChild(game);
 
-                // Name elements
-                Element gamename = doc.createElement("Name");
-                gamename.appendChild(doc.createTextNode(mainFrame.getMainGameLabels().get(i).getGame().getGameName()));
-                game.appendChild(gamename);
+                    // Set attribute to staff element
+                    Attr attr = doc.createAttribute("id");
+                    attr.setValue(Integer.toString(i * mainFrame.getGameLabelLists().get(i).size() + j + 1));
+                    game.setAttributeNode(attr);
 
-                // Icon elements
-                Element gameicon = doc.createElement("Icon");
-                gameicon.appendChild(doc.createTextNode(mainFrame.getMainGameLabels().get(i).getGame().getGameIconPath()));
-                game.appendChild(gameicon);
+                    // Name elements
+                    Element gamename = doc.createElement("Name");
+                    gamename.appendChild(doc.createTextNode(mainFrame.getGameLabelLists().get(i).get(j).getGame().getGameName()));
+                    game.appendChild(gamename);
 
-                // Exe locaiton elements
-                Element gamepath = doc.createElement("Path");
-                gamepath.appendChild(doc.createTextNode(mainFrame.getMainGameLabels().get(i).getGame().getGamePath()));
-                game.appendChild(gamepath);
+                    // Icon elements
+                    Element gameicon = doc.createElement("Icon");
+                    gameicon.appendChild(doc.createTextNode(mainFrame.getGameLabelLists().get(i).get(j).getGame().getGameIconPath()));
+                    game.appendChild(gameicon);
+
+                    // Exe locaiton elements
+                    Element gamepath = doc.createElement("Path");
+                    gamepath.appendChild(doc.createTextNode(mainFrame.getGameLabelLists().get(i).get(j).getGame().getGamePath()));
+                    game.appendChild(gamepath);
+                }
             }
-            
-            
-            // Game list
-            Element subElement1 = doc.createElement("SecretGameList");
-            rootElement.appendChild(subElement1);
-            
-            // Secret games list
-            for (int i = 0; i < mainFrame.getSecretGameLabels().size(); i++) {
-                // Game elements
-                Element game = doc.createElement("SecretGame");
-                subElement1.appendChild(game);
 
-                // Set attribute to staff element
-                Attr attr = doc.createAttribute("id");
-                attr.setValue(Integer.toString(i + 1));
-                game.setAttributeNode(attr);
-
-                // Name elements
-                Element gamename = doc.createElement("Name");
-                gamename.appendChild(doc.createTextNode(mainFrame.getSecretGameLabels().get(i).getGame().getGameName()));
-                game.appendChild(gamename);
-
-                // Icon elements
-                Element gameicon = doc.createElement("Icon");
-                gameicon.appendChild(doc.createTextNode(mainFrame.getSecretGameLabels().get(i).getGame().getGameIconPath()));
-                game.appendChild(gameicon);
-
-                // Exe locaiton elements
-                Element gamepath = doc.createElement("Path");
-                gamepath.appendChild(doc.createTextNode(mainFrame.getSecretGameLabels().get(i).getGame().getGamePath()));
-                game.appendChild(gamepath);
-            }
-            
             // Window properties
             Element subElement2 = doc.createElement("WindowProperties");
             rootElement.appendChild(subElement2);
@@ -187,9 +158,18 @@ public class ProcessXML {
             }
             subElement2.appendChild(useSteam);
 
+            // ShowingNewMenuButton bool
+            Element showingNewMenuButton = doc.createElement("ShowingNewMenuButton");
+            if (mainFrame.isShowingNewMenuButton()) {
+                showingNewMenuButton.appendChild(doc.createTextNode("true"));
+            } else {
+                showingNewMenuButton.appendChild(doc.createTextNode("false"));
+            }
+            subElement2.appendChild(showingNewMenuButton);
+
             // Window Title text
             Element windowTitle = doc.createElement("WindowTitle");
-            windowTitle.appendChild(doc.createTextNode(mainFrame.getTitleText()));
+            windowTitle.appendChild(doc.createTextNode(mainFrame.getTitleText().replace("[Secret Menu]", "")));
             subElement2.appendChild(windowTitle);
 
             // Window scale double
@@ -235,13 +215,13 @@ public class ProcessXML {
     public static void LoadXML(MainFrame mainFrame) {
         File file = new File(System.getProperty("user.home") + "\\GameOrganizerData.xml");
         if (file.exists()) {
-            
+
             // Initialize values
-            String barClr = "", btnsClr = "", brdrClr = "", bgClr = "", shdClr = "", hasBrdr = "", hasSpc = "", hasShadow = "", autoExit = "", focusing = "", usingSteam = "", windowTitle = "";
+            String barClr = "", btnsClr = "", brdrClr = "", bgClr = "", shdClr = "", hasBrdr = "", hasSpc = "", hasShadow = "", autoExit = "", focusing = "", usingSteam = "", showingNewMenuButton = "", windowTitle = "";
             double windowPosX = 0, windowPosY = 0, frameScale = 1;
-            NodeList gamesList = null, secretGamesList = null;
+            NodeList gamesLists = null, gamesList = null, legacySecretGamesList = null;
             Document document = null;
-            
+
             try {
                 document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
             } catch (ParserConfigurationException ex) {
@@ -358,33 +338,55 @@ public class ProcessXML {
                 mainFrame.setFrameScale(frameScale);
             }
             try {
-                gamesList = document.getElementsByTagName("Game");
-                secretGamesList = document.getElementsByTagName("SecretGame");
+                gamesLists = document.getElementsByTagName("GameList");
+                legacySecretGamesList = document.getElementsByTagName("SecretGameList");
+                ArrayList<ArrayList<GameLabel>> gameLabelLists = new ArrayList<>();
+
+                // Legacy support
+                if (gamesLists.getLength() == 0) {
+                    gamesLists = document.getElementsByTagName("MainGameList");
+                }
+
                 // Load game data
-                ArrayList<GameLabel> gameLabels = new ArrayList<>();
-                ArrayList<GameLabel> secretGameLabels = new ArrayList<>();
-                for (int i = 0; i < gamesList.getLength(); i++) {
-                    // Set data to Strings and create GameLabels
-                    String name = ((Element) gamesList.item(i)).getElementsByTagName("Name").item(0).getTextContent();
-                    String icon = ((Element) gamesList.item(i)).getElementsByTagName("Icon").item(0).getTextContent();
-                    String path = ((Element) gamesList.item(i)).getElementsByTagName("Path").item(0).getTextContent();
-                    GameLabel gameLabel = new GameLabel(new Game(icon, path, name, frameScale), mainFrame);
-                    gameLabels.add(gameLabel);
+                for (int i = 0; i < gamesLists.getLength(); i++) {
+                    ArrayList<GameLabel> gameLabels = new ArrayList<>();
+                    gamesList = ((Element) gamesLists.item(i)).getElementsByTagName("Game");
+                    for (int j = 0; j < gamesList.getLength(); j++) {
+                        // Set data to Strings and create GameLabels
+                        String name = ((Element) gamesList.item(j)).getElementsByTagName("Name").item(0).getTextContent();
+                        String icon = ((Element) gamesList.item(j)).getElementsByTagName("Icon").item(0).getTextContent();
+                        String path = ((Element) gamesList.item(j)).getElementsByTagName("Path").item(0).getTextContent();
+                        GameLabel gameLabel = new GameLabel(new Game(icon, path, name, frameScale), mainFrame);
+                        gameLabels.add(gameLabel);
+                    }
+                    if (gamesList.getLength() > 0) {
+                        gameLabelLists.add(gameLabels);
+                    }
                 }
-                for (int i = 0; i < secretGamesList.getLength(); i++) {
-                    // Set data to Strings and create GameLabels
-                    String name = ((Element) secretGamesList.item(i)).getElementsByTagName("Name").item(0).getTextContent();
-                    String icon = ((Element) secretGamesList.item(i)).getElementsByTagName("Icon").item(0).getTextContent();
-                    String path = ((Element) secretGamesList.item(i)).getElementsByTagName("Path").item(0).getTextContent();
-                    GameLabel gameLabel = new GameLabel(new Game(icon, path, name, frameScale), mainFrame);
-                    secretGameLabels.add(gameLabel);
+
+                // Load legacy secret games data
+                for (int i = 0; i < legacySecretGamesList.getLength(); i++) {
+                    ArrayList<GameLabel> gameLabels = new ArrayList<>();
+                    legacySecretGamesList = ((Element) legacySecretGamesList.item(i)).getElementsByTagName("SecretGame");
+                    for (int j = 0; j < legacySecretGamesList.getLength(); j++) {
+                        // Set data to Strings and create GameLabels
+                        String name = ((Element) legacySecretGamesList.item(j)).getElementsByTagName("Name").item(0).getTextContent();
+                        String icon = ((Element) legacySecretGamesList.item(j)).getElementsByTagName("Icon").item(0).getTextContent();
+                        String path = ((Element) legacySecretGamesList.item(j)).getElementsByTagName("Path").item(0).getTextContent();
+                        GameLabel gameLabel = new GameLabel(new Game(icon, path, name, frameScale), mainFrame);
+                        gameLabels.add(gameLabel);
+                    }
+                    gameLabelLists.add(gameLabels);
                 }
-                
+
                 // Set the secret GameLabels
-                mainFrame.setSecretGameLabels(secretGameLabels);
-                
+                mainFrame.setGameLabelLists(gameLabelLists);
+
                 // Draw the gameGridPanel with the new GameLabels
-                mainFrame.redrawGameGridPanel(gameLabels);
+                if (gameLabelLists.size() > 0) {
+                    mainFrame.redrawGameGridPanel(gameLabelLists.get(0));
+                }
+                mainFrame.setFocusedGameLabel(null);
             } catch (DOMException | NullPointerException e) {
                 Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
                 mainFrame.redrawGameGridPanel(new ArrayList<>());
@@ -395,6 +397,12 @@ public class ProcessXML {
                     mainFrame.setUseSteam(true);
                 } else if (usingSteam.equalsIgnoreCase("false")) {
                     mainFrame.setUseSteam(false);
+                }
+                showingNewMenuButton = document.getElementsByTagName("ShowingNewMenuButton").item(0).getTextContent();
+                if (showingNewMenuButton.equalsIgnoreCase("true")) {
+                    mainFrame.setShowingNewMenuButton(true);
+                } else if (showingNewMenuButton.equalsIgnoreCase("false")) {
+                    mainFrame.setShowingNewMenuButton(false);
                 }
             } catch (NumberFormatException | DOMException | NullPointerException e) {
                 Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);

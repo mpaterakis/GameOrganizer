@@ -84,6 +84,16 @@ public class MainFrame extends JFrame {
         steamButton.setForeground(buttonColor);
         steamButton.addActionListener(e -> doLaunchSteam());
 
+        addMenuButton = new JButton("+");
+        addMenuButton.setBorderPainted(false);
+        addMenuButton.setFocusPainted(false);
+        addMenuButton.setContentAreaFilled(false);
+        addMenuButton.setPreferredSize(new Dimension(15, 16));
+        addMenuButton.setBorder(null);
+        addMenuButton.setFont(customFont.deriveFont(12f));
+        addMenuButton.setForeground(buttonColor);
+        addMenuButton.addActionListener(e -> doAddNewGameMenu());
+
         // JLabels
         emptyGridLabel = new JLabel("Drop a game exe here to add it!", SwingConstants.CENTER);
         emptyGridLabel.setFont(customFont.deriveFont(16f));
@@ -97,6 +107,7 @@ public class MainFrame extends JFrame {
             doDropFile(files);
         });
         buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(addMenuButton);
         buttonsPanel.add(steamButton);
         buttonsPanel.add(programSettingsButton);
         buttonsPanel.add(exitButton);
@@ -152,9 +163,9 @@ public class MainFrame extends JFrame {
                 int notches = e.getWheelRotation();
                 // If scroll up
                 if (notches < 0) {
-                    hideSecretGameLabels();
+                    goToPreviousGameMenu();
                 } else {
-                    showSecretGameLabels();
+                    goToNextGameMenu();
                 }
             }
         };
@@ -163,7 +174,7 @@ public class MainFrame extends JFrame {
 
         // MouseMotionListener
         addMouseMotionListener(mouseAdapter);
-        addMouseWheelListener(mouseAdapter);
+        mainPanel.addMouseWheelListener(mouseAdapter);
         statusBarPanel.addMouseMotionListener(mouseAdapter);
         statusBarPanel.addMouseWheelListener(mouseAdapter);
 
@@ -299,24 +310,6 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Get MainFrame's main GameLabels ArrayList.
-     *
-     * @return GameLabels ArrayList of this MainFrame
-     */
-    public ArrayList<GameLabel> getMainGameLabels() {
-        return mainGameLabels;
-    }
-
-    /**
-     * Get MainFrame's secret GameLabels ArrayList.
-     *
-     * @return GameLabels ArrayList of this MainFrame
-     */
-    public ArrayList<GameLabel> getSecretGameLabels() {
-        return secretGameLabels;
-    }
-
-    /**
      * Check if MainFrame has a border.
      *
      * @return Boolean containing value representative of the check
@@ -435,6 +428,7 @@ public class MainFrame extends JFrame {
         programSettingsButton.setForeground(buttonColor);
         steamButton.setForeground(buttonColor);
         titleLabel.setForeground(buttonColor);
+        addMenuButton.setForeground(buttonColor);
     }
 
     /**
@@ -504,15 +498,6 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Set the MainFrame's main GameLabels.
-     *
-     * @param activeGameLabels GameLabels ArrayList to be set
-     */
-    public void setMainGameLabels(ArrayList<GameLabel> mainGameLabels) {
-        this.mainGameLabels = mainGameLabels;
-    }
-
-    /**
      * Set the MainFrame's active GameLabels.
      *
      * @param activeGameLabels GameLabels ArrayList to be set
@@ -522,12 +507,21 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Set the MainFrame's secret GameLabels.
+     * get the MainFrame's GameLabels list.
      *
-     * @param activeGameLabels GameLabels ArrayList to be set
+     * @return gameLabelLists MainFrame's GameLabels list
      */
-    public void setSecretGameLabels(ArrayList<GameLabel> secretGameLabels) {
-        this.secretGameLabels = secretGameLabels;
+    public ArrayList<ArrayList<GameLabel>> getGameLabelLists() {
+        return gameLabelLists;
+    }
+
+    /**
+     * Set the MainFrame's GameLabels list.
+     *
+     * @param gameLabelLists GameLabels ArrayList to be set
+     */
+    public void setGameLabelLists(ArrayList<ArrayList<GameLabel>> gameLabelLists) {
+        this.gameLabelLists = gameLabelLists;
     }
 
     /**
@@ -577,13 +571,11 @@ public class MainFrame extends JFrame {
         // "Filter" possible noise caused by Double
         this.frameScale = BigDecimal.valueOf(frameScale).setScale(1, RoundingMode.HALF_UP).doubleValue();
         setBorderAndSize(hasBorder, borderColor);
-        for (int i = 0; i < mainGameLabels.size(); i++) {
-            mainGameLabels.get(i).getGame().setFrameScale(frameScale);
-            mainGameLabels.get(i).setIcon(mainGameLabels.get(i).getGame().getGameIcon());
-        }
-        for (int i = 0; i < secretGameLabels.size(); i++) {
-            secretGameLabels.get(i).getGame().setFrameScale(frameScale);
-            secretGameLabels.get(i).setIcon(secretGameLabels.get(i).getGame().getGameIcon());
+        for (int i = 0; i < gameLabelLists.size(); i++) {
+            for (int j = 0; j < gameLabelLists.get(i).size(); j++) {
+                gameLabelLists.get(i).get(j).getGame().setFrameScale(frameScale);
+                gameLabelLists.get(i).get(j).setIcon(gameLabelLists.get(i).get(j).getGame().getGameIcon());
+            }
         }
     }
 
@@ -622,6 +614,19 @@ public class MainFrame extends JFrame {
     public void setUseSteam(boolean useSteam) {
         this.useSteam = useSteam;
         steamButton.setVisible(useSteam);
+    }
+    
+    public boolean isShowingNewMenuButton() {
+        return showingNewMenuButton;
+    }
+    
+    public void setShowingNewMenuButton(boolean showingNewMenuButton) {
+        this.showingNewMenuButton = showingNewMenuButton;
+        if (showingNewMenuButton && menuIndex == gameLabelLists.size() - 1) {
+            showAddNewGameButton();
+        } else {
+            hideAddNewGameButton();
+        }
     }
 
     /**
@@ -681,11 +686,6 @@ public class MainFrame extends JFrame {
      */
     public void redrawGameGridPanel(ArrayList<GameLabel> activeGameLabels) {
         this.activeGameLabels = activeGameLabels;
-        if (secretGamesShown) {
-            secretGameLabels = activeGameLabels;
-        } else {
-            mainGameLabels = activeGameLabels;
-        }
         numberOfGames = activeGameLabels.size();
         if (numberOfGames == 0) {
             gameGridPanel.removeAll();
@@ -702,6 +702,7 @@ public class MainFrame extends JFrame {
         }
         gameGridPanel.revalidate();
         gameGridPanel.repaint();
+        updatePaging();
     }
 
     /**
@@ -844,6 +845,14 @@ public class MainFrame extends JFrame {
     }
 
     /**
+     * Add a new game menu.
+     */
+    private void doAddNewGameMenu() {
+        gameLabelLists.add(new ArrayList<GameLabel>());
+        goToNextGameMenu();
+    }
+
+    /**
      * Launch Steam in Big Picture mode.
      */
     private void doLaunchSteamBigPicture() {
@@ -917,35 +926,90 @@ public class MainFrame extends JFrame {
         } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             changeFocusedGamelabel(1);
         } else if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
-            showSecretGameLabels();
+            goToNextGameMenu();
         } else if (e.getKeyCode() == KeyEvent.VK_PAGE_UP) {
-            hideSecretGameLabels();
+            goToPreviousGameMenu();
         }
     }
 
     /**
-     * Show the secret GameLabels.
+     * Go to next Game menu.
      */
-    public void showSecretGameLabels() {
-        if (!secretGamesShown) {
-            secretGamesShown = true;
-            focusedMainGameLabelCached = focusedGameLabel;
-            focusedGameLabel = focusedSecretGameLabelCached;
-            activeGameLabels = secretGameLabels;
+    public void goToNextGameMenu() {
+        if (menuIndex < gameLabelLists.size() - 1) {
+            menuIndex++;
+            if (focusedGameLabels.size() < gameLabelLists.size()) {
+                focusedGameLabels.add(focusedGameLabel);
+            } else {
+                focusedGameLabels.set(menuIndex - 1, focusedGameLabel);
+                focusedGameLabel = focusedGameLabels.get(menuIndex);
+            }
+            activeGameLabels = gameLabelLists.get(menuIndex);
             redrawGameGridPanel(activeGameLabels);
         }
     }
 
     /**
-     * Hide the secret GameLabels.
+     * Go to previous Game menu.
      */
-    public void hideSecretGameLabels() {
-        if (secretGamesShown) {
-            secretGamesShown = false;
-            focusedSecretGameLabelCached = focusedGameLabel;
-            focusedGameLabel = focusedMainGameLabelCached;
-            activeGameLabels = mainGameLabels;
+    public void goToPreviousGameMenu() {
+        if (menuIndex > 0) {
+            menuIndex--;
+            if (focusedGameLabels.size() < gameLabelLists.size()) {
+                focusedGameLabels.add(focusedGameLabel);
+            } else {
+                focusedGameLabels.set(menuIndex + 1, focusedGameLabel);
+                focusedGameLabel = focusedGameLabels.get(menuIndex);
+            }
+            focusedGameLabel = focusedGameLabels.get(menuIndex);
+            activeGameLabels = gameLabelLists.get(menuIndex);
             redrawGameGridPanel(activeGameLabels);
+        }
+    }
+
+    /**
+     * Go to specified Game menu.
+     */
+    public void goToGameMenu(int newMenuIndex) {
+        this.menuIndex = newMenuIndex;
+        if (focusedGameLabels.size() < gameLabelLists.size()) {
+            focusedGameLabels.add(focusedGameLabel);
+        } else {
+            focusedGameLabels.set(menuIndex + 1, focusedGameLabel);
+            focusedGameLabel = focusedGameLabels.get(menuIndex);
+        }
+        focusedGameLabel = focusedGameLabels.get(menuIndex);
+        activeGameLabels = gameLabelLists.get(menuIndex);
+        redrawGameGridPanel(activeGameLabels);
+    }
+
+    /**
+     * Show the "Add new game menu" button
+     */
+    public void showAddNewGameButton() {
+        addMenuButton.setVisible(true);
+    }
+
+    /**
+     * Hide the "Add new game menu" button
+     */
+    public void hideAddNewGameButton() {
+        addMenuButton.setVisible(false);
+    }
+
+    /**
+     * Show the game menu index on the title.
+     */
+    public void updatePaging() {
+        if (menuIndex != 0) {
+            titleLabel.setText("  " + getTitleText() + " [" + (menuIndex + 1) + "]");
+        } else {
+            titleLabel.setText("  " + getTitleText());
+        }
+        if (menuIndex == gameLabelLists.size() - 1 && activeGameLabels.size() > 0 && showingNewMenuButton) {
+            showAddNewGameButton();
+        } else {
+            hideAddNewGameButton();
         }
     }
 
@@ -954,9 +1018,9 @@ public class MainFrame extends JFrame {
      */
     public void toggleSecretGameLabels() {
         if (secretGamesShown) {
-            hideSecretGameLabels();
+            goToPreviousGameMenu();
         } else {
-            showSecretGameLabels();
+            goToNextGameMenu();
         }
         redrawGameGridPanel(activeGameLabels);
     }
@@ -1044,13 +1108,13 @@ public class MainFrame extends JFrame {
             // If LT is pressed, decrease the window's scale
             //case "" XInputAxis.LEFT_THUMBSTICK_X
             case "LEFT_SHOULDER": {
-                hideSecretGameLabels();
+                goToPreviousGameMenu();
                 break;
             }
 
             // If RT is pressed, increase the window's scale
             case "RIGHT_SHOULDER": {
-                showSecretGameLabels();
+                goToNextGameMenu();
                 break;
             }
 
@@ -1097,7 +1161,7 @@ public class MainFrame extends JFrame {
             if (!activeGameLabels.isEmpty()) {
                 switch (indexDelta) {
                     case 1: {
-                        if (activeGameLabels.size() >= 2) {
+                        if (activeGameLabels.size() > 2) {
                             activeGameLabels.get(2).focusOnGameLabel();
                         } else {
                             activeGameLabels.get(0).focusOnGameLabel();
@@ -1105,7 +1169,7 @@ public class MainFrame extends JFrame {
                         break;
                     }
                     case 3: {
-                        if (activeGameLabels.size() >= 1) {
+                        if (activeGameLabels.size() > 1) {
                             activeGameLabels.get(1).focusOnGameLabel();
                         } else {
                             activeGameLabels.get(0).focusOnGameLabel();
@@ -1113,7 +1177,7 @@ public class MainFrame extends JFrame {
                         break;
                     }
                     case -3: {
-                        if (activeGameLabels.size() >= 7) {
+                        if (activeGameLabels.size() > 7) {
                             activeGameLabels.get(7).focusOnGameLabel();
                         } else {
                             activeGameLabels.get(0).focusOnGameLabel();
@@ -1174,15 +1238,16 @@ public class MainFrame extends JFrame {
     // Fields
     private JXPanel shadowPanel;
     private JPanel gameGridPanel, statusBarPanel, buttonsPanel, mainPanel;
-    private JButton exitButton, programSettingsButton, steamButton;
+    private JButton exitButton, programSettingsButton, steamButton, addMenuButton;
     private JLabel emptyGridLabel, titleLabel;
-    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false, secretGamesShown = false;
+    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false, secretGamesShown = false, showingNewMenuButton = true;
     private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
-    private ArrayList<GameLabel> mainGameLabels = new ArrayList<>(), secretGameLabels = new ArrayList<>(), activeGameLabels = new ArrayList<>();
-    private int numberOfGames = 0, mouseX = 0, mouseY = 0;
+    private ArrayList<GameLabel> activeGameLabels = new ArrayList<>(), focusedGameLabels = new ArrayList<>();
+    private ArrayList<ArrayList<GameLabel>> gameLabelLists = new ArrayList<>();
+    private int numberOfGames = 0, mouseX = 0, mouseY = 0, menuIndex = 0;
     private double frameScale = 1.0;
-    private String gameName, titleText = "Game Organizer", steamLocation = "C:\\Program Files (x86)\\Steam\\Steam.exe";
+    private String gameName, titleText = "Game Organizer";
     private Font customFont;
     private XInputDevice controller;
-    private GameLabel focusedGameLabel = null, focusedSecretGameLabelCached = null, focusedMainGameLabelCached = null;
+    private GameLabel focusedGameLabel = null;
 }

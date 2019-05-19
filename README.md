@@ -4,11 +4,13 @@ A simple app that helps you organize game shortcuts
 ![alt text](https://github.com/mpaterakis/GameOrganizer/blob/master/Screenshot1.png)
 
 Features:
-* Can use up to 18 different games in 2 3x3 grids (256x256 pixels each, on the default size)
+* Uses 3x3 grids (256x256 pixels each, on the default size)
+* Can use virtually infinite individual grids
 * Total color customization
 * 2 different spacing modes
 * Rescalable window
 * Customizable window title
+* Customizable buttons
 * Customizable shadow
 * Customizable game order
 * Option to dim the non-focused game tiles
