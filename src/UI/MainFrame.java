@@ -960,6 +960,7 @@ public class MainFrame extends JFrame {
             menuIndex++;
             if (focusedGameLabels.size() < gameLabelLists.size()) {
                 focusedGameLabels.add(focusedGameLabel);
+                focusedGameLabel = null;
             } else {
                 focusedGameLabels.set(menuIndex - 1, focusedGameLabel);
                 focusedGameLabel = focusedGameLabels.get(menuIndex);
