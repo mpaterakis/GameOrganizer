@@ -615,11 +615,11 @@ public class MainFrame extends JFrame {
         this.useSteam = useSteam;
         steamButton.setVisible(useSteam);
     }
-    
+
     public boolean isShowingNewMenuButton() {
         return showingNewMenuButton;
     }
-    
+
     public void setShowingNewMenuButton(boolean showingNewMenuButton) {
         this.showingNewMenuButton = showingNewMenuButton;
         if (showingNewMenuButton && menuIndex == gameLabelLists.size() - 1) {
@@ -878,8 +878,20 @@ public class MainFrame extends JFrame {
             // Select Image
             String iconFile = SpareDialogs.createGameIconPicker(files[0].getParent());
 
-            // Select Game Name                    
-            SpareDialogs.createGameNameDialog(this, files[0].getAbsoluteFile().getName().split(".exe")[0].split(".bat")[0]);
+            // Select Game Name
+            String tempGameName = files[0].getAbsoluteFile().getName().split(".exe")[0].split(".bat")[0];
+            String gameName = "";
+            // Split on case change
+            for (String w : tempGameName.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")) {
+                gameName += w + " ";
+            }
+            tempGameName = gameName.substring(0, gameName.length() - 1);
+            gameName = "";
+            // Split on number
+            for (String w : tempGameName.split("(?<=\\D)(?=\\d)")) {
+                gameName += w + " ";
+            }
+            SpareDialogs.createGameNameDialog(this, gameName.substring(0, gameName.length() - 1));
 
             numberOfGames = activeGameLabels.size() + 1;
 
