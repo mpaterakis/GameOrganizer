@@ -385,6 +385,8 @@ public class ProcessXML {
                 // Draw the gameGridPanel with the new GameLabels
                 if (gameLabelLists.size() > 0) {
                     mainFrame.redrawGameGridPanel(gameLabelLists.get(0));
+                } else {
+                    mainFrame.redrawGameGridPanel(null);
                 }
                 mainFrame.setFocusedGameLabel(null);
             } catch (DOMException | NullPointerException e) {

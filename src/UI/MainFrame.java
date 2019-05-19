@@ -685,6 +685,11 @@ public class MainFrame extends JFrame {
      * @param activeGameLabels GameLabel ArrayList to be used for the redrawing
      */
     public void redrawGameGridPanel(ArrayList<GameLabel> activeGameLabels) {
+        if (activeGameLabels == null) {
+            gameGridPanel.removeAll();
+            gameGridPanel.add(emptyGridLabel);
+            return;
+        }
         this.activeGameLabels = activeGameLabels;
         numberOfGames = activeGameLabels.size();
         if (numberOfGames == 0) {
@@ -898,6 +903,9 @@ public class MainFrame extends JFrame {
             // Create new GameLabel object
             GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), gameName, frameScale), this);
             activeGameLabels.add(gameLabel);
+            if (gameLabelLists.isEmpty()) {
+                gameLabelLists.add(activeGameLabels);
+            }
 
             // Add gameLabel to gameGridPanel
             gameGridPanel.add(gameLabel);
