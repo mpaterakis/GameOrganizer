@@ -901,7 +901,7 @@ public class MainFrame extends JFrame {
             numberOfGames = activeGameLabels.size() + 1;
 
             // Create new GameLabel object
-            GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), gameName, frameScale), this);
+            GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), this.gameName, frameScale), this);
             activeGameLabels.add(gameLabel);
             if (gameLabelLists.isEmpty()) {
                 gameLabelLists.add(activeGameLabels);
