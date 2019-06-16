@@ -249,7 +249,7 @@ public class GameSettingsDialog extends JDialog {
      * Choose the Game's icon.
      */
     private void doChooseIcon() {
-        iconField.setText(SpareDialogs.createGameIconPicker(new File(game.getGamePath()).getParentFile().getAbsolutePath()));
+        iconField.setText(SpareDialogs.createGameIconPicker(new File(game.getGamePath()).getParentFile().getAbsolutePath(), game.getGameName()));
     }
 
     // Open parent folder

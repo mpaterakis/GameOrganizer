@@ -52,5 +52,6 @@ Usage:
 Darryl Burke (AlphaImageIcon, ComponentMover)  
 Rob Camick (ComponentMover)  
 Robert Harder (FileDrop)  
+doZennn (SteamGridDB (https://www.steamgriddb.com))
 [Copyright (c) 2014 Ivan "StrikerX3" Oliveira (JXInput)](https://github.com/mpaterakis/GameOrganizer/blob/master/licenses/license-JXInput.txt)  
-[Copyright (c) 2015 SwingLabs (SwingX)](https://github.com/mpaterakis/GameOrganizer/blob/master/licenses/license-SwingX.txt) | [Source](  https://github.com/RockManJoe64/swingx)  
+[Copyright (c) 2015 SwingLabs (SwingX)](https://github.com/mpaterakis/GameOrganizer/blob/master/licenses/license-SwingX.txt) | [Source](  https://github.com/RockManJoe64/swingx)

@@ -880,9 +880,6 @@ public class MainFrame extends JFrame {
         // If there are 9 games, then don't a new one
         if (numberOfGames < 9) {
 
-            // Select Image
-            String iconFile = SpareDialogs.createGameIconPicker(files[0].getParent());
-
             // Select Game Name
             String tempGameName = files[0].getAbsoluteFile().getName().split(".exe")[0].split(".bat")[0];
             String gameName = "";
@@ -899,6 +896,9 @@ public class MainFrame extends JFrame {
             SpareDialogs.createGameNameDialog(this, gameName.substring(0, gameName.length() - 1));
 
             numberOfGames = activeGameLabels.size() + 1;
+
+            // Select Image
+            String iconFile = SpareDialogs.createGameIconPicker(files[0].getParent(), this.gameName);
 
             // Create new GameLabel object
             GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), this.gameName, frameScale), this);
