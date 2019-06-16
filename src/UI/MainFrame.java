@@ -26,6 +26,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.border.DropShadowBorder;
+import org.jdesktop.swingx.util.OS;
 
 /**
  * Custom JFrame representing the main window.
@@ -38,7 +39,19 @@ public class MainFrame extends JFrame {
      * Create a MainFrame object.
      */
     public MainFrame() {
-        initComponents();
+        // If program is already running, exit (and focus on existing instance if running in Windows 8+)
+        if (isRunning()) {
+            if (OS.isWindows()) {
+                try {
+                    Runtime.getRuntime().exec("powershell $wshell = New-Object -ComObject wscript.shell ; $wshell.AppActivate('Game Organizer')");
+                } catch (IOException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            System.exit(0);
+        } else {
+            initComponents();
+        }
     }
 
     /**
@@ -657,6 +670,24 @@ public class MainFrame extends JFrame {
     }
 
     /**
+     * Check if program is already running
+     *
+     * @return Status of gameOrganizer (true if running, false if not running)
+     */
+    private boolean isRunning() {
+        try {
+            final File file = new File(System.getProperty("user.home") + "\\.GameOrganizer.lock");
+            if (file.createNewFile()) {
+                file.deleteOnExit();
+                return false;
+            }
+            return true;
+        } catch (IOException e) {
+            return true;
+        }
+    }
+
+    /**
      * Get mouse position.
      *
      * @return Integer table with the X and Y position of the mouse
@@ -820,6 +851,10 @@ public class MainFrame extends JFrame {
     public void doExit() {
         // Save to XML on exit
         ProcessXML.WriteXML(this);
+
+        // Delete lockfile
+        final File file = new File(System.getProperty("user.home") + "\\.GameOrganizer.lock");
+        file.delete();
 
         // Fade Out animation and close program
         fadeOutJFrame();
