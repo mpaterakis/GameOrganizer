@@ -24,7 +24,7 @@ public class SettingsDialog extends JDialog {
 
     /**
      * Create a SettingsDialog object.
-     * 
+     *
      * @param mainFrame MainFrame object to be manipulated from this class
      */
     public SettingsDialog(MainFrame mainFrame) {
@@ -127,27 +127,27 @@ public class SettingsDialog extends JDialog {
         changeSpacingOption.addActionListener(e -> doChangeSpacing());
 
         borderColorButton = new JButton("Change Color");
-        borderColorButton.addActionListener(e -> SpareDialogs.createColorPicker(borderColorChooser));
+        borderColorButton.addActionListener(e -> StaticDialogs.createColorPicker(borderColorChooser));
         borderColorButton.setBackground(new Color(209, 209, 209));
         borderColorButton.setFocusPainted(false);
-        
+
         shadowColorButton = new JButton("Change Color");
-        shadowColorButton.addActionListener(e -> SpareDialogs.createColorPicker(shadowColorChooser));
+        shadowColorButton.addActionListener(e -> StaticDialogs.createColorPicker(shadowColorChooser));
         shadowColorButton.setBackground(new Color(209, 209, 209));
         shadowColorButton.setFocusPainted(false);
-        
+
         backgroundColorButton = new JButton("Change Background Color");
-        backgroundColorButton.addActionListener(e -> SpareDialogs.createColorPicker(backgroundColorChooser));
+        backgroundColorButton.addActionListener(e -> StaticDialogs.createColorPicker(backgroundColorChooser));
         backgroundColorButton.setBackground(new Color(209, 209, 209));
         backgroundColorButton.setFocusPainted(false);
-        
+
         barColorButton = new JButton("Change Bar Color");
-        barColorButton.addActionListener(e -> SpareDialogs.createColorPicker(barColorChooser));
+        barColorButton.addActionListener(e -> StaticDialogs.createColorPicker(barColorChooser));
         barColorButton.setBackground(new Color(209, 209, 209));
         barColorButton.setFocusPainted(false);
-        
+
         buttonsColorButton = new JButton("Change Bar Buttons Color");
-        buttonsColorButton.addActionListener(e -> SpareDialogs.createColorPicker(buttonColorChooser));
+        buttonsColorButton.addActionListener(e -> StaticDialogs.createColorPicker(buttonColorChooser));
         buttonsColorButton.setBackground(new Color(209, 209, 209));
         buttonsColorButton.setFocusPainted(false);
 
@@ -220,7 +220,7 @@ public class SettingsDialog extends JDialog {
         spareColorButtonsPanel.add(barColorButton);
         spareColorButtonsPanel.add(buttonsColorButton);
         spareColorButtonsPanel.add(backgroundColorButton);
-        
+
         titleSettingsPanel = new JPanel(new BorderLayout());
         titleSettingsPanel.add(new JLabel("  Window Title: "), BorderLayout.WEST);
         titleSettingsPanel.add(titleField, BorderLayout.CENTER);
@@ -239,11 +239,11 @@ public class SettingsDialog extends JDialog {
         borderPanel = new JPanel(new BorderLayout());
         borderPanel.add(new JLabel("  Use border on main window: "), BorderLayout.WEST);
         borderPanel.add(borderButtonsPanel, BorderLayout.EAST);
-        
+
         steamPanel = new JPanel(new BorderLayout());
         steamPanel.add(new JLabel("  Show Steam icon on main window: "), BorderLayout.WEST);
         steamPanel.add(usingSteamCheckBox, BorderLayout.EAST);
-        
+
         menuPanel = new JPanel(new BorderLayout());
         menuPanel.add(new JLabel("  Show 'New Menu' button on main window: "), BorderLayout.WEST);
         menuPanel.add(showMenuCheckbox, BorderLayout.EAST);
@@ -334,7 +334,7 @@ public class SettingsDialog extends JDialog {
 
     /**
      * Remove all tabs except "Swatches" from a JColorChooser.
-     * 
+     *
      * @param colorChooser JColorChooser object to be customized
      */
     private void removeExcessChooserTabs(JColorChooser colorChooser) {
@@ -460,7 +460,7 @@ public class SettingsDialog extends JDialog {
 
     /**
      * Set MainFrame's frame scale.
-     * 
+     *
      * @param frameScale Double containing the MainFrame's new frame scale
      */
     private void doSetFrameScale(double frameScale) {
@@ -471,29 +471,35 @@ public class SettingsDialog extends JDialog {
 
     /**
      * Changes the main window's appearance according to each key press.
-     * 
+     *
      * @param e KeyEvent that was triggered
      */
     private void doKeyAction(KeyEvent e) {
 
-        // If F5 is pressed, center the main window
-        if (e.getKeyCode() == KeyEvent.VK_F5) {
-            mainFrame.fadeOutJFrame();
-            setLocationRelativeTo(null);
-            mainFrame.setLocationRelativeTo(null);
-            mainFrame.fadeInJFrame();
-        } // If + is pressed, increase the window's scale
-        else if (e.getKeyCode() == KeyEvent.VK_ADD) {
-            if (mainFrame.getFrameScale() < 1.5) {
-                mainFrame.setFrameScale(mainFrame.getFrameScale() + 0.1);
-                frameScaleSlider.setValue((int) (mainFrame.getFrameScale() * 10));
-            }
-        } // If - is pressed, decrease the window's scale
-        else if (e.getKeyCode() == KeyEvent.VK_SUBTRACT) {
-            if (mainFrame.getFrameScale() > 0.5) {
-                mainFrame.setFrameScale(mainFrame.getFrameScale() - 0.1);
-                frameScaleSlider.setValue((int) (mainFrame.getFrameScale() * 10));
-            }
+        switch (e.getKeyCode()) {
+            // If F5 is pressed, center the main window
+            case KeyEvent.VK_F5:
+                mainFrame.fadeOutJFrame();
+                setLocationRelativeTo(null);
+                mainFrame.setLocationRelativeTo(null);
+                mainFrame.fadeInJFrame();
+                break;
+            // If + is pressed, increase the window's scale
+            case KeyEvent.VK_ADD:
+                if (mainFrame.getFrameScale() < 1.5) {
+                    mainFrame.setFrameScale(mainFrame.getFrameScale() + 0.1);
+                    frameScaleSlider.setValue((int) (mainFrame.getFrameScale() * 10));
+                }
+                break;
+            // If - is pressed, decrease the window's scale
+            case KeyEvent.VK_SUBTRACT:
+                if (mainFrame.getFrameScale() > 0.5) {
+                    mainFrame.setFrameScale(mainFrame.getFrameScale() - 0.1);
+                    frameScaleSlider.setValue((int) (mainFrame.getFrameScale() * 10));
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -521,5 +527,5 @@ public class SettingsDialog extends JDialog {
     private JButton revertDefaultsButton, changeSpacingOption, changeTitleButton, borderColorButton, shadowColorButton, buttonsColorButton, barColorButton, backgroundColorButton;
     private JCheckBox autoExitCheckbox, hasShadowCheckbox, hasFocusingCheckbox, hasBorderCheckBox, usingSteamCheckBox, showMenuCheckbox;
     private JTextField titleField;
-    private MainFrame mainFrame;
+    private final MainFrame mainFrame;
 }

@@ -676,7 +676,7 @@ public class MainFrame extends JFrame {
      */
     private boolean isRunning() {
         try {
-            final File file = new File(System.getProperty("user.home") + "\\.GameOrganizer.lock");
+            final File file = new File(System.getProperty("user.home") + "/.GameOrganizer.lock");
             if (file.createNewFile()) {
                 file.deleteOnExit();
                 return false;
@@ -853,7 +853,7 @@ public class MainFrame extends JFrame {
         ProcessXML.WriteXML(this);
 
         // Delete lockfile
-        final File file = new File(System.getProperty("user.home") + "\\.GameOrganizer.lock");
+        final File file = new File(System.getProperty("user.home") + "/.GameOrganizer.lock");
         file.delete();
 
         // Fade Out animation and close program
@@ -876,9 +876,7 @@ public class MainFrame extends JFrame {
     private void doLaunchSteam() {
         try {
             Desktop.getDesktop().browse(new URI("steam://open/games"));
-        } catch (URISyntaxException ex) {
-            JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
+        } catch (URISyntaxException | IOException ex) {
             JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
         }
         doExit();
@@ -888,7 +886,7 @@ public class MainFrame extends JFrame {
      * Add a new game menu.
      */
     private void doAddNewGameMenu() {
-        gameLabelLists.add(new ArrayList<GameLabel>());
+        gameLabelLists.add(new ArrayList<>());
         goToNextGameMenu();
     }
 
@@ -898,9 +896,7 @@ public class MainFrame extends JFrame {
     private void doLaunchSteamBigPicture() {
         try {
             Desktop.getDesktop().browse(new URI("steam://open/bigpicture"));
-        } catch (URISyntaxException ex) {
-            JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
+        } catch (URISyntaxException | IOException ex) {
             JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
         }
         doExit();
@@ -917,23 +913,23 @@ public class MainFrame extends JFrame {
 
             // Select Game Name
             String tempGameName = files[0].getAbsoluteFile().getName().split(".exe")[0].split(".bat")[0];
-            String gameName = "";
+            String prebuiltGameName = "";
             // Split on case change
             for (String w : tempGameName.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])")) {
-                gameName += w + " ";
+                prebuiltGameName += w + " ";
             }
-            tempGameName = gameName.substring(0, gameName.length() - 1);
-            gameName = "";
+            tempGameName = prebuiltGameName.substring(0, prebuiltGameName.length() - 1);
+            prebuiltGameName = "";
             // Split on number
             for (String w : tempGameName.split("(?<=\\D)(?=\\d)")) {
-                gameName += w + " ";
+                prebuiltGameName += w + " ";
             }
-            SpareDialogs.createGameNameDialog(this, gameName.substring(0, gameName.length() - 1));
+            StaticDialogs.createGameNameDialog(this, prebuiltGameName.substring(0, prebuiltGameName.length() - 1));
 
             numberOfGames = activeGameLabels.size() + 1;
 
             // Select Image
-            String iconFile = SpareDialogs.createGameIconPicker(files[0].getParent(), this.gameName);
+            String iconFile = StaticDialogs.createGameIconPicker(files[0].getParent(), this.gameName, files[0].getAbsoluteFile().getAbsolutePath());
 
             // Create new GameLabel object
             GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), this.gameName, frameScale), this);
@@ -957,33 +953,48 @@ public class MainFrame extends JFrame {
      */
     private void doKeyAction(KeyEvent e) {
 
-        // If F5 is pressed, center the main window
-        if (e.getKeyCode() == KeyEvent.VK_F5) {
-            centerWindow();
-        } // If + is pressed, increase the window's scale
-        else if (e.getKeyCode() == KeyEvent.VK_ADD) {
-            increaseScale();
-        } // If - is pressed, decrease the window's scale
-        else if (e.getKeyCode() == KeyEvent.VK_SUBTRACT) {
-            decreaseScale();
-        } // If Enter is pressed, launch the focused game
-        else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (focusedGameLabel != null) {
-                focusedGameLabel.launchGame();
-            }
-        } // If an arrow key is pressed, navigate through the tiles
-        else if (e.getKeyCode() == KeyEvent.VK_UP) {
-            changeFocusedGamelabel(-3);
-        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            changeFocusedGamelabel(3);
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            changeFocusedGamelabel(-1);
-        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            changeFocusedGamelabel(1);
-        } else if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
-            goToNextGameMenu();
-        } else if (e.getKeyCode() == KeyEvent.VK_PAGE_UP) {
-            goToPreviousGameMenu();
+        switch (e.getKeyCode()) {
+            // If F5 is pressed, center the main window
+            case KeyEvent.VK_F5:
+                centerWindow();
+                break;
+            // If + is pressed, increase the window's scale
+            case KeyEvent.VK_ADD:
+                increaseScale();
+                break;
+            // If - is pressed, decrease the window's scale
+            case KeyEvent.VK_SUBTRACT:
+                decreaseScale();
+                break;
+            // If Enter is pressed, launch the focused game
+            case KeyEvent.VK_ENTER:
+                if (focusedGameLabel != null) {
+                    focusedGameLabel.launchGame();
+                }
+                break;
+            // If an arrow key is pressed, navigate through the tiles
+            case KeyEvent.VK_UP:
+                changeFocusedGamelabel(-3);
+                break;
+            case KeyEvent.VK_DOWN:
+                changeFocusedGamelabel(3);
+                break;
+            case KeyEvent.VK_LEFT:
+                changeFocusedGamelabel(-1);
+                break;
+            case KeyEvent.VK_RIGHT:
+                changeFocusedGamelabel(1);
+                break;
+            // If Page Down is pressed, go to next game menu
+            case KeyEvent.VK_PAGE_DOWN:
+                goToNextGameMenu();
+                break;
+            // If Page Up is pressed, go to previous game menu
+            case KeyEvent.VK_PAGE_UP:
+                goToPreviousGameMenu();
+                break;
+            default:
+                break;
         }
     }
 
@@ -1025,6 +1036,8 @@ public class MainFrame extends JFrame {
 
     /**
      * Go to specified Game menu.
+     * 
+     * @param newMenuIndex The index of the menu to be shown
      */
     public void goToGameMenu(int newMenuIndex) {
         this.menuIndex = newMenuIndex;

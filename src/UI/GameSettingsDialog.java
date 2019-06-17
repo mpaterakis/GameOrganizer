@@ -7,6 +7,7 @@ import GameOrganizer.Game;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -21,7 +22,7 @@ public class GameSettingsDialog extends JDialog {
     /**
      * Create a new GameSettingsDialog object.
      *
-     * @param game Game object whose values will be shown and edited
+     * @param gameLabel The selected GameLabel
      * @param mainFrame MainFrame object containing the GameLabel that holds the game
      */
     public GameSettingsDialog(GameLabel gameLabel, MainFrame mainFrame) {
@@ -242,21 +243,21 @@ public class GameSettingsDialog extends JDialog {
      * Choose the Game's path.
      */
     private void doChoosePath() {
-        pathField.setText(SpareDialogs.createGameExePicker());
+        pathField.setText(StaticDialogs.createGameExePicker());
     }
 
     /**
      * Choose the Game's icon.
      */
     private void doChooseIcon() {
-        iconField.setText(SpareDialogs.createGameIconPicker(new File(game.getGamePath()).getParentFile().getAbsolutePath(), game.getGameName()));
+        iconField.setText(StaticDialogs.createGameIconPicker(new File(game.getGamePath()).getParentFile().getAbsolutePath(), game.getGameName(), game.getGamePath()));
     }
 
     // Open parent folder
     private void doOpenDir() {
         try {
             Desktop.getDesktop().open(new File(game.getGamePath()).getParentFile());
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "This file has no parent directory", "No Parent Directory", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -391,13 +392,13 @@ public class GameSettingsDialog extends JDialog {
     }
 
     // Fields
-    private Game game;
-    private GameLabel gameLabel;
+    private final Game game;
+    private final GameLabel gameLabel;
     private JButton okButton, choosePathButton, chooseIconButton, cancelButton, removeGameButton, openDirButton, orderPlusButton, orderMinusButton, moveToGameMenuButton;
     private JLabel nameLabel, pathLabel, iconLabel, orderLabel;
     private JTextField nameField, pathField, iconField, orderField;
     private JPanel mainPanel, centerPanel, buttonsPanel, labelsPanel, chooserFieldsPanel, chooserButtonsPanel, filechoosersPanel, orderPanel, orderAndNamePanel;
     private JComboBox gameMenuComboBox;
-    private MainFrame mainFrame;
-    private ArrayList<GameLabel> originalGameLabels;
+    private final MainFrame mainFrame;
+    private final ArrayList<GameLabel> originalGameLabels;
 }

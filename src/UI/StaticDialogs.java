@@ -5,20 +5,22 @@ package UI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import me.marnic.jiconextract.extractor.IconSize;
+import me.marnic.jiconextract.extractor.JIconExtractor;
 
 /**
  * Includes functions for smaller and less important dialogs that are used by MainFrame.
  *
  * @author mpaterakis
  */
-public class SpareDialogs {
+public class StaticDialogs {
 
     /**
      * Creates a dialog for inserting a game name.
@@ -72,37 +74,65 @@ public class SpareDialogs {
     /**
      * Creates a dialog for picking a game icon.
      *
+     * @param gameLocation The game's parent folder
+     * @param gameName The game's name
+     * @param gamePath The game's full path
      * @return String containing the picked icon's path
      */
-    public static String createGameIconPicker(String gameLocation, String gameName) {
+    public static String createGameIconPicker(String gameLocation, String gameName, String gamePath) {
 
-        // JButtons
-        JButton sgdbButton = new JButton("Search for image on SteamGridDB");
-        sgdbButton.addActionListener(e -> {
-            try {
-                java.awt.Desktop.getDesktop().browse(java.net.URI.create("https://www.steamgriddb.com/search/" + java.net.URLEncoder.encode(gameName, "UTF-8").replace("+", "%20")));
-            } catch (IOException ex) {
-                Logger.getLogger(SpareDialogs.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
+        // JFileChooser
+        JFileChooser chooser = new JFileChooser(gameLocation);
 
         // JLabels
+        JLabel gameIconLabel = new JLabel("", SwingConstants.CENTER);
         JLabel sgdbLabel = new JLabel("", SwingConstants.CENTER);
+        gameIconLabel.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, Color.LIGHT_GRAY));
+        sgdbLabel.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Color.LIGHT_GRAY));
+        BufferedImage gameImage = JIconExtractor.getJIconExtractor().extractIconFromFile(gamePath, IconSize.JUMBO);
+        gameIconLabel.setIcon(new ImageIcon(gameImage));
         try {
-            InputStream stream = SpareDialogs.class.getResourceAsStream("/Files/sgdb-logo.png");
+            InputStream stream = StaticDialogs.class.getResourceAsStream("/Files/sgdb-logo.png");
             sgdbLabel.setIcon(new ImageIcon(ImageIO.read(stream)));
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "IconImage Error: Cannot load statusbar icon", "Icon Error", JOptionPane.ERROR_MESSAGE);
         }
 
+        // JButtons
+        JButton gameIconButton = new JButton("Use game's built-in icon");
+        JButton sgdbButton = new JButton("Search for images on SteamGridDB");
+        gameIconButton.setBackground(new Color(209, 209, 209));
+        sgdbButton.setBackground(new Color(209, 209, 209));
+        gameIconButton.addActionListener(e -> {
+            try {
+                ImageIO.write(gameImage, "png", new File(gameLocation + "/" + gameName + ".png"));
+                chooser.setSelectedFile(new File(gameLocation + "/" + gameName + ".png"));
+                chooser.approveSelection();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Image Write Error: Cannot write game icon to image file", "Image Write Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        sgdbButton.addActionListener(e -> {
+            try {
+                java.awt.Desktop.getDesktop().browse(java.net.URI.create("https://www.steamgriddb.com/search/" + java.net.URLEncoder.encode(gameName, "UTF-8").replace("+", "%20")));
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "URI Error: Cannot open SteamGridDB.com in browser", "URI Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         // JPanels
+        JPanel extraActionsPanel = new JPanel(new GridLayout(2, 1));
+        JPanel gameIconPanel = new JPanel(new BorderLayout());
         JPanel sgdbPanel = new JPanel(new BorderLayout());
+        gameIconPanel.add(gameIconButton, BorderLayout.SOUTH);
+        gameIconPanel.add(gameIconLabel, BorderLayout.CENTER);
+        extraActionsPanel.add(gameIconPanel);
         sgdbPanel.add(sgdbButton, BorderLayout.SOUTH);
         sgdbPanel.add(sgdbLabel, BorderLayout.CENTER);
+        extraActionsPanel.add(sgdbPanel);
 
         // Set up JFileChooser
-        JFileChooser chooser = new JFileChooser(gameLocation);
-        chooser.setAccessory(sgdbPanel);
+        chooser.setAccessory(extraActionsPanel);
         chooser.setDialogTitle("Choose Game Tile Image");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
@@ -155,7 +185,7 @@ public class SpareDialogs {
                         for (Component child3 : jp2.getComponents()) {
                             if (child3 instanceof JButton) {
                                 JButton b = (JButton) child3;
-                                if (b.getText() == "Open" || b.getText() == "Cancel") {
+                                if ("Open".equals(b.getText()) || "Cancel".equals(b.getText())) {
                                     b.setBackground(new Color(209, 209, 209));
                                 }
                             }

@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
  *
  * @author mpaterakis
  */
-public class Game {
+public final class Game {
 
     /**
      * Create a Game object.
@@ -23,10 +23,9 @@ public class Game {
      */
     public Game(String gameIconPath, String gamePath, String gameName, double frameScale) {
         this.frameScale = frameScale;
-        setGameIconPath(gameIconPath);
         this.gamePath = gamePath;
         this.gameName = gameName;
-        this.gameIconPath = gameIconPath;
+        setGameIconPath(gameIconPath);
     }
 
     /**

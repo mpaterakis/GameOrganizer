@@ -6,6 +6,7 @@ A simple app that helps you organize game shortcuts
 Features:
 * Uses 3x3 grids (256x256 pixels each, on the default size)
 * Can use virtually infinite individual grids (game menus)
+* Ability to select the game's default icon, or any custom image
 * Total color customization
 * 2 different spacing modes
 * Rescalable window
@@ -22,7 +23,7 @@ Features:
 
 Usage:
 * Simply Drag-and-Drop a file onto the GameOrganizer window to create its shortcut
-* A prompt asking for a game icon and a game name will follow
+* A prompt asking for a game name and a game icon will follow
 * Right clicking a game's icon opens up the Game's Settings Menu
 * Left clicking a game's icon will launch the game
 * Scrolling Down shows the next games menu
@@ -53,5 +54,6 @@ Darryl Burke (AlphaImageIcon, ComponentMover)
 Rob Camick (ComponentMover)  
 Robert Harder (FileDrop)  
 doZennn ([SteamGridDB](https://www.steamgriddb.com))  
+MrMarnic ([JIconExtract] (https://github.com/MrMarnic/JIconExtract))  
 [Copyright (c) 2014 Ivan "StrikerX3" Oliveira (JXInput)](https://github.com/mpaterakis/GameOrganizer/blob/master/licenses/license-JXInput.txt)  
 [Copyright (c) 2015 SwingLabs (SwingX)](https://github.com/mpaterakis/GameOrganizer/blob/master/licenses/license-SwingX.txt) | [Source](  https://github.com/RockManJoe64/swingx)

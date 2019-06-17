@@ -187,7 +187,7 @@ public class GameLabel extends JLabel {
     }
 
     // Fields
-    private Game game;
-    private MainFrame mainFrame;
+    private final Game game;
+    private final MainFrame mainFrame;
     private AlphaImageIcon bgImage;
 }
