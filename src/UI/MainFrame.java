@@ -20,6 +20,8 @@ import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
 import javax.imageio.ImageIO;
@@ -924,7 +926,8 @@ public class MainFrame extends JFrame {
             for (String w : tempGameName.split("(?<=\\D)(?=\\d)")) {
                 prebuiltGameName += w + " ";
             }
-            StaticDialogs.createGameNameDialog(this, prebuiltGameName.substring(0, prebuiltGameName.length() - 1));
+            prebuiltGameName = prebuiltGameName.substring(0, prebuiltGameName.length() - 1).replace("  ", " ");
+            StaticDialogs.createGameNameDialog(this, prebuiltGameName);
 
             numberOfGames = activeGameLabels.size() + 1;
 
@@ -933,14 +936,27 @@ public class MainFrame extends JFrame {
 
             // Create new GameLabel object
             GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), this.gameName, frameScale), this);
-            activeGameLabels.add(gameLabel);
+            
+            ArrayList<String> gameNames = new ArrayList<>();
+            activeGameLabels.forEach((currentGameLabel) -> {
+                gameNames.add(currentGameLabel.getGame().getGameName());
+            });
+
+            // Get array index of previous (alphabetically) game
+            int previousGameIndex = -1;
+            for (int i = 0; i < gameNames.size(); i++) {
+                if (gameNames.get(i).compareTo(this.gameName) <= 0) {
+                    previousGameIndex = i;
+                }
+            }
+            
+            // Add the new GameLabel
+            activeGameLabels.add(previousGameIndex + 1, gameLabel);
+
             if (gameLabelLists.isEmpty()) {
                 gameLabelLists.add(activeGameLabels);
             }
-
-            // Add gameLabel to gameGridPanel
-            gameGridPanel.add(gameLabel);
-
+            
             // Redraw the gameGridPanel
             redrawGameGridPanel(activeGameLabels);
         }
@@ -1036,7 +1052,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Go to specified Game menu.
-     * 
+     *
      * @param newMenuIndex The index of the menu to be shown
      */
     public void goToGameMenu(int newMenuIndex) {
