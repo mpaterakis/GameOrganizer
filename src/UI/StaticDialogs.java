@@ -89,7 +89,14 @@ public class StaticDialogs {
         JLabel sgdbLabel = new JLabel("", SwingConstants.CENTER);
         gameIconLabel.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, Color.LIGHT_GRAY));
         sgdbLabel.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Color.LIGHT_GRAY));
-        BufferedImage gameImage = JIconExtractor.getJIconExtractor().extractIconFromFile(gamePath, IconSize.JUMBO);
+        BufferedImage gameImageOrig = JIconExtractor.getJIconExtractor().extractIconFromFile(gamePath, IconSize.JUMBO);
+        BufferedImage gameImage = new BufferedImage(gameImageOrig.getWidth(), gameImageOrig.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g2d = gameImage.createGraphics();
+        g2d.setColor(Color.BLACK); // Or what ever fill color you want...
+        g2d.fillRect(0, 0, gameImage.getWidth(), gameImage.getHeight());
+        g2d.drawImage(gameImageOrig, 0, 0, null);
+        g2d.dispose();
         gameIconLabel.setIcon(new ImageIcon(gameImage));
         try {
             InputStream stream = StaticDialogs.class.getResourceAsStream("/Files/sgdb-logo.png");
