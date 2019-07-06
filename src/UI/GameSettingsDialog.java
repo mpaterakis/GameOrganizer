@@ -105,10 +105,10 @@ public class GameSettingsDialog extends JDialog {
         gameMenuComboBox.setBackground(new Color(219, 219, 219));
         for (int i = 0; i < mainFrame.getGameLabelLists().size(); i++) {
             gameMenuComboBox.addItem(i + 1);
-            gameMenuComboBox.addItemListener((ie) -> {
-                if (mainFrame.getGameLabelLists().get(Integer.valueOf(ie.getItem().toString()) - 1) == mainFrame.getActiveGameLabels()) {
+            gameMenuComboBox.addItemListener((selection) -> {
+                if (mainFrame.getGameLabelLists().get(Integer.valueOf(selection.getItem().toString()) - 1) == mainFrame.getActiveGameLabels()) {
                     moveToGameMenuButton.setEnabled(false);
-                } else if (mainFrame.getGameLabelLists().get(Integer.valueOf(ie.getItem().toString()) - 1).size() == 9) {
+                } else if (mainFrame.getGameLabelLists().get(Integer.valueOf(selection.getItem().toString()) - 1).size() == 9) {
                     moveToGameMenuButton.setEnabled(false);
                 } else {
                     moveToGameMenuButton.setEnabled(true);

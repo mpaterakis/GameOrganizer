@@ -631,10 +631,20 @@ public class MainFrame extends JFrame {
         steamButton.setVisible(useSteam);
     }
 
+    /**
+     * Check the status (enabled/disabled) of the New Menu button.
+     *
+     * @return The status (enabled/disabled) of the New Menu button.
+     */
     public boolean isShowingNewMenuButton() {
         return showingNewMenuButton;
     }
 
+    /**
+     * Set the new status (enabled/disabled) of the New Menu button.
+     *
+     * @param showingNewMenuButton The new status of the New Menu button
+     */
     public void setShowingNewMenuButton(boolean showingNewMenuButton) {
         this.showingNewMenuButton = showingNewMenuButton;
         if (showingNewMenuButton && menuIndex == gameLabelLists.size() - 1) {
@@ -660,15 +670,6 @@ public class MainFrame extends JFrame {
      */
     public void setIgnoreMouse(boolean ignoreMouse) {
         this.ignoreMouse = ignoreMouse;
-    }
-
-    /**
-     * Get the status of secretGamesShown
-     *
-     * @return The status of secretGamesShown
-     */
-    public boolean secretGamesShown() {
-        return secretGamesShown;
     }
 
     /**
@@ -723,6 +724,7 @@ public class MainFrame extends JFrame {
             gameGridPanel.add(emptyGridLabel);
             return;
         }
+        gameLabelLists.set(menuIndex, activeGameLabels);
         this.activeGameLabels = activeGameLabels;
         numberOfGames = activeGameLabels.size();
         if (numberOfGames == 0) {
@@ -936,7 +938,7 @@ public class MainFrame extends JFrame {
 
             // Create new GameLabel object
             GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), this.gameName, frameScale), this);
-            
+
             ArrayList<String> gameNames = new ArrayList<>();
             activeGameLabels.forEach((currentGameLabel) -> {
                 gameNames.add(currentGameLabel.getGame().getGameName());
@@ -949,14 +951,14 @@ public class MainFrame extends JFrame {
                     previousGameIndex = i;
                 }
             }
-            
+
             // Add the new GameLabel
             activeGameLabels.add(previousGameIndex + 1, gameLabel);
 
             if (gameLabelLists.isEmpty()) {
                 gameLabelLists.add(activeGameLabels);
             }
-            
+
             // Redraw the gameGridPanel
             redrawGameGridPanel(activeGameLabels);
         }
@@ -1096,18 +1098,6 @@ public class MainFrame extends JFrame {
         } else {
             hideAddNewGameButton();
         }
-    }
-
-    /**
-     * Toggle the secret GameLabels.
-     */
-    public void toggleSecretGameLabels() {
-        if (secretGamesShown) {
-            goToPreviousGameMenu();
-        } else {
-            goToNextGameMenu();
-        }
-        redrawGameGridPanel(activeGameLabels);
     }
 
     /**
@@ -1325,7 +1315,7 @@ public class MainFrame extends JFrame {
     private JPanel gameGridPanel, statusBarPanel, buttonsPanel, mainPanel;
     private JButton exitButton, programSettingsButton, steamButton, addMenuButton;
     private JLabel emptyGridLabel, titleLabel;
-    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false, secretGamesShown = false, showingNewMenuButton = true;
+    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false, showingNewMenuButton = true;
     private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
     private ArrayList<GameLabel> activeGameLabels = new ArrayList<>(), focusedGameLabels = new ArrayList<>();
     private ArrayList<ArrayList<GameLabel>> gameLabelLists = new ArrayList<>();
