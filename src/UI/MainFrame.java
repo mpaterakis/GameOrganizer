@@ -939,12 +939,13 @@ public class MainFrame extends JFrame {
             // Create new GameLabel object
             GameLabel gameLabel = new GameLabel(new Game(iconFile, files[0].getAbsoluteFile().getAbsolutePath(), this.gameName, frameScale), this);
 
+            // Get array index of previous (alphabetically) game
             ArrayList<String> gameNames = new ArrayList<>();
             activeGameLabels.forEach((currentGameLabel) -> {
                 gameNames.add(currentGameLabel.getGame().getGameName());
             });
 
-            // Get array index of previous (alphabetically) game
+            // Compare game names
             int previousGameIndex = -1;
             for (int i = 0; i < gameNames.size(); i++) {
                 if (gameNames.get(i).compareTo(this.gameName) <= 0) {

@@ -359,19 +359,33 @@ public class GameSettingsDialog extends JDialog {
             yesButton.setBackground(new Color(209, 209, 209));
             yesButton.setFocusPainted(false);
             yesButton.addActionListener((ActionEvent actionEvent) -> {
+                // Get array index of previous (alphabetically) game
+                ArrayList<String> gameNames = new ArrayList<>();
+                mainFrame.getGameLabelLists().get(newMenuIndex).forEach((currentGameLabel) -> {
+                    gameNames.add(currentGameLabel.getGame().getGameName());
+                });
+
+                // Compare game names
+                int previousGameIndex = -1;
+                for (int i = 0; i < gameNames.size(); i++) {
+                    if (gameNames.get(i).compareTo(game.getGameName()) <= 0) {
+                        previousGameIndex = i;
+                    }
+                }
+
                 // Get gameLabels, remove this instance and move it to the new gameLabels list
                 mainFrame.getActiveGameLabels().remove(gameLabel);
-                mainFrame.getGameLabelLists().get(newMenuIndex).add(gameLabel);
+                mainFrame.getGameLabelLists().get(newMenuIndex).add(previousGameIndex + 1, gameLabel);
 
                 // If the gameLabels list is empty, remove it
                 if (mainFrame.getActiveGameLabels().isEmpty()) {
                     mainFrame.getGameLabelLists().remove(mainFrame.getActiveGameLabels());
                     mainFrame.goToGameMenu(newMenuIndex);
                 }
-                
+
                 // Reload GameLabels
                 mainFrame.redrawGameGridPanel(mainFrame.getActiveGameLabels());
-                
+
                 // Close the dialogs
                 SwingUtilities.getWindowAncestor(yesButton).dispose();
                 dispose();
