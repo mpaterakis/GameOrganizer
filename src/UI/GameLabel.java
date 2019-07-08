@@ -40,8 +40,14 @@ public class GameLabel extends JLabel {
     private void initComponents() {
 
         // Add background image to JLabel
-        bgImage = new AlphaImageIcon(game.getGameIcon(), 1.0f);
-        setIcon(bgImage);
+        if (game.getGameIcon().getImageLoadStatus() == 8) {
+            bgImage = new AlphaImageIcon(game.getGameIcon(), 1.0f);
+            setIcon(bgImage);
+        } else {
+            setText("Image not found");
+            setHorizontalAlignment(CENTER);
+            setForeground(new Color(16777215 - mainFrame.getBackgroundColor().getRGB()));
+        }
 
         // Add MouseListener
         addMouseListener(new MouseAdapter() {
