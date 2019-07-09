@@ -574,6 +574,15 @@ public class MainFrame extends JFrame {
         double maxFrameScale = BigDecimal.valueOf(Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 860).setScale(1, RoundingMode.HALF_UP).doubleValue();
         return maxFrameScale;
     }
+    
+    /**
+     * Get the main frame's custom font.
+     * 
+     * @return The custom font
+     */
+    public Font getCustomFont() {
+        return customFont;
+    }
 
     /**
      * Set the MainFrame's frame scale.
