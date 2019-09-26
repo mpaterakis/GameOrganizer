@@ -1,5 +1,5 @@
 # GameOrganizer
-A simple app that helps you organize game shortcuts
+A simple app that helps you launch and organize your games with style
 
 ![alt text](https://github.com/mpaterakis/GameOrganizer/blob/master/Screenshot1.png)
 
