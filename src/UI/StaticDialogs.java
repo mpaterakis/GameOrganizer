@@ -143,7 +143,7 @@ public class StaticDialogs {
         chooser.setDialogTitle("Choose Game Tile Image");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
-        chooser.addChoosableFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "tif", "bmp"));
+        chooser.addChoosableFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "png", "tif", "bmp", "gif"));
 
         // Change buttons' color
         changeFileChooserButtonColor(chooser);
