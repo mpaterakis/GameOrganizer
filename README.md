@@ -21,23 +21,27 @@ Features:
 * Ability to move games to different game menus
 * Mouse cursor gets hidden when an XBOX Controller action is registered
 
-Usage:
+Usage:  
+
+*Mouse*  
 * Simply Drag-and-Drop a file onto the GameOrganizer window to create its shortcut
 * A prompt asking for a game name and a game icon will follow
 * Right clicking a game's icon opens up the Game's Settings Menu
 * Left clicking a game's icon will launch the game
 * Scrolling Down shows the next games menu
 * Scrolling Up shows the previous games menu
-* Clicking on + will create a new games menu
+* Clicking on + will create a new games menu  
 
+*Keyboard*  
 * Pressing F5 centers the main window
 * Pressing Add (+) increases the main window's scale
 * Pressing Subtract (-) decreases the main window's scale
 * Pressing any Arrow key navigates through the games
 * Pressing Enter launches the selected game
 * Pressing Page Down shows the next games menu
-* Pressing Page Up shows the previous games menu
+* Pressing Page Up shows the previous games menu  
 
+*XBOX Controller*  
 * Pressing any DPAD button on an XBOX Controller navigates through the games
 * Moving the Left Stick on an XBOX Controller also navigates through the games
 * Moving the Right Stick on an XBOX Controller moves the main window
