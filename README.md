@@ -4,7 +4,7 @@ A simple app that helps you launch and organize your games with style
 ![alt text](https://github.com/mpaterakis/GameOrganizer/blob/master/Screenshot1.png)
 
 **Features:**
-* Uses 3x3 grids (256x256 pixels each, on the default size)
+* Uses 3x3 grids (256x256 pixels each on the default size)
 * Can use virtually infinite individual grids (game menus)
 * Ability to select the game's default icon, or any custom image
 * Total color customization
