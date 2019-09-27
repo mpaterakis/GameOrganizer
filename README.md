@@ -29,12 +29,15 @@ Usage:
 * Scrolling Down shows the next games menu
 * Scrolling Up shows the previous games menu
 * Clicking on + will create a new games menu
+
 * Pressing F5 centers the main window
 * Pressing Add (+) increases the main window's scale
 * Pressing Subtract (-) decreases the main window's scale
 * Pressing any Arrow key navigates through the games
+* Pressing Enter launches the selected game
 * Pressing Page Down shows the next games menu
 * Pressing Page Up shows the previous games menu
+
 * Pressing any DPAD button on an XBOX Controller navigates through the games
 * Moving the Left Stick on an XBOX Controller also navigates through the games
 * Moving the Right Stick on an XBOX Controller moves the main window
@@ -53,7 +56,7 @@ Usage:
 Darryl Burke (AlphaImageIcon, ComponentMover)  
 Rob Camick (ComponentMover)  
 Robert Harder (FileDrop)  
-doZennn ([SteamGridDB](https://www.steamgriddb.com))  
-MrMarnic ([JIconExtract](https://github.com/MrMarnic/JIconExtract))  
+[Jozen Martinez](https://github.com/doZennn) ([SteamGridDB](https://www.steamgriddb.com))  
+[MrMarnic](https://github.com/MrMarnic) ([JIconExtract](https://github.com/MrMarnic/JIconExtract))  
 [Copyright (c) 2014 Ivan "StrikerX3" Oliveira (JXInput)](https://github.com/mpaterakis/GameOrganizer/blob/master/licenses/license-JXInput.txt)  
 [Copyright (c) 2015 SwingLabs (SwingX)](https://github.com/mpaterakis/GameOrganizer/blob/master/licenses/license-SwingX.txt) | [Source](  https://github.com/RockManJoe64/swingx)
