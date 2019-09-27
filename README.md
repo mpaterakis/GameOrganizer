@@ -3,7 +3,7 @@ A simple app that helps you launch and organize your games with style
 
 ![alt text](https://github.com/mpaterakis/GameOrganizer/blob/master/Screenshot1.png)
 
-Features:
+**Features:**
 * Uses 3x3 grids (256x256 pixels each, on the default size)
 * Can use virtually infinite individual grids (game menus)
 * Ability to select the game's default icon, or any custom image
@@ -21,7 +21,7 @@ Features:
 * Ability to move games to different game menus
 * Mouse cursor gets hidden when an XBOX Controller action is registered
 
-Usage:  
+**Usage:**  
 
 *Mouse*  
 * Simply Drag-and-Drop a file onto the GameOrganizer window to create its shortcut
