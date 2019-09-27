@@ -110,12 +110,14 @@ public class MainFrame extends JFrame {
         // JLabels
         emptyGridLabel = new JLabel("Drop a game exe here to add it!", SwingConstants.CENTER);
         emptyGridLabel.setFont(customFont.deriveFont(16f));
+        emptyGridLabel.setForeground(buttonColor);
         titleLabel = new JLabel("  " + titleText);
         titleLabel.setFont(customFont.deriveFont(12f));
+        titleLabel.setForeground(buttonColor);
 
         // JPanels
         gameGridPanel = new JPanel(new GridLayout(3, 3));
-        gameGridPanel.setBackground(Color.WHITE);
+        gameGridPanel.setBackground(backgroundColor);
         FileDrop fileDrop = new FileDrop(gameGridPanel, (java.io.File[] files) -> {
             doDropFile(files);
         });
@@ -574,10 +576,10 @@ public class MainFrame extends JFrame {
         double maxFrameScale = BigDecimal.valueOf(Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 860).setScale(1, RoundingMode.HALF_UP).doubleValue();
         return maxFrameScale;
     }
-    
+
     /**
      * Get the main frame's custom font.
-     * 
+     *
      * @return The custom font
      */
     public Font getCustomFont() {
@@ -731,7 +733,11 @@ public class MainFrame extends JFrame {
             gameGridPanel.add(emptyGridLabel);
             return;
         }
-        gameLabelLists.set(menuIndex, activeGameLabels);
+        if (gameLabelLists.isEmpty()) {
+            gameLabelLists.add(activeGameLabels);
+        } else {
+            gameLabelLists.set(menuIndex, activeGameLabels);
+        }
         this.activeGameLabels = activeGameLabels;
         numberOfGames = activeGameLabels.size();
         if (numberOfGames == 0) {
@@ -755,7 +761,8 @@ public class MainFrame extends JFrame {
     /**
      * Set the border and window size.
      *
-     * @param hasBorder Boolean object (true if MainFrame has border, false otherwise)
+     * @param hasBorder Boolean object (true if MainFrame has border, false
+     * otherwise)
      * @param borderColor Color object containing the new border Color
      */
     public void setBorderAndSize(boolean hasBorder, Color borderColor) {
@@ -1230,7 +1237,8 @@ public class MainFrame extends JFrame {
     /**
      * Change the focused GameLabel.
      *
-     * @param indexDelta Integer containing the delta (difference) of the new focused GameLabel compared to the previous one.
+     * @param indexDelta Integer containing the delta (difference) of the new
+     * focused GameLabel compared to the previous one.
      */
     private void changeFocusedGamelabel(int indexDelta) {
         if (getFocusedGameLabel() != null) {
@@ -1324,7 +1332,7 @@ public class MainFrame extends JFrame {
     private JButton exitButton, programSettingsButton, steamButton, addMenuButton;
     private JLabel emptyGridLabel, titleLabel;
     private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false, showingNewMenuButton = true;
-    private Color buttonColor = Color.BLACK, barColor = new Color(204, 204, 204), borderColor = Color.GRAY, backgroundColor = Color.WHITE, shadowColor = Color.BLACK;
+    private Color buttonColor = Color.LIGHT_GRAY, barColor = Color.BLACK, borderColor = Color.BLACK, backgroundColor = Color.DARK_GRAY, shadowColor = Color.BLACK;
     private ArrayList<GameLabel> activeGameLabels = new ArrayList<>(), focusedGameLabels = new ArrayList<>();
     private ArrayList<ArrayList<GameLabel>> gameLabelLists = new ArrayList<>();
     private int numberOfGames = 0, mouseX = 0, mouseY = 0, menuIndex = 0;
