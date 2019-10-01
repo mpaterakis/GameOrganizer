@@ -16,8 +16,7 @@ import javax.swing.*;
 import org.jdesktop.swingx.util.OS;
 
 /**
- * A GameLabel object displays the game icon, can launch the game and open its
- * GameSettingsDialog.
+ * A GameLabel object displays the game icon, can launch the game and open its GameSettingsDialog.
  *
  * @author mpaterakis
  */
@@ -43,12 +42,8 @@ public class GameLabel extends JLabel {
         // Add background image to JLabel
         bgImage = new AlphaImageIcon(game.getGameIcon(), 1.0f);
         setIcon(bgImage);
-        if (game.getGameIcon().getImageLoadStatus() != 8) {
-            setText("Image not found");
-            setFont(mainFrame.getCustomFont().deriveFont(20f));
-            setHorizontalAlignment(CENTER);
-            setForeground(new Color(16777215 - mainFrame.getBackgroundColor().getRGB()));
-            setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(16777215 - mainFrame.getBackgroundColor().getRGB())));
+        if (game.getGameIcon().getImageLoadStatus() == MediaTracker.ERRORED) {
+            showImageError();
         }
 
         // Add MouseListener
@@ -192,6 +187,17 @@ public class GameLabel extends JLabel {
             }
             mainFrame.setFocusedGameLabel(null);
         }
+    }
+
+    /**
+     * Show "Image not found" error on GameLabel.
+     */
+    public void showImageError() {
+        setText("Image not found");
+        setFont(mainFrame.getCustomFont().deriveFont(20f));
+        setHorizontalAlignment(CENTER);
+        setForeground(new Color(16777215 - mainFrame.getBackgroundColor().getRGB()));
+        setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(16777215 - mainFrame.getBackgroundColor().getRGB())));
     }
 
     // Fields

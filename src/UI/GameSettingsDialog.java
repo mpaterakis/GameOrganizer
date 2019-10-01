@@ -233,9 +233,14 @@ public class GameSettingsDialog extends JDialog {
      * Apply the data from the textfields to the game instance
      */
     private void doOk() {
+        gameLabel.setBorder(null);
+        gameLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         game.setGameName(nameField.getText());
         game.setGameIconPath(iconField.getText());
         game.setGamePath(pathField.getText());
+        if (game.getGameIcon().getImageLoadStatus() == MediaTracker.ERRORED) {
+            gameLabel.showImageError();
+        }
         dispose();
     }
 
