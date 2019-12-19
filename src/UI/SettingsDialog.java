@@ -456,6 +456,7 @@ public class SettingsDialog extends JDialog {
      */
     private void doDisableFocusing() {
         mainFrame.setFocusing(false);
+        GameLabel.resetAllGameLabelFocus(mainFrame);
     }
 
     /**

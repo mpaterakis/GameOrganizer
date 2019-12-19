@@ -66,7 +66,7 @@ public class GameLabel extends JLabel {
             public void mouseExited(MouseEvent e) {
                 // Reset focus of all games
                 if (!mainFrame.isIgnoreMouse()) {
-                    resetGameLabelFocus(mainFrame);
+                    resetActiveGameLabelFocus(mainFrame);
                 }
             }
         });
@@ -78,7 +78,7 @@ public class GameLabel extends JLabel {
                 if (mainFrame.isIgnoreMouse() && (mainFrame.getFrameMousePosition()[0] != e.getXOnScreen() || mainFrame.getFrameMousePosition()[1] != e.getYOnScreen())) {
                     // Focus on this game
                     mainFrame.setFrameMousePosition(e.getXOnScreen(), e.getYOnScreen());
-                    resetGameLabelFocus(mainFrame);
+                    resetActiveGameLabelFocus(mainFrame);
                     focusOnGameLabel();
                     mainFrame.enableCursor();
                 }
@@ -180,12 +180,25 @@ public class GameLabel extends JLabel {
      *
      * @param mainFrame MainFrame object containing this GameLabel
      */
-    public static void resetGameLabelFocus(MainFrame mainFrame) {
+    public static void resetActiveGameLabelFocus(MainFrame mainFrame) {
         if (mainFrame.hasFocusing()) {
             for (int i = 0; i < mainFrame.getActiveGameLabels().size(); i++) {
                 mainFrame.getActiveGameLabels().get(i).setIcon(new AlphaImageIcon(mainFrame.getActiveGameLabels().get(i).getGame().getGameIcon(), 1.0f));
             }
             mainFrame.setFocusedGameLabel(null);
+        }
+    }
+
+    /**
+     * Reset focus of all the GameLabels.
+     *
+     * @param mainFrame MainFrame object containing this GameLabel
+     */
+    public static void resetAllGameLabelFocus(MainFrame mainFrame) {
+        for (int i = 0; i < mainFrame.getGameLabelLists().size(); i++) {
+            for (int j = 0; j < mainFrame.getGameLabelLists().get(i).size(); j++) {
+                mainFrame.getGameLabelLists().get(i).get(j).setIcon(new AlphaImageIcon(mainFrame.getGameLabelLists().get(i).get(j).getGame().getGameIcon(), 1.0f));
+            }
         }
     }
 
