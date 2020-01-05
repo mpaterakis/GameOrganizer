@@ -167,6 +167,15 @@ public class ProcessXML {
             }
             subElement2.appendChild(showingNewMenuButton);
 
+            // SoundEnabled bool
+            Element soundEnabled = doc.createElement("SoundEnabled");
+            if (mainFrame.isSoundEnabled()) {
+                soundEnabled.appendChild(doc.createTextNode("true"));
+            } else {
+                soundEnabled.appendChild(doc.createTextNode("false"));
+            }
+            subElement2.appendChild(soundEnabled);
+
             // Window Title text
             Element windowTitle = doc.createElement("WindowTitle");
             windowTitle.appendChild(doc.createTextNode(mainFrame.getTitleText().replace("[Secret Menu]", "")));
@@ -217,7 +226,7 @@ public class ProcessXML {
         if (file.exists()) {
 
             // Initialize values
-            String barClr = "", btnsClr = "", brdrClr = "", bgClr = "", shdClr = "", hasBrdr = "", hasSpc = "", hasShadow = "", autoExit = "", focusing = "", usingSteam = "", showingNewMenuButton = "", windowTitle = "";
+            String barClr = "", btnsClr = "", brdrClr = "", bgClr = "", shdClr = "", hasBrdr = "", hasSpc = "", hasShadow = "", autoExit = "", focusing = "", usingSteam = "", soundEnabled = "", showingNewMenuButton = "", windowTitle = "";
             double windowPosX = 0, windowPosY = 0, frameScale = 1;
             NodeList gamesLists = null, gamesList = null, legacySecretGamesList = null;
             Document document = null;
@@ -405,6 +414,16 @@ public class ProcessXML {
                     mainFrame.setShowingNewMenuButton(true);
                 } else if (showingNewMenuButton.equalsIgnoreCase("false")) {
                     mainFrame.setShowingNewMenuButton(false);
+                }
+            } catch (NumberFormatException | DOMException | NullPointerException e) {
+                Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);
+            }
+            try {
+                soundEnabled = document.getElementsByTagName("SoundEnabled").item(0).getTextContent();
+                if (soundEnabled.equalsIgnoreCase("true")) {
+                    mainFrame.setSound(true);
+                } else if (soundEnabled.equalsIgnoreCase("false")) {
+                    mainFrame.setSound(false);
                 }
             } catch (NumberFormatException | DOMException | NullPointerException e) {
                 Logger.getLogger(ProcessXML.class.getName()).log(Level.SEVERE, null, e);

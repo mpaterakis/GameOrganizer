@@ -6,6 +6,8 @@ package UI;
 import Plugins.*;
 import DataManagement.ProcessXML;
 import GameOrganizer.Game;
+import Sound.SoundPlayer;
+import Sound.SoundTypes;
 import com.ivan.xinput.XInputDevice;
 import com.ivan.xinput.enums.XInputAxis;
 import com.ivan.xinput.enums.XInputButton;
@@ -299,6 +301,7 @@ public class MainFrame extends JFrame {
         paintShadow();
         setOpacity(0);
         setVisible(true);
+        playSound(SoundTypes.HIGH_CLICK);
         fadeInJFrame();
 
         // Add ComponentMover on status bar
@@ -664,6 +667,24 @@ public class MainFrame extends JFrame {
     }
 
     /**
+     * Check the status (enabled/disabled) of Sound.
+     *
+     * @return The status (enabled/disabled) of Sound.
+     */
+    public boolean isSoundEnabled() {
+        return soundEnabled;
+    }
+
+    /**
+     * Set the new status (enabled/disabled) of sound.
+     *
+     * @param soundEnabled The new status of sound
+     */
+    public void setSound(boolean soundEnabled) {
+        this.soundEnabled = soundEnabled;
+    }
+
+    /**
      * Get the status of ignoreMouse.
      *
      * @return The status of ignoreMouse
@@ -761,8 +782,7 @@ public class MainFrame extends JFrame {
     /**
      * Set the border and window size.
      *
-     * @param hasBorder Boolean object (true if MainFrame has border, false
-     * otherwise)
+     * @param hasBorder Boolean object (true if MainFrame has border, false otherwise)
      * @param borderColor Color object containing the new border Color
      */
     public void setBorderAndSize(boolean hasBorder, Color borderColor) {
@@ -874,6 +894,9 @@ public class MainFrame extends JFrame {
         final File file = new File(System.getProperty("user.home") + "/.GameOrganizer.lock");
         file.delete();
 
+        // Play exit sound
+        playSound(SoundTypes.LOW_CLICK);
+
         // Fade Out animation and close program
         fadeOutJFrame();
         dispose();
@@ -885,6 +908,7 @@ public class MainFrame extends JFrame {
      */
     private void doOpenProgramSettings() {
         new SettingsDialog(this);
+        playSound(SoundTypes.LOW_CLICK);
         requestFocus();
     }
 
@@ -1036,6 +1060,7 @@ public class MainFrame extends JFrame {
      */
     public void goToNextGameMenu() {
         if (menuIndex < gameLabelLists.size() - 1) {
+            playSound(SoundTypes.HIGH_CLICK);
             menuIndex++;
             if (focusedGameLabels.size() < gameLabelLists.size()) {
                 focusedGameLabels.add(focusedGameLabel);
@@ -1054,6 +1079,7 @@ public class MainFrame extends JFrame {
      */
     public void goToPreviousGameMenu() {
         if (menuIndex > 0) {
+            playSound(SoundTypes.HIGH_CLICK);
             menuIndex--;
             if (focusedGameLabels.size() < gameLabelLists.size()) {
                 focusedGameLabels.add(focusedGameLabel);
@@ -1098,7 +1124,7 @@ public class MainFrame extends JFrame {
     public void hideAddNewGameButton() {
         addMenuButton.setVisible(false);
     }
-
+    
     /**
      * Show the game menu index on the title.
      */
@@ -1237,8 +1263,7 @@ public class MainFrame extends JFrame {
     /**
      * Change the focused GameLabel.
      *
-     * @param indexDelta Integer containing the delta (difference) of the new
-     * focused GameLabel compared to the previous one.
+     * @param indexDelta Integer containing the delta (difference) of the new focused GameLabel compared to the previous one.
      */
     private void changeFocusedGamelabel(int indexDelta) {
         if (getFocusedGameLabel() != null) {
@@ -1325,13 +1350,24 @@ public class MainFrame extends JFrame {
             ignoreMouse = false;
         }
     }
-
+    
+    /**
+     * Play a sound.
+     * 
+     * @param soundType The type of sound to be played
+     */
+    public void playSound(SoundTypes soundType) {
+        if (isSoundEnabled()) {
+            SoundPlayer.playSound(soundType);
+        }
+    }
+    
     // Fields
     private JXPanel shadowPanel;
     private JPanel gameGridPanel, statusBarPanel, buttonsPanel, mainPanel;
     private JButton exitButton, programSettingsButton, steamButton, addMenuButton;
     private JLabel emptyGridLabel, titleLabel;
-    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false, showingNewMenuButton = true;
+    private boolean hasBorder = true, hasSpace = false, autoExit = false, hasShadow = true, fullyBooted = false, focusing = true, useSteam = true, ignoreMouse = false, showingNewMenuButton = true, soundEnabled = true;
     private Color buttonColor = Color.LIGHT_GRAY, barColor = Color.BLACK, borderColor = Color.BLACK, backgroundColor = Color.DARK_GRAY, shadowColor = Color.BLACK;
     private ArrayList<GameLabel> activeGameLabels = new ArrayList<>(), focusedGameLabels = new ArrayList<>();
     private ArrayList<ArrayList<GameLabel>> gameLabelLists = new ArrayList<>();

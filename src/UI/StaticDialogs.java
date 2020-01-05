@@ -112,8 +112,8 @@ public class StaticDialogs {
         sgdbButton.setBackground(new Color(209, 209, 209));
         gameIconButton.addActionListener(e -> {
             try {
-                ImageIO.write(gameImage, "png", new File(gameLocation + "/" + gameName + ".png"));
-                chooser.setSelectedFile(new File(gameLocation + "/" + gameName + ".png"));
+                ImageIO.write(gameImage, "png", new File(gameLocation + "/" + gameName.replaceAll("[^a-zA-Z0-9_-]", "") + ".png"));
+                chooser.setSelectedFile(new File(gameLocation + "/" + gameName.replaceAll("[^a-zA-Z0-9_-]", "") + ".png"));
                 chooser.approveSelection();
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Image Write Error: Cannot write game icon to image file", "Image Write Error", JOptionPane.ERROR_MESSAGE);

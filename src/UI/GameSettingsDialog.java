@@ -4,6 +4,8 @@
 package UI;
 
 import GameOrganizer.Game;
+import Sound.SoundPlayer;
+import Sound.SoundTypes;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -179,6 +181,7 @@ public class GameSettingsDialog extends JDialog {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                mainFrame.playSound(SoundTypes.LOW_CLICK);
                 // Cancel all changes on close
                 mainFrame.redrawGameGridPanel(originalGameLabels);
             }
@@ -226,6 +229,7 @@ public class GameSettingsDialog extends JDialog {
      */
     private void doCancel() {
         mainFrame.redrawGameGridPanel(originalGameLabels);
+        mainFrame.playSound(SoundTypes.LOW_CLICK);
         dispose();
     }
 
@@ -241,6 +245,7 @@ public class GameSettingsDialog extends JDialog {
         if (game.getGameIcon().getImageLoadStatus() == MediaTracker.ERRORED) {
             gameLabel.showImageError();
         }
+        mainFrame.playSound(SoundTypes.LOW_CLICK);
         dispose();
     }
 

@@ -5,6 +5,8 @@ package UI;
 
 import Plugins.*;
 import GameOrganizer.*;
+import Sound.SoundPlayer;
+import Sound.SoundTypes;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -144,12 +146,12 @@ public class GameLabel extends JLabel {
             } else if (e.getButton() == MouseEvent.BUTTON3) {
 
                 // Open game's settings if right click is pressed
+                mainFrame.playSound(SoundTypes.HIGH_CLICK);
                 new GameSettingsDialog(this, mainFrame);
                 bgImage = new AlphaImageIcon(game.getGameIcon(), 1.0f);
                 setIcon(bgImage);
             }
         }
-
     }
 
     /**
@@ -172,6 +174,7 @@ public class GameLabel extends JLabel {
             }
             setIcon(new AlphaImageIcon(getGame().getGameIcon(), 1.0f));
             mainFrame.setFocusedGameLabel(this);
+            mainFrame.playSound(SoundTypes.BASE_CLICK);
         }
     }
 
