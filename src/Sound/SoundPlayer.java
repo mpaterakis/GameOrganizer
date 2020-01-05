@@ -1,5 +1,6 @@
 package Sound;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -19,7 +20,6 @@ public class SoundPlayer {
      * @param soundType The type of sound to be played
      */
     public static synchronized void playSound(final SoundTypes soundType) {
-        String soundFile = getFileName(soundType);
         new Thread(new Runnable() {
             // The wrapper thread is unnecessary, unless it blocks on the
             // Clip finishing; see comments.
@@ -27,7 +27,7 @@ public class SoundPlayer {
             public void run() {
                 try {
                     Clip clip = AudioSystem.getClip();
-                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("/Files/Sounds/" + soundFile));
+                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream("/Files/Sounds/" + getFileName(soundType))));
                     clip.open(inputStream);
                     clip.start();
                 } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
