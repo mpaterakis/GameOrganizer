@@ -99,7 +99,7 @@ public class StaticDialogs {
         g2d.dispose();
         gameIconLabel.setIcon(new ImageIcon(gameImage));
         try {
-            InputStream stream = StaticDialogs.class.getResourceAsStream("/Files/sgdb-logo.png");
+            InputStream stream = StaticDialogs.class.getResourceAsStream("/Files/Images/sgdb-logo.png");
             sgdbLabel.setIcon(new ImageIcon(ImageIO.read(stream)));
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "IconImage Error: Cannot load statusbar icon", "Icon Error", JOptionPane.ERROR_MESSAGE);

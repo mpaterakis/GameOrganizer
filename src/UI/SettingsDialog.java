@@ -3,7 +3,6 @@
  */
 package UI;
 
-import Sound.SoundPlayer;
 import Sound.SoundTypes;
 import java.awt.*;
 import java.awt.event.KeyAdapter;

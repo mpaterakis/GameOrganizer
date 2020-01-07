@@ -5,7 +5,6 @@ package UI;
 
 import Plugins.*;
 import GameOrganizer.*;
-import Sound.SoundPlayer;
 import Sound.SoundTypes;
 import java.awt.*;
 import java.awt.event.*;
