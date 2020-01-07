@@ -30,7 +30,7 @@ public class ProcessXML {
      *
      * @param mainFrame MainFrame object whose data will be written to XML
      */
-    public static void WriteXML(MainFrame mainFrame) {
+    public static void writeXML(MainFrame mainFrame) {
         try {
             // Build XML
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -40,6 +40,8 @@ public class ProcessXML {
             Document doc = docBuilder.newDocument();
             Element rootElement = doc.createElement("GameOrganizerData");
             doc.appendChild(rootElement);
+            
+            int gameCount = 0;
 
             // Game Labels lists
             for (int i = 0; i < mainFrame.getGameLabelLists().size(); i++) {
@@ -55,7 +57,7 @@ public class ProcessXML {
 
                     // Set attribute to staff element
                     Attr attr = doc.createAttribute("id");
-                    attr.setValue(Integer.toString(i * mainFrame.getGameLabelLists().get(i).size() + j + 1));
+                    attr.setValue(Integer.toString(++gameCount));
                     game.setAttributeNode(attr);
 
                     // Name elements
@@ -221,7 +223,7 @@ public class ProcessXML {
      *
      * @param mainFrame MainFrame object to be adjusted
      */
-    public static void LoadXML(MainFrame mainFrame) {
+    public static void initFrameFromXML(MainFrame mainFrame) {
         File file = new File(System.getProperty("user.home") + "\\GameOrganizerData.xml");
         if (file.exists()) {
 
