@@ -69,7 +69,7 @@ public class MainFrame extends JFrame {
         exitButton.setPreferredSize(new Dimension(15, 16));
         exitButton.setBorder(null);
         try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/Files/Xolonium-Special.ttf")).deriveFont(12f);
+            customFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/Files/Fonts/Xolonium-Special.ttf")).deriveFont(12f);
         } catch (FontFormatException ex) {
             JOptionPane.showMessageDialog(null, "FontFormat Error: Cannot load custom font", "Font Error", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
@@ -262,7 +262,7 @@ public class MainFrame extends JFrame {
 
                         try {
                             Thread.sleep(5);
-                        } catch (Exception e) {
+                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
@@ -280,7 +280,7 @@ public class MainFrame extends JFrame {
         setTitle("Game Organizer");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setUndecorated(true);
-        InputStream stream = getClass().getResourceAsStream("/Files/Icon.png");
+        InputStream stream = getClass().getResourceAsStream("/Files/Images/Icon.png");
         try {
             setIconImage(new ImageIcon(ImageIO.read(stream)).getImage());
         } catch (IOException ex) {
@@ -288,7 +288,7 @@ public class MainFrame extends JFrame {
         }
 
         // Load data from XML
-        ProcessXML.LoadXML(this);
+        ProcessXML.initFrameFromXML(this);
 
         // If screen is too small, adjust the frame scale
         int height = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -888,7 +888,7 @@ public class MainFrame extends JFrame {
      */
     public void doExit() {
         // Save to XML on exit
-        ProcessXML.WriteXML(this);
+        ProcessXML.writeXML(this);
 
         // Delete lockfile
         final File file = new File(System.getProperty("user.home") + "/.GameOrganizer.lock");
@@ -918,10 +918,10 @@ public class MainFrame extends JFrame {
     private void doLaunchSteam() {
         try {
             Desktop.getDesktop().browse(new URI("steam://open/games"));
+            doExit();
         } catch (URISyntaxException | IOException ex) {
             JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
         }
-        doExit();
     }
 
     /**
@@ -938,10 +938,10 @@ public class MainFrame extends JFrame {
     private void doLaunchSteamBigPicture() {
         try {
             Desktop.getDesktop().browse(new URI("steam://open/bigpicture"));
+            doExit();
         } catch (URISyntaxException | IOException ex) {
             JOptionPane.showMessageDialog(null, "Steam Error: Steam is not installed", "Steam Error", JOptionPane.ERROR_MESSAGE);
         }
-        doExit();
     }
 
     /**
