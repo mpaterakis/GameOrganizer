@@ -210,7 +210,7 @@ public class ProcessXML {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File(System.getProperty("user.home") + "\\GameOrganizerData.xml"));
+            StreamResult result = new StreamResult(new File(System.getProperty("user.home") + System.getProperty("file.separator")  + "GameOrganizerData.xml"));
 
             // Output to console for testing
             // StreamResult result = new StreamResult(System.out);
@@ -230,7 +230,7 @@ public class ProcessXML {
      * @param mainFrame MainFrame object to be adjusted
      */
     public static void initFrameFromXML(MainFrame mainFrame) {
-        File file = new File(System.getProperty("user.home") + "\\GameOrganizerData.xml");
+        File file = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "GameOrganizerData.xml");
         if (file.exists()) {
 
             // Initialize values
