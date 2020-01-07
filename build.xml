@@ -3,10 +3,10 @@
     <description>Builds, tests, and runs the project GameOrganizer.</description>
     <import file="nbproject/build-impl.xml"/>
     <target name="-post-jar">
-        <copy file="LICENSE" todir="${dist.dir}"/> 
+        <copy file="LICENSE" tofile="${dist.dir}/LICENSE.TXT"/> 
         <copy overwrite="true" file="README.md" tofile="${dist.dir}/README.TXT"/> 
         <zip zipfile="${dist.dir}\GameOrganizer.zip" basedir="${dist.dir}" includes="**"/>
-        <delete file="${dist.dir}\LICENSE"/>
+        <delete file="${dist.dir}\LICENSE.TXT"/>
         <delete file="${dist.dir}\README.TXT"/>
         <delete file="${dist.dir}\GameOrganizer.jar"/>
     </target>
