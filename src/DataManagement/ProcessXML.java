@@ -42,6 +42,7 @@ public class ProcessXML {
             doc.appendChild(rootElement);
             
             int gameCount = 0;
+            int gamelistCount = 0;
 
             // Game Labels lists
             for (int i = 0; i < mainFrame.getGameLabelLists().size(); i++) {
@@ -50,15 +51,20 @@ public class ProcessXML {
                 Element subElement = doc.createElement("GameList");
                 rootElement.appendChild(subElement);
 
+                // Set attribute to GameList element
+                Attr gameListAttr = doc.createAttribute("list-number");
+                gameListAttr.setValue(Integer.toString(++gamelistCount));
+                subElement.setAttributeNode(gameListAttr);
+
                 for (int j = 0; j < mainFrame.getGameLabelLists().get(i).size(); j++) {
                     // Game elements
                     Element game = doc.createElement("Game");
                     subElement.appendChild(game);
 
-                    // Set attribute to staff element
-                    Attr attr = doc.createAttribute("id");
-                    attr.setValue(Integer.toString(++gameCount));
-                    game.setAttributeNode(attr);
+                    // Set attribute to Game element
+                    Attr gameAttr = doc.createAttribute("game-number");
+                    gameAttr.setValue(Integer.toString(++gameCount));
+                    game.setAttributeNode(gameAttr);
 
                     // Name elements
                     Element gamename = doc.createElement("Name");
@@ -202,7 +208,7 @@ public class ProcessXML {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new File(System.getProperty("user.home") + "\\GameOrganizerData.xml"));
 
